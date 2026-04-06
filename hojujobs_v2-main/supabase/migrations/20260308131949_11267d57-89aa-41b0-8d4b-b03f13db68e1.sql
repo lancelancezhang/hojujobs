@@ -1,0 +1,1 @@
+UPDATE public.jobs SET location = ARRAY['스트라스필드'] WHERE id = 69;

@@ -1,0 +1,1 @@
+DELETE FROM public.jobs WHERE id IN (196, 231, 86, 248);

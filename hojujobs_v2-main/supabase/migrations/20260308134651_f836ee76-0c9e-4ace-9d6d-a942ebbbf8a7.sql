@@ -1,0 +1,1 @@
+ALTER TABLE public.jobs ADD COLUMN uploaded_at timestamptz NOT NULL DEFAULT now();

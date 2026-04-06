@@ -1,0 +1,120 @@
+import { useState, useEffect } from "react";
+import hojuJobsLogo from "@/assets/hoju-jobs-logo.png";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { ArrowLeft, Plus, Pencil, Trash2, Briefcase } from "lucide-react";
+
+interface Job {
+  id: number;
+  title: string;
+  company: string;
+  location: string[];
+  type: string;
+  created_at: string;
+}
+
+export default function MyPosts() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    fetchMyJobs();
+  }, [user]);
+
+  const fetchMyJobs = async () => {
+    const { data, error } = await supabase
+      .from("jobs")
+      .select("id, title, company, location, type, created_at")
+      .eq("user_id", user!.id)
+      .order("uploaded_at", { ascending: false });
+
+    if (error) {
+      toast.error("공고 불러오기 실패");
+    } else {
+      setJobs(data || []);
+    }
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("이 공고를 삭제하시겠습니까?")) return;
+
+    // Ensure users can only delete posts they own
+    const { error } = await supabase
+      .from("jobs")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user!.id);
+    if (error) {
+      toast.error("삭제 실패: " + error.message);
+    } else {
+      toast.success("공고가 삭제되었습니다.");
+      setJobs((prev) => prev.filter((j) => j.id !== id));
+    }
+  };
+
+  if (!user) return null;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <div className="mb-6 space-y-4">
+          <Link to="/">
+            <img src={hojuJobsLogo} alt="Hoju Jobs" className="h-8 hover:opacity-80 transition-opacity" />
+          </Link>
+          <Link to="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+            홈으로
+          </Link>
+        </div>
+
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-foreground">내 공고 관리</h2>
+          <Button onClick={() => navigate("/post-job")} size="sm">
+            <Plus className="h-4 w-4 mr-1" /> 새 공고
+          </Button>
+        </div>
+
+        {loading ? (
+          <p className="text-center py-12 text-muted-foreground">불러오는 중...</p>
+        ) : jobs.length === 0 ? (
+          <div className="text-center py-16 space-y-4">
+            <Briefcase className="h-12 w-12 text-muted-foreground/40 mx-auto" />
+            <p className="text-muted-foreground">등록한 공고가 없습니다.</p>
+            <Button onClick={() => navigate("/post-job")}>첫 공고 등록하기</Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {jobs.map((job) => (
+              <div key={job.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <Link to={`/job/${job.id}`} className="text-sm font-bold text-foreground hover:text-primary transition-colors truncate block">
+                    {job.title}
+                  </Link>
+                  <p className="text-xs text-muted-foreground">{job.company} · {job.location.join(", ")} · {job.type}</p>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button variant="ghost" size="icon" onClick={() => navigate(`/edit-job/${job.id}`)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleDelete(job.id)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
