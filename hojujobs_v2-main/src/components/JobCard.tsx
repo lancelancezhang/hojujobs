@@ -57,9 +57,9 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1"><Building2 className="h-3 w-3 text-primary/60" />{job.company}</span>
-              <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-accent/60" />{job.location.join(", ")}</span>
-              <span className="flex items-center gap-1"><Briefcase className="h-3 w-3" />{job.industry}</span>
+              {job.company && <span className="flex items-center gap-1"><Building2 className="h-3 w-3 text-primary/60" />{job.company}</span>}
+              {job.location && job.location.length > 0 && <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-accent/60" />{job.location.join(", ")}</span>}
+              {job.industry && <span className="flex items-center gap-1"><Briefcase className="h-3 w-3" />{job.industry}</span>}
               {(job as any).pay && (
                 <span className="text-emerald-600 font-semibold">{(job as any).pay}</span>
               )}
