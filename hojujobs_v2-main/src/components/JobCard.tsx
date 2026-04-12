@@ -47,7 +47,7 @@ function formatDate(dateStr?: string) {
 export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {
   return (
     <Link to={`/job/${job.id}`} className="block group">
-      <div className="bg-card border border-border rounded-lg px-4 h-[4.75rem] flex items-center overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-200">
+      <div className="bg-card border border-border rounded-lg px-4 h-[4.75rem] w-full flex items-center overflow-hidden hover:shadow-md hover:border-primary/30 transition-[box-shadow,border-color] duration-200">
         <div className="flex items-center justify-between gap-3 w-full min-w-0">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
