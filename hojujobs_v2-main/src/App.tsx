@@ -12,6 +12,8 @@ import MyPosts from "./pages/MyPosts";
 import EditJob from "./pages/EditJob";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/my-posts" element={<MyPosts />} />
             <Route path="/edit-job/:id" element={<EditJob />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
