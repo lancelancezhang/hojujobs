@@ -47,24 +47,22 @@ function formatDate(dateStr?: string) {
 export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {
   return (
     <Link to={`/job/${job.id}`} className="block group">
-      <div className="bg-card border border-border rounded-lg px-4 py-3 min-h-[4.5rem] hover:shadow-md hover:border-primary/30 transition-all duration-200">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-0.5">
-              <h3 className="text-sm font-bold text-foreground line-clamp-2 sm:truncate group-hover:text-primary transition-colors">{job.title}</h3>
-              <span className={`inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-px rounded-full shrink-0 w-fit ${typeColor[job.type] || "bg-secondary text-secondary-foreground"}`}>
+      <div className="bg-card border border-border rounded-lg px-4 py-3 hover:shadow-md hover:border-primary/30 transition-all duration-200">
+        <div className="flex items-center justify-between gap-3 h-[3.25rem] overflow-hidden">
+          <div className="flex-1 min-w-0 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-0.5">
+              <h3 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
+              <span className={`inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-px rounded-full shrink-0 ${typeColor[job.type] || "bg-secondary text-secondary-foreground"}`}>
                 {typeEmoji[job.type] || "💼"} {job.type}
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
-              {job.company && <span className="flex items-center gap-1"><Building2 className="h-3 w-3 text-primary/60" />{job.company}</span>}
-              {job.location && job.location.length > 0 && <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-accent/60" />{job.location.join(", ")}</span>}
-              {job.industry && <span className="flex items-center gap-1"><Briefcase className="h-3 w-3" />{job.industry}</span>}
-              {(job as any).pay && (
-                <span className="text-emerald-600 font-semibold">{(job as any).pay}</span>
-              )}
-              <span className="flex items-center gap-1 ml-auto"><Eye className="h-3 w-3" />{viewCount}</span>
-              <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate((job as any).uploaded_at || job.created_at)}</span>
+            <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
+              {job.company && <span className="flex items-center gap-1 shrink-0"><Building2 className="h-3 w-3 text-primary/60" /><span className="truncate max-w-[8rem]">{job.company}</span></span>}
+              {job.location && job.location.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60" />{job.location.join(", ")}</span>}
+              {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3" />{job.industry}</span>}
+              {(job as any).pay && <span className="text-emerald-600 font-semibold shrink-0">{(job as any).pay}</span>}
+              <span className="flex items-center gap-1 ml-auto shrink-0"><Eye className="h-3 w-3" />{viewCount}</span>
+              <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate((job as any).uploaded_at || job.created_at)}</span>
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary shrink-0 transition-colors" />
