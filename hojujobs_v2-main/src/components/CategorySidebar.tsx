@@ -86,11 +86,11 @@ export function CategorySidebar({
 
   return (
     <aside className="space-y-6">
-      {/* Reset */}
+      {/* Reset - always takes space to prevent layout shift */}
       <button
         onClick={onReset}
         className={cn(
-          "flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors",
+          "flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors h-5",
           !hasFilters && "invisible pointer-events-none"
         )}
       >

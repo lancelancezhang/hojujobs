@@ -47,19 +47,19 @@ function formatDate(dateStr?: string) {
 export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {
   return (
     <Link to={`/job/${job.id}`} className="block group">
-      <div className="bg-card border border-border rounded-lg px-4 h-[4.75rem] overflow-hidden flex items-center hover:shadow-md hover:border-primary/30 transition-all duration-200">
-        <div className="flex items-center justify-between gap-3 w-full">
-          <div className="flex-1 min-w-0 flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-0.5">
+      <div className="bg-card border border-border rounded-lg px-4 h-[4.75rem] flex items-center overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-200">
+        <div className="flex items-center justify-between gap-3 w-full min-w-0">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
               <h3 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
               <span className={`inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-px rounded-full shrink-0 ${typeColor[job.type] || "bg-secondary text-secondary-foreground"}`}>
                 {typeEmoji[job.type] || "💼"} {job.type}
               </span>
             </div>
             <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
-              {job.company && <span className="flex items-center gap-1 shrink-0"><Building2 className="h-3 w-3 text-primary/60" /><span className="truncate max-w-[8rem]">{job.company}</span></span>}
-              {job.location && job.location.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60" />{job.location.join(", ")}</span>}
-              {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3" />{job.industry}</span>}
+              {job.company && <span className="flex items-center gap-1 shrink-0 min-w-0"><Building2 className="h-3 w-3 text-primary/60 shrink-0" /><span className="truncate max-w-[7rem]">{job.company}</span></span>}
+              {job.location && job.location.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60 shrink-0" />{job.location[0]}</span>}
+              {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3 shrink-0" />{job.industry}</span>}
               {(job as any).pay && <span className="text-emerald-600 font-semibold shrink-0">{(job as any).pay}</span>}
               <span className="flex items-center gap-1 ml-auto shrink-0"><Eye className="h-3 w-3" />{viewCount}</span>
               <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate((job as any).uploaded_at || job.created_at)}</span>
@@ -69,6 +69,5 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
         </div>
       </div>
     </Link>
-
   );
 }
