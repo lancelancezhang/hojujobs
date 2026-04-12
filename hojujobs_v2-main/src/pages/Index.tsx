@@ -123,43 +123,22 @@ const Index = () => {
   }, [keyword, selectedLocations, industry, jobType, sortBy, counts, jobsData]);
 
   const locationCounts = useMemo(() => {
-    const base = jobsData.filter((job) => {
-      const kw = keyword.toLowerCase();
-      const matchKeyword = !kw || job.title.toLowerCase().includes(kw) || job.company.toLowerCase().includes(kw) || job.summary.toLowerCase().includes(kw);
-      const matchIndustry = industry === "all" || job.industry === industry;
-      const matchType = jobType === "all" || job.type === jobType;
-      return matchKeyword && matchIndustry && matchType;
-    });
     const c: Record<string, number> = {};
-    base.forEach((j) => { j.location.forEach((loc) => { c[loc] = (c[loc] || 0) + 1; }); });
+    jobsData.forEach((j) => { j.location.forEach((loc) => { c[loc] = (c[loc] || 0) + 1; }); });
     return c;
-  }, [keyword, industry, jobType, jobsData]);
+  }, [jobsData]);
 
   const industryCounts = useMemo(() => {
-    const base = jobsData.filter((job) => {
-      const kw = keyword.toLowerCase();
-      const matchKeyword = !kw || job.title.toLowerCase().includes(kw) || job.company.toLowerCase().includes(kw) || job.summary.toLowerCase().includes(kw);
-      const matchLocation = selectedLocations.length === 0 || job.location.some((loc) => selectedLocations.includes(loc));
-      const matchType = jobType === "all" || job.type === jobType;
-      return matchKeyword && matchLocation && matchType;
-    });
     const c: Record<string, number> = {};
-    base.forEach((j) => { c[j.industry] = (c[j.industry] || 0) + 1; });
+    jobsData.forEach((j) => { c[j.industry] = (c[j.industry] || 0) + 1; });
     return c;
-  }, [keyword, selectedLocations, jobType, jobsData]);
+  }, [jobsData]);
 
   const typeCounts = useMemo(() => {
-    const base = jobsData.filter((job) => {
-      const kw = keyword.toLowerCase();
-      const matchKeyword = !kw || job.title.toLowerCase().includes(kw) || job.company.toLowerCase().includes(kw) || job.summary.toLowerCase().includes(kw);
-      const matchLocation = selectedLocations.length === 0 || job.location.some((loc) => selectedLocations.includes(loc));
-      const matchIndustry = industry === "all" || job.industry === industry;
-      return matchKeyword && matchLocation && matchIndustry;
-    });
     const c: Record<string, number> = {};
-    base.forEach((j) => { c[j.type] = (c[j.type] || 0) + 1; });
+    jobsData.forEach((j) => { c[j.type] = (c[j.type] || 0) + 1; });
     return c;
-  }, [keyword, selectedLocations, industry, jobsData]);
+  }, [jobsData]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentPage = Math.min(page, totalPages || 1);
@@ -179,7 +158,7 @@ const Index = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex gap-8">
-          <div className="hidden lg:block w-56 shrink-0">
+          <div className="hidden lg:block w-56 flex-none">
             <CategorySidebar
               locations={locations}
               jobTypes={jobTypes}
