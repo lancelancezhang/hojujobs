@@ -174,7 +174,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -274,7 +274,7 @@ const Index = () => {
         </div>
       </div>
 
-      <footer className="border-t border-border bg-muted/30 py-6 mt-8">
+      <footer className="border-t border-border bg-muted/30 py-6 mt-auto">
         <div className="max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground">
           <p>문의: <a href="mailto:admin.hojujobs@gmail.com" className="text-primary hover:underline">admin.hojujobs@gmail.com</a></p>
         </div>
