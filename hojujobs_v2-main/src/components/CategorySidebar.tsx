@@ -138,7 +138,7 @@ export function CategorySidebar({
                   <button
                     onClick={() => toggleAllSuburbsInRegion(group.suburbs)}
                     className={cn(
-                      "flex items-center gap-2 py-2 pl-3 pr-1.5 transition-colors",
+                      "flex items-center gap-2 h-9 pl-3 pr-1.5 transition-colors",
                       someSelected ? "text-primary" : "text-muted-foreground hover:text-foreground"
                     )}
                   >
@@ -151,7 +151,7 @@ export function CategorySidebar({
                   <button
                     onClick={() => toggleRegion(group.region)}
                     className={cn(
-                      "flex-1 flex items-center justify-between pr-3 py-2 rounded-r-lg text-sm transition-colors",
+                      "flex-1 flex items-center justify-between pr-3 h-9 rounded-r-lg text-sm transition-colors",
                       someSelected
                         ? "text-primary font-semibold"
                         : "text-foreground hover:bg-muted"
@@ -263,7 +263,7 @@ function LocationCheckItem({ label, count, checked, onClick }: {
       <button
         onClick={onClick}
         className={cn(
-          "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm transition-colors",
+          "w-full h-8 flex items-center gap-2.5 px-3 rounded-lg text-sm transition-colors",
           checked
             ? "bg-primary/10 text-primary font-semibold"
             : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -288,7 +288,7 @@ function SidebarItem({ label, count, active, onClick }: {
       <button
         onClick={onClick}
         className={cn(
-          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+          "w-full h-9 flex items-center justify-between px-3 rounded-lg text-sm transition-colors",
           active
             ? "bg-primary/10 text-primary font-semibold"
             : "text-muted-foreground hover:bg-muted hover:text-foreground"

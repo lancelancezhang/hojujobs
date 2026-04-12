@@ -47,8 +47,8 @@ function formatDate(dateStr?: string) {
 export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {
   return (
     <Link to={`/job/${job.id}`} className="block group">
-      <div className="bg-card border border-border rounded-lg px-4 py-3 hover:shadow-md hover:border-primary/30 transition-all duration-200">
-        <div className="flex items-center justify-between gap-3 h-[3.25rem] overflow-hidden">
+      <div className="bg-card border border-border rounded-lg px-4 h-[4.75rem] overflow-hidden flex items-center hover:shadow-md hover:border-primary/30 transition-all duration-200">
+        <div className="flex items-center justify-between gap-3 w-full">
           <div className="flex-1 min-w-0 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-0.5">
               <h3 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
@@ -69,5 +69,6 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
         </div>
       </div>
     </Link>
+
   );
 }
