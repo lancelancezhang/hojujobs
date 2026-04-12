@@ -244,14 +244,16 @@ export default function JobDetail() {
             </h2>
             {job.location.map((loc) => {
               const englishName = SUBURB_EN[loc] || loc;
-              const mapsQuery = job.address 
-                ? `${job.address}, Australia`
-                : `${job.company}, ${englishName}, Australia`;
-              const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`;
-              const embedQuery = job.address
-                ? `${job.address}, Australia`
-                : `${job.company}, ${englishName}, Australia`;
-              const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(embedQuery)}&z=15&output=embed`;
+              const buildQuery = () => {
+                if (job.address) return `${job.address}, ${englishName}, Australia`;
+                const parts = [];
+                if (job.company) parts.push(job.company);
+                parts.push(englishName, "Australia");
+                return parts.join(", ");
+              };
+              const query = buildQuery();
+              const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+              const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
 
               return (
                 <div key={loc} className="px-6 pb-4">
