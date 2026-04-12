@@ -47,7 +47,7 @@ function formatDate(dateStr?: string) {
 export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {
   return (
     <Link to={`/job/${job.id}`} className="block group">
-      <div className="bg-card border border-border rounded-lg px-4 py-3 hover:shadow-md hover:border-primary/30 transition-all duration-200">
+      <div className="bg-card border border-border rounded-lg px-4 py-3 min-h-[4.5rem] hover:shadow-md hover:border-primary/30 transition-all duration-200">
         <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-0.5">

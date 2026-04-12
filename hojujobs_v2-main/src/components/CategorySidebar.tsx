@@ -87,15 +87,16 @@ export function CategorySidebar({
   return (
     <aside className="space-y-6">
       {/* Reset */}
-      {hasFilters && (
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          필터 초기화
-        </button>
-      )}
+      <button
+        onClick={onReset}
+        className={cn(
+          "flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors",
+          !hasFilters && "invisible pointer-events-none"
+        )}
+      >
+        <RotateCcw className="h-3.5 w-3.5" />
+        필터 초기화
+      </button>
 
       {/* Location - grouped by region */}
       <div>

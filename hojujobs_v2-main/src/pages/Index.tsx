@@ -158,7 +158,7 @@ const Index = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex gap-8">
-          <div className="hidden lg:block w-56 flex-none">
+          <div className="hidden lg:block w-56 flex-none self-start">
             <CategorySidebar
               locations={locations}
               jobTypes={jobTypes}
