@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import hojuJobsLogo from "@/assets/hoju-jobs-logo.png";
 import { useEffect, useState, useMemo } from "react";
+import { Header } from "@/components/Header";
 import { ArrowLeft, MapPin, Building2, Briefcase, Clock, DollarSign, Phone, Mail, CheckCircle2, Eye, Calendar, ExternalLink } from "lucide-react";
 import { incrementViewCount } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
@@ -148,11 +148,9 @@ export default function JobDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="mb-6 space-y-4">
-          <Link to="/">
-            <img src={hojuJobsLogo} alt="Hoju Jobs" className="h-8 hover:opacity-80 transition-opacity" />
-          </Link>
+        <div className="mb-6">
           <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
             목록으로 돌아가기
@@ -164,9 +162,9 @@ export default function JobDetail() {
             <div>
               <h1 className="text-2xl font-bold text-foreground mb-2">{job.title}</h1>
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5"><Building2 className="h-4 w-4 text-primary" />{job.company}</span>
-                <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" />{job.location.join(", ")}</span>
-                <span className="flex items-center gap-1.5"><Briefcase className="h-4 w-4 text-muted-foreground" />{job.industry}</span>
+                {job.company && <span className="flex items-center gap-1.5"><Building2 className="h-4 w-4 text-primary" />{job.company}</span>}
+                {job.location && job.location.length > 0 && <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" />{job.location.join(", ")}</span>}
+                {job.industry && <span className="flex items-center gap-1.5"><Briefcase className="h-4 w-4 text-muted-foreground" />{job.industry}</span>}
               </div>
             </div>
             <span className={`inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full whitespace-nowrap ${typeColor[job.type] || "bg-secondary text-secondary-foreground"}`}>

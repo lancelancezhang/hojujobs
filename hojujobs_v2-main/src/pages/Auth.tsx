@@ -1,6 +1,7 @@
 import { useState } from "react";
 import hojuJobsLogo from "@/assets/hoju-jobs-logo.png";
 import { Link, useNavigate } from "react-router-dom";
+import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,16 +54,12 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm space-y-6">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-4 w-4" />
-          홈으로
-        </Link>
-
         <div className="text-center">
-          <Link to="/"><img src={hojuJobsLogo} alt="Hoju Jobs" className="h-8 mx-auto" /></Link>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-lg font-semibold text-foreground">
             {isLogin ? "로그인" : "회원가입"}
           </p>
         </div>
@@ -132,6 +129,7 @@ export default function Auth() {
             {isLogin ? "회원가입" : "로그인"}
           </button>
         </p>
+      </div>
       </div>
     </div>
   );
