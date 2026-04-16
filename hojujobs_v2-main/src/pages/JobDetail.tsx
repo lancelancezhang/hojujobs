@@ -22,6 +22,7 @@ interface Job {
   email: string | null;
   description: string | null;
   address: string | null;
+  google_search: string | null;
   uploaded_at: string;
 }
 
@@ -35,7 +36,7 @@ export default function JobDetail() {
     async function fetchJob() {
       const { data, error } = await supabase
         .from("jobs")
-        .select("id, title, location, industry, contact, email, description, address, uploaded_at")
+        .select("id, title, location, industry, contact, email, description, address, google_search, uploaded_at")
         .eq("id", Number(id))
         .single();
 
@@ -173,9 +174,8 @@ export default function JobDetail() {
             </h2>
             {job.location.map((loc) => {
               const englishName = SUBURB_EN[loc] || loc;
-              const query = job.address
-                ? `${job.address}, ${englishName}, Australia`
-                : `${englishName}, Australia`;
+              const query = job.google_search
+                || (job.address ? `${job.address}, ${englishName}, Australia` : `${englishName}, Australia`);
               const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
               const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
 
