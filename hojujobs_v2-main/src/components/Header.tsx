@@ -16,7 +16,7 @@ export function Header() {
             src={hojuJobsLogo}
             alt="Hoju Jobs"
             className="h-8 sm:h-10 cursor-pointer"
-            onClick={() => window.location.href = "/"}
+            onClick={() => { sessionStorage.removeItem("hoju_filters"); window.location.href = "/"; }}
           />
           <div className="flex items-center gap-1.5 sm:gap-2">
             {user ? (
