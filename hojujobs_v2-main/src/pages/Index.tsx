@@ -140,9 +140,9 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          <div className="hidden lg:block w-56 flex-none">
+      <div className="w-full max-w-6xl mx-auto px-4 py-8">
+        <div className="lg:grid lg:grid-cols-[14rem_1fr] lg:gap-8">
+          <div className="hidden lg:block">
             <div className="sticky top-4">
             <CategorySidebar
               locations={locations}
@@ -158,7 +158,7 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0">
             <div className="space-y-3 mb-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
