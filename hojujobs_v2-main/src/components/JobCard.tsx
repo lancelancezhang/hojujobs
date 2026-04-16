@@ -1,33 +1,13 @@
 import { Link } from "react-router-dom";
-import { MapPin, Building2, Briefcase, ChevronRight, Eye, Calendar } from "lucide-react";
+import { MapPin, Briefcase, ChevronRight, Eye, Calendar } from "lucide-react";
 
 interface Job {
   id: number;
   title: string;
-  company: string;
   location: string[];
   industry: string;
-  type: string;
-  summary: string;
-  pay?: string;
-  created_at?: string;
+  uploaded_at?: string;
 }
-
-const typeEmoji: Record<string, string> = {
-  "풀타임": "💼",
-  "파트타임": "🕒",
-  "컨트랙": "📄",
-  "캐주얼": "⚡",
-  "리모트": "🌍",
-};
-
-const typeColor: Record<string, string> = {
-  "풀타임": "bg-primary/10 text-primary",
-  "파트타임": "bg-amber-100 text-amber-700",
-  "컨트랙": "bg-emerald-100 text-emerald-700",
-  "캐주얼": "bg-orange-100 text-orange-700",
-  "리모트": "bg-violet-100 text-violet-700",
-};
 
 function formatDate(dateStr?: string) {
   if (!dateStr) return "";
@@ -52,17 +32,12 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h3 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
-              <span className={`inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-px rounded-full shrink-0 ${typeColor[job.type] || "bg-secondary text-secondary-foreground"}`}>
-                {typeEmoji[job.type] || "💼"} {job.type}
-              </span>
             </div>
             <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
-              {job.company && <span className="flex items-center gap-1 shrink-0 min-w-0"><Building2 className="h-3 w-3 text-primary/60 shrink-0" /><span className="truncate max-w-[7rem]">{job.company}</span></span>}
               {job.location && job.location.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60 shrink-0" />{job.location[0]}</span>}
               {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3 shrink-0" />{job.industry}</span>}
-              {(job as any).pay && <span className="text-emerald-600 font-semibold shrink-0">{(job as any).pay}</span>}
               <span className="flex items-center gap-1 ml-auto shrink-0"><Eye className="h-3 w-3" />{viewCount}</span>
-              <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate((job as any).uploaded_at || job.created_at)}</span>
+              <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate(job.uploaded_at)}</span>
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary shrink-0 transition-colors" />

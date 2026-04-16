@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Header } from "@/components/Header";
 import { MobileLocationFilter } from "@/components/MobileLocationFilter";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { JobCard } from "@/components/JobCard";
 import { Pagination } from "@/components/Pagination";
@@ -23,13 +22,8 @@ type SortOption = "recent" | "views";
 interface Job {
   id: number;
   title: string;
-  company: string;
   location: string[];
   industry: string;
-  type: string;
-  summary: string;
-  pay: string | null;
-  created_at: string;
   uploaded_at: string;
 }
 
@@ -48,7 +42,6 @@ const Index = () => {
   const [keyword, setKeyword] = useState(saved?.keyword ?? "");
   const [selectedLocations, setSelectedLocations] = useState<string[]>(saved?.locations ?? []);
   const [industry, setIndustry] = useState(saved?.industry ?? "all");
-  const [jobType, setJobType] = useState(saved?.type ?? "all");
   const [page, setPage] = useState(saved?.page ?? 1);
   const [sortBy, setSortBy] = useState<SortOption>(saved?.sortBy ?? "recent");
   const [jobsData, setJobsData] = useState<Job[]>([]);
@@ -61,12 +54,12 @@ const Index = () => {
   useSEO({
     title: "Hoju Jobs - 호주 한인 구인구직",
     description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보를 찾아보세요.",
-    canonical: "https://hojujobs.lovable.app/",
+    canonical: "https://hojujobs.com/",
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "Hoju Jobs",
-      url: "https://hojujobs.lovable.app/",
+      url: "https://hojujobs.com/",
       description: "호주 한인 커뮤니티 구인구직 게시판",
       inLanguage: "ko",
     },
@@ -75,15 +68,15 @@ const Index = () => {
   // Persist filters to sessionStorage
   useEffect(() => {
     sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
-      keyword, locations: selectedLocations, industry, type: jobType, page, sortBy,
+      keyword, locations: selectedLocations, industry, page, sortBy,
     }));
-  }, [keyword, selectedLocations, industry, jobType, page, sortBy]);
+  }, [keyword, selectedLocations, industry, page, sortBy]);
 
   useEffect(() => {
     async function fetchJobs() {
       const { data, error } = await supabase
         .from("jobs")
-        .select("id, title, company, location, industry, type, summary, pay, created_at, uploaded_at")
+        .select("id, title, location, industry, uploaded_at")
         .order("uploaded_at", { ascending: false });
 
       if (!error && data) {
@@ -101,16 +94,14 @@ const Index = () => {
     return [...new Set(allLocs)].sort((a, b) => (countMap[b] || 0) - (countMap[a] || 0));
   }, [jobsData]);
   const industries = useMemo(() => [...new Set(jobsData.map((j) => j.industry))].sort(), [jobsData]);
-  const jobTypes = useMemo(() => [...new Set(jobsData.map((j) => j.type))].sort(), [jobsData]);
 
   const filtered = useMemo(() => {
     const result = jobsData.filter((job) => {
       const kw = keyword.toLowerCase();
-      const matchKeyword = !kw || job.title.toLowerCase().includes(kw) || job.company.toLowerCase().includes(kw) || job.summary.toLowerCase().includes(kw);
+      const matchKeyword = !kw || job.title.toLowerCase().includes(kw);
       const matchLocation = selectedLocations.length === 0 || job.location.some((loc) => selectedLocations.includes(loc));
       const matchIndustry = industry === "all" || job.industry === industry;
-      const matchType = jobType === "all" || job.type === jobType;
-      return matchKeyword && matchLocation && matchIndustry && matchType;
+      return matchKeyword && matchLocation && matchIndustry;
     });
 
     if (sortBy === "views") {
@@ -120,7 +111,7 @@ const Index = () => {
     }
 
     return result;
-  }, [keyword, selectedLocations, industry, jobType, sortBy, counts, jobsData]);
+  }, [keyword, selectedLocations, industry, sortBy, counts, jobsData]);
 
   const locationCounts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -134,19 +125,12 @@ const Index = () => {
     return c;
   }, [jobsData]);
 
-  const typeCounts = useMemo(() => {
-    const c: Record<string, number> = {};
-    jobsData.forEach((j) => { c[j.type] = (c[j.type] || 0) + 1; });
-    return c;
-  }, [jobsData]);
-
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentPage = Math.min(page, totalPages || 1);
   const paginatedJobs = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleReset = () => {
     setSelectedLocations([]);
-    setJobType("all");
     setIndustry("all");
     setKeyword("");
     setPage(1);
@@ -162,17 +146,13 @@ const Index = () => {
             <div className="sticky top-4">
             <CategorySidebar
               locations={locations}
-              jobTypes={jobTypes}
               industries={industries}
               selectedLocations={selectedLocations}
-              selectedType={jobType}
               selectedIndustry={industry}
               onLocationsChange={(v) => { setSelectedLocations(v); setPage(1); }}
-              onTypeChange={(v) => { setJobType(v); setPage(1); }}
               onIndustryChange={(v) => { setIndustry(v); setPage(1); }}
               onReset={handleReset}
               locationCounts={locationCounts}
-              typeCounts={typeCounts}
               industryCounts={industryCounts}
             />
             </div>
@@ -190,7 +170,7 @@ const Index = () => {
                   className="pl-10"
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                 <div className="lg:hidden contents sm:contents">
                   <MobileLocationFilter
                     locations={locations}
@@ -205,15 +185,6 @@ const Index = () => {
                     <SelectContent>
                       <SelectItem value="all">전체 업종</SelectItem>
                       {industries.map((i) => <SelectItem key={i} value={i}>{i}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="lg:hidden contents sm:contents">
-                  <Select value={jobType} onValueChange={(v) => { setJobType(v); setPage(1); }}>
-                    <SelectTrigger className={cn("w-full", jobType !== "all" && "border-primary/50 bg-primary/5 text-primary")}><SelectValue placeholder="근무타입" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">전체 타입</SelectItem>
-                      {jobTypes.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>

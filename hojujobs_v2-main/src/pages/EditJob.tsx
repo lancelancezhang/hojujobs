@@ -7,12 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LocationPicker } from "@/components/LocationPicker";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, X } from "lucide-react";
-
-const JOB_TYPES = ["풀타임", "파트타임", "컨트랙", "캐주얼", "리모트"];
+import { ArrowLeft } from "lucide-react";
 
 export default function EditJob() {
   const { id } = useParams();
@@ -22,12 +19,10 @@ export default function EditJob() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    title: "", company: "", industry: "", type: "풀타임",
-    summary: "", pay: "", hours: "", contact: "", email: "", address: "", description: "",
+    title: "", industry: "", contact: "", email: "", address: "", description: "",
   });
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [availableLocations, setAvailableLocations] = useState<string[]>([]);
-  const [requirements, setRequirements] = useState<string[]>([""]);
 
   useEffect(() => {
     if (!user) { navigate("/auth"); return; }
@@ -35,7 +30,6 @@ export default function EditJob() {
   }, [user, id]);
 
   const fetchJob = async () => {
-    // Fetch available locations
     const { data: allJobs } = await supabase.from("jobs").select("location");
     if (allJobs) {
       setAvailableLocations([...new Set(allJobs.flatMap((j) => j.location))].sort());
@@ -43,7 +37,7 @@ export default function EditJob() {
 
     let query = supabase
       .from("jobs")
-      .select("*")
+      .select("id, title, location, industry, contact, email, address, description")
       .eq("id", Number(id));
 
     if (!isAdmin) {
@@ -59,13 +53,14 @@ export default function EditJob() {
     }
 
     setForm({
-      title: data.title || "", company: data.company || "",
-      industry: data.industry || "", type: data.type || "풀타임", summary: data.summary || "",
-      pay: data.pay || "", hours: data.hours || "", contact: data.contact || "",
-      email: data.email || "", address: data.address || "", description: data.description || "",
+      title: data.title || "",
+      industry: data.industry || "",
+      contact: data.contact || "",
+      email: data.email || "",
+      address: data.address || "",
+      description: data.description || "",
     });
     setSelectedLocations(Array.isArray(data.location) ? data.location : [data.location || ""]);
-    setRequirements(data.requirements?.length ? data.requirements : [""]);
     setLoading(false);
   };
 
@@ -73,21 +68,13 @@ export default function EditJob() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const addRequirement = () => setRequirements((prev) => [...prev, ""]);
-  const removeRequirement = (i: number) => setRequirements((prev) => prev.filter((_, idx) => idx !== i));
-  const updateRequirement = (i: number, val: string) => {
-    setRequirements((prev) => prev.map((r, idx) => (idx === i ? val : r)));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
-    const filteredReqs = requirements.filter((r) => r.trim());
-
     let updateQuery = supabase
       .from("jobs")
-      .update({ ...form, location: selectedLocations, requirements: filteredReqs })
+      .update({ ...form, location: selectedLocations })
       .eq("id", Number(id));
 
     if (!isAdmin) {
@@ -128,10 +115,6 @@ export default function EditJob() {
               <Input value={form.title} onChange={(e) => updateField("title", e.target.value)} required />
             </div>
             <div className="space-y-2">
-              <Label>회사명 *</Label>
-              <Input value={form.company} onChange={(e) => updateField("company", e.target.value)} required />
-            </div>
-            <div className="space-y-2">
               <Label>지역 *</Label>
               <LocationPicker
                 availableLocations={availableLocations}
@@ -142,23 +125,6 @@ export default function EditJob() {
             <div className="space-y-2">
               <Label>업종 *</Label>
               <Input value={form.industry} onChange={(e) => updateField("industry", e.target.value)} required />
-            </div>
-            <div className="space-y-2">
-              <Label>근무타입 *</Label>
-              <Select value={form.type} onValueChange={(v) => updateField("type", v)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {JOB_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>급여</Label>
-              <Input value={form.pay} onChange={(e) => updateField("pay", e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>근무시간</Label>
-              <Input value={form.hours} onChange={(e) => updateField("hours", e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label>연락처</Label>
@@ -178,30 +144,8 @@ export default function EditJob() {
           </div>
 
           <div className="space-y-2">
-            <Label>요약 *</Label>
-            <Input value={form.summary} onChange={(e) => updateField("summary", e.target.value)} required />
-          </div>
-
-          <div className="space-y-2">
             <Label>상세 내용</Label>
             <Textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} rows={6} />
-          </div>
-
-          <div className="space-y-2">
-            <Label>지원 조건</Label>
-            {requirements.map((req, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <Input value={req} onChange={(e) => updateRequirement(i, e.target.value)} />
-                {requirements.length > 1 && (
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeRequirement(i)}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button type="button" variant="outline" size="sm" onClick={addRequirement}>
-              <Plus className="h-3.5 w-3.5 mr-1" /> 조건 추가
-            </Button>
           </div>
 
           <Button type="submit" className="w-full" size="lg" disabled={saving}>

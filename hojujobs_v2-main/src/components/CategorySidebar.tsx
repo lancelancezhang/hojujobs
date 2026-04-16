@@ -1,4 +1,4 @@
-import { MapPin, Briefcase, Store, RotateCcw, ChevronDown, Search, X } from "lucide-react";
+import { MapPin, Store, RotateCcw, ChevronDown, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -7,33 +7,21 @@ import { useState, useMemo } from "react";
 
 interface CategorySidebarProps {
   locations: string[];
-  jobTypes: string[];
   industries: string[];
   selectedLocations: string[];
-  selectedType: string;
   selectedIndustry: string;
   onLocationsChange: (v: string[]) => void;
-  onTypeChange: (v: string) => void;
   onIndustryChange: (v: string) => void;
   onReset: () => void;
   locationCounts: Record<string, number>;
-  typeCounts: Record<string, number>;
   industryCounts: Record<string, number>;
 }
 
-const typeEmoji: Record<string, string> = {
-  "풀타임": "💼",
-  "파트타임": "🕒",
-  "컨트랙": "📄",
-  "캐주얼": "⚡",
-  "리모트": "🌍",
-};
-
 export function CategorySidebar({
-  locations, jobTypes, industries, selectedLocations, selectedType, selectedIndustry,
-  onLocationsChange, onTypeChange, onIndustryChange, onReset, locationCounts, typeCounts, industryCounts,
+  locations, industries, selectedLocations, selectedIndustry,
+  onLocationsChange, onIndustryChange, onReset, locationCounts, industryCounts,
 }: CategorySidebarProps) {
-  const hasFilters = selectedLocations.length > 0 || selectedType !== "all" || selectedIndustry !== "all";
+  const hasFilters = selectedLocations.length > 0 || selectedIndustry !== "all";
   const [expandedRegions, setExpandedRegions] = useState<Set<string>>(new Set());
   const [locationSearch, setLocationSearch] = useState("");
 
@@ -227,30 +215,6 @@ export function CategorySidebar({
         </ul>
       </div>
 
-      {/* Job Type */}
-      <div>
-        <h3 className="flex items-center gap-2 text-sm font-bold text-foreground mb-3">
-          <Briefcase className="h-4 w-4 text-primary" />
-          근무타입
-        </h3>
-        <ul className="space-y-0.5">
-          <SidebarItem
-            label="전체 타입"
-            count={Object.values(typeCounts).reduce((a, b) => a + b, 0)}
-            active={selectedType === "all"}
-            onClick={() => onTypeChange("all")}
-          />
-          {jobTypes.map((t) => (
-            <SidebarItem
-              key={t}
-              label={`${typeEmoji[t] || "💼"} ${t}`}
-              count={typeCounts[t] || 0}
-              active={selectedType === t}
-              onClick={() => onTypeChange(t)}
-            />
-          ))}
-        </ul>
-      </div>
     </aside>
   );
 }
