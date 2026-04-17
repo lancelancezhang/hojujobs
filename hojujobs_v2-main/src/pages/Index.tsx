@@ -79,7 +79,9 @@ const Index = () => {
         .select("id, title, location, industry, uploaded_at")
         .order("uploaded_at", { ascending: false });
 
-      if (!error && data) {
+      if (error) {
+        console.error("jobs fetch error:", error);
+      } else if (data) {
         setJobsData(data as Job[]);
       }
       setLoadingJobs(false);
