@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -86,6 +86,19 @@ const Index = () => {
     }
     fetchJobs();
   }, []);
+
+  // Restore scroll position after returning from a job detail page
+  const scrollRestored = useRef(false);
+  useEffect(() => {
+    if (!loadingJobs && !scrollRestored.current) {
+      scrollRestored.current = true;
+      const savedY = sessionStorage.getItem("hoju_scroll_y");
+      if (savedY) {
+        sessionStorage.removeItem("hoju_scroll_y");
+        setTimeout(() => window.scrollTo({ top: Number(savedY) }), 50);
+      }
+    }
+  }, [loadingJobs]);
 
   const locations = useMemo(() => {
     const countMap: Record<string, number> = {};
@@ -221,7 +234,7 @@ const Index = () => {
               )}
             </div>
 
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => { setPage(p); sessionStorage.removeItem("hoju_scroll_y"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
           </div>
         </div>
       </div>
