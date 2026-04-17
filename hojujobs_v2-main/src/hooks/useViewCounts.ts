@@ -2,14 +2,33 @@ import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export async function incrementViewCount(jobId: number): Promise<number> {
-  const { data, error } = await supabase.rpc("increment_view_count", {
-    p_job_id: jobId,
-  });
-  if (error) {
-    console.error("Error incrementing view count:", error);
+  // Read current count
+  const { data: existing, error: readError } = await supabase
+    .from("view_counts")
+    .select("count")
+    .eq("job_id", jobId)
+    .maybeSingle();
+
+  if (readError) {
+    console.error("Error reading view count:", readError);
     return 0;
   }
-  return data as number;
+
+  const newCount = (existing?.count ?? 0) + 1;
+
+  const { error: writeError } = await supabase
+    .from("view_counts")
+    .upsert(
+      { job_id: jobId, count: newCount, updated_at: new Date().toISOString() },
+      { onConflict: "job_id" }
+    );
+
+  if (writeError) {
+    console.error("Error writing view count:", writeError);
+    return existing?.count ?? 0;
+  }
+
+  return newCount;
 }
 
 export async function fetchAllViewCounts(): Promise<Record<number, number>> {
@@ -34,10 +53,10 @@ export function useViewCounts() {
     fetchAllViewCounts().then(setCounts);
 
     const channel = supabase
-      .channel('view_counts_realtime')
+      .channel("view_counts_realtime")
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'view_counts' },
+        "postgres_changes",
+        { event: "*", schema: "public", table: "view_counts" },
         (payload) => {
           const row = payload.new as { job_id: number; count: number };
           if (row?.job_id != null) {
