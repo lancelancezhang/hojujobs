@@ -108,8 +108,6 @@ const Index = () => {
     const allLocs = jobsData.flatMap((j) => j.location);
     return [...new Set(allLocs)].sort((a, b) => (countMap[b] || 0) - (countMap[a] || 0));
   }, [jobsData]);
-  const industries = useMemo(() => [...new Set(jobsData.map((j) => j.industry))].sort(), [jobsData]);
-
   const filtered = useMemo(() => {
     const result = jobsData.filter((job) => {
       const kw = keyword.toLowerCase();
@@ -139,6 +137,14 @@ const Index = () => {
     jobsData.forEach((j) => { c[j.industry] = (c[j.industry] || 0) + 1; });
     return c;
   }, [jobsData]);
+
+  const industries = useMemo(() => {
+    const seen = new Set<string>();
+    return jobsData
+      .map((j) => j.industry)
+      .filter((i): i is string => !!i && !seen.has(i) && !!seen.add(i))
+      .sort((a, b) => (industryCounts[b] || 0) - (industryCounts[a] || 0));
+  }, [jobsData, industryCounts]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentPage = Math.min(page, totalPages || 1);
