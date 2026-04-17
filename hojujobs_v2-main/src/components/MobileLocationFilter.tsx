@@ -20,17 +20,25 @@ export function MobileLocationFilter({
   const [open, setOpen] = useState(false);
   const [expandedRegions, setExpandedRegions] = useState<Set<string>>(new Set());
   const [locationSearch, setLocationSearch] = useState("");
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
   const [maxSheetHeight, setMaxSheetHeight] = useState("85dvh");
 
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
-    const handler = () => {
-      // Cap sheet at 90% of visual viewport height so it always fits above keyboard
+    const update = () => {
+      // On iOS, fixed elements stay at layout viewport bottom even when keyboard opens.
+      // We need to shift the sheet up by the keyboard height manually.
+      const offset = Math.max(0, window.innerHeight - vv.height - (vv.offsetTop || 0));
+      setKeyboardOffset(offset);
       setMaxSheetHeight(`${Math.floor(vv.height * 0.9)}px`);
     };
-    vv.addEventListener("resize", handler);
-    return () => vv.removeEventListener("resize", handler);
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
   }, []);
 
   const activeRegionGroups = useMemo(() => {
@@ -85,7 +93,7 @@ export function MobileLocationFilter({
       : `${selectedLocations.length}개 지역 선택`;
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={(o) => { setOpen(o); if (!o) setKeyboardOffset(0); }}>
       <SheetTrigger asChild>
         <button className={cn(
           "w-full flex items-center justify-between px-3 py-2 rounded-md border text-sm",
@@ -100,7 +108,7 @@ export function MobileLocationFilter({
           <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-50" />
         </button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="flex flex-col rounded-t-2xl" style={{ maxHeight: maxSheetHeight }} onOpenAutoFocus={(e) => e.preventDefault()}>
+      <SheetContent side="bottom" className="flex flex-col rounded-t-2xl" style={{ maxHeight: maxSheetHeight, bottom: `${keyboardOffset}px` }} onOpenAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader className="pb-2">
           <SheetTitle className="flex items-center gap-2 text-base">
             <MapPin className="h-4 w-4 text-accent" />
