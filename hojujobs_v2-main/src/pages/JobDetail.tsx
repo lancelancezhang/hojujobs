@@ -1,13 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { Header } from "@/components/Header";
-import { ArrowLeft, MapPin, Briefcase, Phone, Mail, Eye, Calendar, ExternalLink } from "lucide-react";
+import { ArrowLeft, MapPin, Briefcase, Phone, Mail, MessageCircle, Eye, Calendar, ExternalLink } from "lucide-react";
 import { incrementViewCount } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
 import { SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
 
-function formatDate(dateStr?: string) {
+function formatDate(dateStr?: string | null) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
   return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
@@ -15,15 +15,15 @@ function formatDate(dateStr?: string) {
 
 interface Job {
   id: number;
-  title: string;
-  location: string[];
-  industry: string;
+  title: string | null;
+  location: string[] | null;
+  industry: string | null;
   contact: string | null;
   email: string | null;
+  kakaoid: string | null;
   description: string | null;
-  address: string | null;
   google_search: string | null;
-  uploaded_at: string;
+  uploaded_at: string | null;
 }
 
 export default function JobDetail() {
@@ -36,7 +36,7 @@ export default function JobDetail() {
     async function fetchJob() {
       const { data, error } = await supabase
         .from("jobs")
-        .select("id, title, location, industry, contact, email, description, address, google_search, uploaded_at")
+        .select("id, title, location, industry, contact, email, kakaoid, description, google_search, uploaded_at")
         .eq("id", Number(id))
         .single();
 
@@ -82,7 +82,7 @@ export default function JobDetail() {
         "@type": "Place",
         address: {
           "@type": "PostalAddress",
-          addressLocality: job.location.join(", "),
+          addressLocality: (job.location || []).join(", "),
           addressCountry: "AU",
         },
       },
@@ -116,6 +116,8 @@ export default function JobDetail() {
     );
   }
 
+  const locations = job.location || [];
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -130,7 +132,7 @@ export default function JobDetail() {
         <div className="bg-card border border-border rounded-xl p-6 mb-6">
           <h1 className="text-2xl font-bold text-foreground mb-3">{job.title}</h1>
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
-            {job.location && job.location.length > 0 && <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" />{job.location.join(", ")}</span>}
+            {locations.length > 0 && <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" />{locations.join(", ")}</span>}
             {job.industry && <span className="flex items-center gap-1.5"><Briefcase className="h-4 w-4 text-muted-foreground" />{job.industry}</span>}
           </div>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -146,36 +148,41 @@ export default function JobDetail() {
           </div>
         )}
 
-        {(job.contact || job.email) && (
+        {(job.contact || job.email || job.kakaoid) && (
           <div className="bg-card border border-border rounded-xl p-6 mb-6">
             <h2 className="text-lg font-bold text-foreground mb-4">연락처</h2>
             <div className="space-y-3">
               {job.contact && (
                 <div className="flex items-center gap-2.5 text-sm">
-                  <Phone className="h-4 w-4 text-primary" />
+                  <Phone className="h-4 w-4 text-primary shrink-0" />
                   <span className="text-foreground">{job.contact}</span>
                 </div>
               )}
               {job.email && job.email !== "정보없음" && (
                 <div className="flex items-center gap-2.5 text-sm">
-                  <Mail className="h-4 w-4 text-primary" />
+                  <Mail className="h-4 w-4 text-primary shrink-0" />
                   <a href={`mailto:${job.email}`} className="text-primary hover:underline">{job.email}</a>
+                </div>
+              )}
+              {job.kakaoid && (
+                <div className="flex items-center gap-2.5 text-sm">
+                  <MessageCircle className="h-4 w-4 text-yellow-500 shrink-0" />
+                  <span className="text-foreground">카카오톡: {job.kakaoid}</span>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {job.location.length > 0 && (
+        {locations.length > 0 && (
           <div className="bg-card border border-border rounded-xl overflow-hidden mb-6">
             <h2 className="text-lg font-bold text-foreground px-6 pt-6 pb-3 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-accent" />
               위치
             </h2>
-            {job.location.map((loc) => {
+            {locations.map((loc) => {
               const englishName = SUBURB_EN[loc] || loc;
-              const query = job.google_search
-                || (job.address ? `${job.address}, ${englishName}, Australia` : `${englishName}, Australia`);
+              const query = job.google_search || `${englishName}, Australia`;
               const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
               const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
 

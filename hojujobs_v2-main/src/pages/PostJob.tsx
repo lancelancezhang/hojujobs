@@ -22,7 +22,8 @@ export default function PostJob() {
     customIndustry: "",
     contact: "",
     email: "",
-    address: "",
+    kakaoid: "",
+    google_search: "",
     description: "",
   });
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -30,16 +31,14 @@ export default function PostJob() {
 
   useEffect(() => {
     async function fetchOptions() {
-      const { data } = await supabase
-        .from("jobs")
-        .select("location, industry");
+      const { data } = await supabase.from("jobs").select("location, industry");
       if (data) setExistingJobs(data);
     }
     fetchOptions();
   }, []);
 
-  const locations = useMemo(() => [...new Set(existingJobs.flatMap((j) => j.location))].sort(), [existingJobs]);
-  const industries = useMemo(() => [...new Set(existingJobs.map((j) => j.industry))].sort(), [existingJobs]);
+  const locations = useMemo(() => [...new Set(existingJobs.flatMap((j) => j.location ?? []))].sort(), [existingJobs]);
+  const industries = useMemo(() => [...new Set(existingJobs.map((j) => j.industry).filter(Boolean))].sort() as string[], [existingJobs]);
 
   if (!user) {
     navigate("/auth");
@@ -66,10 +65,11 @@ export default function PostJob() {
       title: form.title,
       location: selectedLocations,
       industry: finalIndustry,
-      contact: form.contact,
-      email: form.email,
-      address: form.address || null,
-      description: form.description,
+      contact: form.contact || null,
+      email: form.email || null,
+      kakaoid: form.kakaoid || null,
+      google_search: form.google_search || null,
+      description: form.description || null,
       user_id: user.id,
     });
 
@@ -134,8 +134,13 @@ export default function PostJob() {
           </div>
 
           <div className="space-y-2">
-            <Label>주소</Label>
-            <Input value={form.address} onChange={(e) => updateField("address", e.target.value)} placeholder="예: 123 Main St, Chatswood NSW 2067" />
+            <Label>카카오톡 ID</Label>
+            <Input value={form.kakaoid} onChange={(e) => updateField("kakaoid", e.target.value)} placeholder="예: kakao123" />
+          </div>
+
+          <div className="space-y-2">
+            <Label>구글 지도 검색어</Label>
+            <Input value={form.google_search} onChange={(e) => updateField("google_search", e.target.value)} placeholder="예: 이스트우드 카페, Eastwood NSW" />
             <p className="text-xs text-muted-foreground">공고 상세페이지에 지도가 자동으로 표시됩니다</p>
           </div>
 

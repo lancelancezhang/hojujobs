@@ -20,11 +20,10 @@ import {
 
 interface Job {
   id: number;
-  title: string;
-  company: string;
-  location: string[];
-  type: string;
-  created_at: string;
+  title: string | null;
+  location: string[] | null;
+  industry: string | null;
+  uploaded_at: string | null;
   user_id: string | null;
 }
 
@@ -45,7 +44,7 @@ export default function Admin() {
   const fetchJobs = async () => {
     const { data, error } = await supabase
       .from("jobs")
-      .select("id, title, company, location, type, created_at, user_id")
+      .select("id, title, location, industry, uploaded_at, user_id")
       .order("uploaded_at", { ascending: false });
     if (!error && data) setJobs(data);
     setLoadingJobs(false);
@@ -100,7 +99,9 @@ export default function Admin() {
                     <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                   </div>
                   <p className="text-sm text-muted-foreground truncate">
-                    {job.company} · {job.location.join(", ")} · {job.type} · {new Date(job.created_at).toLocaleDateString("ko-KR")}
+                    {(job.location || []).join(", ")}
+                    {job.industry ? ` · ${job.industry}` : ""}
+                    {job.uploaded_at ? ` · ${new Date(job.uploaded_at).toLocaleDateString("ko-KR")}` : ""}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
@@ -113,18 +114,18 @@ export default function Admin() {
                         <Trash2 className="h-3.5 w-3.5" /> 삭제
                       </Button>
                     </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>공고를 삭제하시겠습니까?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        "{job.title}" 공고가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>취소</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => deleteJob(job.id)}>삭제</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>공고를 삭제하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          "{job.title}" 공고가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>취소</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => deleteJob(job.id)}>삭제</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
                   </AlertDialog>
                 </div>
               </div>

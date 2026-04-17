@@ -9,11 +9,10 @@ import { ArrowLeft, Plus, Pencil, Trash2, Briefcase } from "lucide-react";
 
 interface Job {
   id: number;
-  title: string;
-  company: string;
-  location: string[];
-  type: string;
-  created_at: string;
+  title: string | null;
+  location: string[] | null;
+  industry: string | null;
+  uploaded_at: string | null;
 }
 
 export default function MyPosts() {
@@ -33,7 +32,7 @@ export default function MyPosts() {
   const fetchMyJobs = async () => {
     const { data, error } = await supabase
       .from("jobs")
-      .select("id, title, company, location, type, created_at")
+      .select("id, title, location, industry, uploaded_at")
       .eq("user_id", user!.id)
       .order("uploaded_at", { ascending: false });
 
@@ -48,12 +47,12 @@ export default function MyPosts() {
   const handleDelete = async (id: number) => {
     if (!confirm("이 공고를 삭제하시겠습니까?")) return;
 
-    // Ensure users can only delete posts they own
     const { error } = await supabase
       .from("jobs")
       .delete()
       .eq("id", id)
       .eq("user_id", user!.id);
+
     if (error) {
       toast.error("삭제 실패: " + error.message);
     } else {
@@ -98,7 +97,10 @@ export default function MyPosts() {
                   <Link to={`/job/${job.id}`} className="text-sm font-bold text-foreground hover:text-primary transition-colors truncate block">
                     {job.title}
                   </Link>
-                  <p className="text-xs text-muted-foreground">{job.company} · {job.location.join(", ")} · {job.type}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(job.location || []).join(", ")}
+                    {job.industry ? ` · ${job.industry}` : ""}
+                  </p>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                   <Button variant="ghost" size="icon" onClick={() => navigate(`/edit-job/${job.id}`)}>

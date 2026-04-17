@@ -19,7 +19,7 @@ export default function EditJob() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    title: "", industry: "", contact: "", email: "", address: "", description: "",
+    title: "", industry: "", contact: "", email: "", kakaoid: "", google_search: "", description: "",
   });
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [availableLocations, setAvailableLocations] = useState<string[]>([]);
@@ -32,12 +32,12 @@ export default function EditJob() {
   const fetchJob = async () => {
     const { data: allJobs } = await supabase.from("jobs").select("location");
     if (allJobs) {
-      setAvailableLocations([...new Set(allJobs.flatMap((j) => j.location))].sort());
+      setAvailableLocations([...new Set(allJobs.flatMap((j) => j.location ?? []))].sort());
     }
 
     let query = supabase
       .from("jobs")
-      .select("id, title, location, industry, contact, email, address, description")
+      .select("id, title, location, industry, contact, email, kakaoid, google_search, description")
       .eq("id", Number(id));
 
     if (!isAdmin) {
@@ -57,10 +57,11 @@ export default function EditJob() {
       industry: data.industry || "",
       contact: data.contact || "",
       email: data.email || "",
-      address: data.address || "",
+      kakaoid: data.kakaoid || "",
+      google_search: data.google_search || "",
       description: data.description || "",
     });
-    setSelectedLocations(Array.isArray(data.location) ? data.location : [data.location || ""]);
+    setSelectedLocations(Array.isArray(data.location) ? data.location : []);
     setLoading(false);
   };
 
@@ -74,7 +75,16 @@ export default function EditJob() {
 
     let updateQuery = supabase
       .from("jobs")
-      .update({ ...form, location: selectedLocations })
+      .update({
+        title: form.title,
+        industry: form.industry,
+        contact: form.contact || null,
+        email: form.email || null,
+        kakaoid: form.kakaoid || null,
+        google_search: form.google_search || null,
+        description: form.description || null,
+        location: selectedLocations,
+      })
       .eq("id", Number(id));
 
     if (!isAdmin) {
@@ -138,8 +148,13 @@ export default function EditJob() {
           </div>
 
           <div className="space-y-2">
-            <Label>주소</Label>
-            <Input value={form.address} onChange={(e) => updateField("address", e.target.value)} placeholder="예: 123 Main St, Chatswood NSW 2067" />
+            <Label>카카오톡 ID</Label>
+            <Input value={form.kakaoid} onChange={(e) => updateField("kakaoid", e.target.value)} placeholder="예: kakao123" />
+          </div>
+
+          <div className="space-y-2">
+            <Label>구글 지도 검색어</Label>
+            <Input value={form.google_search} onChange={(e) => updateField("google_search", e.target.value)} placeholder="예: 이스트우드 카페, Eastwood NSW" />
             <p className="text-xs text-muted-foreground">공고 상세페이지에 지도가 자동으로 표시됩니다</p>
           </div>
 
