@@ -6,6 +6,13 @@ html {
   overflow-y: scroll;
 }
 
+/* Prevent iOS Safari from zooming in on input focus (requires font-size >= 16px) */
+@media screen and (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

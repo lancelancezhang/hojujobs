@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { MapPin, ChevronDown, X, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,6 +20,18 @@ export function MobileLocationFilter({
   const [open, setOpen] = useState(false);
   const [expandedRegions, setExpandedRegions] = useState<Set<string>>(new Set());
   const [locationSearch, setLocationSearch] = useState("");
+  const [maxSheetHeight, setMaxSheetHeight] = useState("85dvh");
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      // Cap sheet at 90% of visual viewport height so it always fits above keyboard
+      setMaxSheetHeight(`${Math.floor(vv.height * 0.9)}px`);
+    };
+    vv.addEventListener("resize", handler);
+    return () => vv.removeEventListener("resize", handler);
+  }, []);
 
   const activeRegionGroups = useMemo(() => {
     const locationSet = new Set(locations);
@@ -88,7 +100,7 @@ export function MobileLocationFilter({
           <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-50" />
         </button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="max-h-[70vh] flex flex-col rounded-t-2xl" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <SheetContent side="bottom" className="flex flex-col rounded-t-2xl" style={{ maxHeight: maxSheetHeight }} onOpenAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader className="pb-2">
           <SheetTitle className="flex items-center gap-2 text-base">
             <MapPin className="h-4 w-4 text-accent" />
