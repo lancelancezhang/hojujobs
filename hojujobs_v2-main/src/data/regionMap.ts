@@ -10,10 +10,6 @@ export interface RegionGroup {
 
 export const REGION_GROUPS: RegionGroup[] = [
   {
-    region: "시드니",
-    suburbs: ["시드니"],
-  },
-  {
     region: "시드니 시티",
     suburbs: ["시드니 CBD", "킹스크로스", "차이나타운", "뉴타운"],
   },
