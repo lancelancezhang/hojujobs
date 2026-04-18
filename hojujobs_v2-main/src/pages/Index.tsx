@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Search, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/Header";
@@ -10,7 +9,6 @@ import { JobCard } from "@/components/JobCard";
 import { Pagination } from "@/components/Pagination";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
-import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
@@ -80,8 +78,6 @@ const Index = ({ cityFilter }: IndexProps) => {
   const [loadingJobs, setLoadingJobs] = useState(true);
 
   const { counts, getCount } = useViewCounts();
-  const { user } = useAuth();
-  const navigate = useNavigate();
 
   const meta = cityFilter ? (CITY_META[cityFilter] ?? DEFAULT_META) : DEFAULT_META;
 
@@ -231,7 +227,7 @@ const Index = ({ cityFilter }: IndexProps) => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="키워드 검색 (예: 바리스타, 네일, 마사지...)"
+                  placeholder="키워드 검색 (예: 바리스타, 네일, 주방...)"
                   value={keyword}
                   onChange={(e) => { setKeyword(e.target.value); setPage(1); }}
                   onKeyDown={(e) => { if (e.key === "Enter") { (e.target as HTMLInputElement).blur(); } }}
