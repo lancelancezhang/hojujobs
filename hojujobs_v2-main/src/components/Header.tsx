@@ -19,7 +19,7 @@ export function Header() {
   return (
     <header className="bg-white border-b border-border">
       <div className="max-w-6xl mx-auto px-4 pt-4 sm:pt-5">
-        <div className="flex items-center justify-between pb-5 sm:pb-6">
+        <div className="flex items-center justify-between pb-7 sm:pb-8">
           <img
             src={hojuJobsLogo}
             alt="Hoju Jobs"
