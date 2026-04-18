@@ -63,8 +63,6 @@ export const REGION_GROUPS: RegionGroup[] = [
   { state: "QLD", region: "골드코스트", suburbs: ["골드코스트"] },
   { state: "QLD", region: "기타 퀸즐랜드", suburbs: ["타운스빌", "케언즈", "선샤인 코스트"] },
 
-  // ACT
-  { state: "ACT", region: "캔버라", suburbs: ["캔버라"] },
 ];
 
 /** Flat lookup: suburb → region name */

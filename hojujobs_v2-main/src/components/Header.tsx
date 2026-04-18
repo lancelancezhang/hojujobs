@@ -59,7 +59,7 @@ export function Header() {
         </div>
 
         {/* City tabs */}
-        <div className="flex gap-0 -mx-1">
+        <div className="flex gap-0 -mx-1 overflow-x-auto scrollbar-none">
           {CITY_TABS.map(({ label, path }) => (
             <NavLink
               key={path}
@@ -67,7 +67,7 @@ export function Header() {
               end={path === "/"}
               className={({ isActive }) =>
                 cn(
-                  "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
+                  "px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0",
                   isActive
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"

@@ -3,7 +3,7 @@ import { MapPin, Store, RotateCcw, ChevronDown, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { REGION_GROUPS, SUBURB_TO_REGION } from "@/data/regionMap";
+import { REGION_GROUPS, SUBURB_TO_REGION, SUBURB_EN } from "@/data/regionMap";
 
 const STATE_LABELS: Record<string, string> = {
   NSW: "시드니 (NSW)",
@@ -130,26 +130,28 @@ export function CategorySidebar({
         </div>
         <ul className="space-y-1">
           {(() => {
-            const items: React.ReactNode[] = [];
-            let lastState: string | null = null;
-            activeRegionGroups.forEach((group) => {
-              if (!cityFilter && group.state !== lastState) {
-                lastState = group.state;
-                items.push(
-                  <li key={`divider-${group.state}`} className="pt-2 pb-0.5 first:pt-0">
-                    <span className="block px-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50">
-                      {STATE_LABELS[group.state] ?? group.state}
-                    </span>
-                  </li>
-                );
-              }
+            // States that get inline fallback items (generic city names appended to their section)
+            const INLINE_STATES = ["NSW", "VIC", "QLD", "SA"];
 
+            // Bucket unmapped suburbs: state-specific (inline) vs bottom
+            const unmappedByState: Record<string, string[]> = {};
+            const unmappedBottom: string[] = [];
+            unmappedSuburbs.forEach((s) => {
+              const en = SUBURB_EN[s] ?? "";
+              const st = INLINE_STATES.find((x) => en.endsWith(` ${x}`));
+              if (!cityFilter && st) {
+                (unmappedByState[st] ??= []).push(s);
+              } else {
+                unmappedBottom.push(s);
+              }
+            });
+
+            const renderGroup = (group: typeof activeRegionGroups[number]) => {
               const isExpanded = expandedRegions.has(group.region) || !!locationSearch;
               const selectedInGroup = group.suburbs.filter((s) => selectedLocations.includes(s)).length;
               const allSelected = selectedInGroup === group.suburbs.length;
               const someSelected = selectedInGroup > 0;
-
-              items.push(
+              return (
                 <li key={group.region}>
                   <div className="flex items-center">
                     <button
@@ -169,54 +171,84 @@ export function CategorySidebar({
                       onClick={() => toggleRegion(group.region)}
                       className={cn(
                         "flex-1 flex items-center justify-between pr-3 h-9 rounded-r-lg text-sm transition-colors",
-                        someSelected
-                          ? "text-primary font-semibold"
-                          : "text-foreground hover:bg-muted"
+                        someSelected ? "text-primary font-semibold" : "text-foreground hover:bg-muted"
                       )}
                     >
                       <span className="truncate text-left">{group.region}</span>
                       <span className="flex items-center gap-1">
-                        <span className={cn(
-                          "text-xs tabular-nums",
-                          someSelected ? "text-primary" : "text-muted-foreground/60"
-                        )}>{group.count}</span>
-                        <ChevronDown className={cn(
-                          "h-3.5 w-3.5 text-muted-foreground transition-transform",
-                          isExpanded && "rotate-180"
-                        )} />
+                        <span className={cn("text-xs tabular-nums", someSelected ? "text-primary" : "text-muted-foreground/60")}>{group.count}</span>
+                        <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", isExpanded && "rotate-180")} />
                       </span>
                     </button>
                   </div>
-
                   {isExpanded && (
                     <ul className="ml-3 border-l border-border/50 pl-1 space-y-0">
                       {group.suburbs.map((s) => (
-                        <LocationCheckItem
-                          key={s}
-                          label={s}
-                          count={locationCounts[s] || 0}
-                          checked={selectedLocations.includes(s)}
-                          onClick={() => toggleLocation(s)}
-                        />
+                        <LocationCheckItem key={s} label={s} count={locationCounts[s] || 0} checked={selectedLocations.includes(s)} onClick={() => toggleLocation(s)} />
                       ))}
                     </ul>
                   )}
                 </li>
               );
-            });
+            };
+
+            const items: React.ReactNode[] = [];
+
+            if (!cityFilter) {
+              // All-cities mode: group by state with dividers + inline fallbacks
+              let lastState: string | null = null;
+              activeRegionGroups.forEach((group) => {
+                if (group.state !== lastState) {
+                  // Before switching state, emit inline fallbacks for previous state
+                  if (lastState && unmappedByState[lastState]) {
+                    unmappedByState[lastState].forEach((l) =>
+                      items.push(<LocationCheckItem key={l} label={l} count={locationCounts[l] || 0} checked={selectedLocations.includes(l)} onClick={() => toggleLocation(l)} />)
+                    );
+                  }
+                  lastState = group.state;
+                  items.push(
+                    <li key={`divider-${group.state}`} className="pt-2 pb-0.5 first:pt-0">
+                      <span className="block px-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50">
+                        {STATE_LABELS[group.state] ?? group.state}
+                      </span>
+                    </li>
+                  );
+                }
+                items.push(renderGroup(group));
+              });
+              // Inline fallbacks for the last state
+              if (lastState && unmappedByState[lastState]) {
+                unmappedByState[lastState].forEach((l) =>
+                  items.push(<LocationCheckItem key={l} label={l} count={locationCounts[l] || 0} checked={selectedLocations.includes(l)} onClick={() => toggleLocation(l)} />)
+                );
+              }
+              // Handle states that have only fallbacks (no region groups)
+              INLINE_STATES.forEach((st) => {
+                if (unmappedByState[st] && !activeRegionGroups.some((g) => g.state === st)) {
+                  items.push(
+                    <li key={`divider-${st}`} className="pt-2 pb-0.5">
+                      <span className="block px-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50">
+                        {STATE_LABELS[st] ?? st}
+                      </span>
+                    </li>
+                  );
+                  unmappedByState[st].forEach((l) =>
+                    items.push(<LocationCheckItem key={l} label={l} count={locationCounts[l] || 0} checked={selectedLocations.includes(l)} onClick={() => toggleLocation(l)} />)
+                  );
+                }
+              });
+            } else {
+              // City-specific mode: just regions sorted by count, no dividers
+              activeRegionGroups.forEach((group) => items.push(renderGroup(group)));
+            }
+
+            // Bottom: truly unmapped (캔버라 etc.)
+            unmappedBottom.forEach((l) =>
+              items.push(<LocationCheckItem key={l} label={l} count={locationCounts[l] || 0} checked={selectedLocations.includes(l)} onClick={() => toggleLocation(l)} />)
+            );
+
             return items;
           })()}
-
-          {/* Unmapped suburbs */}
-          {unmappedSuburbs.map((l) => (
-            <LocationCheckItem
-              key={l}
-              label={l}
-              count={locationCounts[l] || 0}
-              checked={selectedLocations.includes(l)}
-              onClick={() => toggleLocation(l)}
-            />
-          ))}
         </ul>
       </div>
 
