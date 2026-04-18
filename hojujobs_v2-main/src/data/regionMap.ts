@@ -13,7 +13,7 @@ export const REGION_GROUPS: RegionGroup[] = [
   {
     region: "시드니 시티",
     suburbs: [
-      "시드니", "시드니 CBD", "킹스크로스", "차이나타운", "헤이마켓",
+      "시드니 CBD", "킹스크로스", "차이나타운", "헤이마켓",
       "뉴타운", "서리 힐스", "울티모", "알렉산드리아", "로젤",
       "레드펀", "록스", "드러모인", "바랑가루", "팟츠 포인트", "피어몬트", "타운홀",
     ],
@@ -70,7 +70,7 @@ export const REGION_GROUPS: RegionGroup[] = [
   // VIC - Melbourne
   {
     region: "멜버른 CBD / 이너",
-    suburbs: ["멜버른", "멜버른 CBD", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "콜링우드", "피츠로이", "칼튼"],
+    suburbs: ["멜버른 CBD", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "콜링우드", "피츠로이", "칼튼"],
   },
   {
     region: "이너 이스트 멜버른",
@@ -91,22 +91,12 @@ export const REGION_GROUPS: RegionGroup[] = [
 
   // QLD - Brisbane
   {
-    region: "브리즈번",
-    suburbs: ["브리즈번"],
-  },
-  {
     region: "골드코스트",
     suburbs: ["골드코스트"],
   },
   {
     region: "기타 퀸즐랜드",
     suburbs: ["타운스빌", "케언즈", "선샤인 코스트"],
-  },
-
-  // SA - Adelaide
-  {
-    region: "애들레이드",
-    suburbs: ["애들레이드"],
   },
 
   // ACT
