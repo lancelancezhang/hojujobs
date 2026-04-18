@@ -14,7 +14,7 @@ export const REGION_GROUPS: RegionGroup[] = [
   { state: "NSW", region: "시드니 시티", suburbs: [
     "시드니 CBD", "킹스크로스", "차이나타운", "헤이마켓",
     "뉴타운", "서리 힐스", "울티모", "알렉산드리아", "로젤",
-    "레드펀", "록스", "드러모인", "바랑가루", "팟츠 포인트", "피어몬트", "타운홀",
+    "레드펀", "록스", "드러모인", "바랑가루", "팟츠 포인트", "피어몬트", "타운홀", "매릭빌",
   ]},
   { state: "NSW", region: "노스 시드니 / 노스쇼어", suburbs: [
     "노스 쇼어", "노스 시드니", "채스우드", "세인트 레오나즈",
@@ -49,7 +49,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "멜버른 CBD", "도클랜드", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "엘스터닉", "콜링우드", "피츠로이", "칼튼",
   ]},
   { state: "VIC", region: "이너 이스트 멜버른", suburbs: [
-    "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "글렌 웨이벌리", "Mt 웨이버리",
+    "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "글렌 웨이벌리", "Mt 웨이버리", "마운트 웨이버리",
   ]},
   { state: "VIC", region: "사우스 이스트 멜버른", suburbs: [
     "사우스 이스트 멜버른", "채드스톤", "오클리", "오클리 이스트", "글렌 헌틀리", "헌팅데일", "카네기", "단데농", "댄드농", "녹스", "비스",
@@ -92,6 +92,7 @@ export const SUBURB_EN: Record<string, string> = {
   "팟츠 포인트": "Potts Point NSW",
   "피어몬트": "Pyrmont NSW",
   "타운홀": "Town Hall NSW",
+  "매릭빌": "Marrickville NSW",
   "노스 쇼어": "North Shore NSW",
   "노스 시드니": "North Sydney NSW",
   "채스우드": "Chatswood NSW",
@@ -192,6 +193,7 @@ export const SUBURB_EN: Record<string, string> = {
   "글렌 웨이버리": "Glen Waverley VIC",
   "글렌 웨이벌리": "Glen Waverley VIC",
   "Mt 웨이버리": "Mount Waverley VIC",
+  "마운트 웨이버리": "Mount Waverley VIC",
   "채드스톤": "Chadstone VIC",
   "오클리": "Oakleigh VIC",
   "오클리 이스트": "Oakleigh East VIC",
