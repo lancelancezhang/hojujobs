@@ -33,7 +33,7 @@ export const REGION_GROUPS: RegionGroup[] = [
   ]},
   { state: "NSW", region: "사우스 시드니", suburbs: [
     "허스트빌", "사우스 허스트빌", "마스콧", "본다이", "본다이 정션",
-    "랜드윅", "로즈랜즈", "미란다", "울리 크릭", "쿠지", "킹스포드",
+    "랜드윅", "로즈랜즈", "로즈랜드", "미란다", "울리 크릭", "쿠지", "킹스포드",
   ]},
   { state: "NSW", region: "사우스웨스트", suburbs: [
     "캠벨타운", "마운트 드루이트", "스프링우드", "리버풀", "뱅크스타운", "페어필드", "펜리스",
@@ -46,13 +46,13 @@ export const REGION_GROUPS: RegionGroup[] = [
 
   // VIC - Melbourne
   { state: "VIC", region: "멜버른 CBD / 이너", suburbs: [
-    "멜버른 CBD", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "콜링우드", "피츠로이", "칼튼",
+    "멜버른 CBD", "도클랜드", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "엘스터닉", "콜링우드", "피츠로이", "칼튼",
   ]},
   { state: "VIC", region: "이너 이스트 멜버른", suburbs: [
-    "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "Mt 웨이버리",
+    "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "글렌 웨이벌리", "Mt 웨이버리",
   ]},
   { state: "VIC", region: "사우스 이스트 멜버른", suburbs: [
-    "사우스 이스트 멜버른", "채드스톤", "오클리", "오클리 이스트", "글렌 헌틀리", "헌팅데일", "카네기", "단데농", "비스",
+    "사우스 이스트 멜버른", "채드스톤", "오클리", "오클리 이스트", "글렌 헌틀리", "헌팅데일", "카네기", "단데농", "댄드농", "녹스", "비스",
   ]},
   { state: "VIC", region: "노스 멜버른", suburbs: [
     "브로드메도우스", "에핑 (VIC)", "크레이기번", "선샤인",
@@ -150,6 +150,7 @@ export const SUBURB_EN: Record<string, string> = {
   "본다이 정션": "Bondi Junction NSW",
   "랜드윅": "Randwick NSW",
   "로즈랜즈": "Roselands NSW",
+  "로즈랜드": "Roselands NSW",
   "미란다": "Miranda NSW",
   "울리 크릭": "Wolli Creek NSW",
   "쿠지": "Coogee NSW",
@@ -178,6 +179,8 @@ export const SUBURB_EN: Record<string, string> = {
   "프라란": "Prahran VIC",
   "세인트 킬다": "St Kilda VIC",
   "엘스터윅": "Elsternwick VIC",
+  "엘스터닉": "Elsternwick VIC",
+  "도클랜드": "Docklands VIC",
   "콜링우드": "Collingwood VIC",
   "피츠로이": "Fitzroy VIC",
   "칼튼": "Carlton VIC",
@@ -187,6 +190,7 @@ export const SUBURB_EN: Record<string, string> = {
   "버우드 이스트": "Burwood East VIC",
   "블랙번": "Blackburn VIC",
   "글렌 웨이버리": "Glen Waverley VIC",
+  "글렌 웨이벌리": "Glen Waverley VIC",
   "Mt 웨이버리": "Mount Waverley VIC",
   "채드스톤": "Chadstone VIC",
   "오클리": "Oakleigh VIC",
@@ -196,6 +200,8 @@ export const SUBURB_EN: Record<string, string> = {
   "카네기": "Carnegie VIC",
   "사우스 이스트 멜버른": "South East Melbourne VIC",
   "단데농": "Dandenong VIC",
+  "댄드농": "Dandenong VIC",
+  "녹스": "Knox VIC",
   "비스": "Wantirna South VIC",
   "브로드메도우스": "Broadmeadows VIC",
   "에핑 (VIC)": "Epping VIC",
