@@ -12,7 +12,7 @@ import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-
+import { SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
 
 const ITEMS_PER_PAGE = 25;
@@ -27,18 +27,50 @@ interface Job {
   uploaded_at: string;
 }
 
-const FILTER_STORAGE_KEY = "hoju_filters";
+const CITY_META: Record<string, { title: string; description: string; canonical: string }> = {
+  NSW: {
+    title: "Hoju Jobs - 시드니 한인 구인구직",
+    description: "시드니 한인 구인구직 게시판. 시드니 전 지역 한인 채용정보를 찾아보세요.",
+    canonical: "https://hojujobs.com/sydney",
+  },
+  VIC: {
+    title: "Hoju Jobs - 멜버른 한인 구인구직",
+    description: "멜버른 한인 구인구직 게시판. 멜버른 전 지역 한인 채용정보를 찾아보세요.",
+    canonical: "https://hojujobs.com/melbourne",
+  },
+  QLD: {
+    title: "Hoju Jobs - 브리즈번 한인 구인구직",
+    description: "브리즈번 한인 구인구직 게시판. 브리즈번 전 지역 한인 채용정보를 찾아보세요.",
+    canonical: "https://hojujobs.com/brisbane",
+  },
+  SA: {
+    title: "Hoju Jobs - 애들레이드 한인 구인구직",
+    description: "애들레이드 한인 구인구직 게시판. 애들레이드 전 지역 한인 채용정보를 찾아보세요.",
+    canonical: "https://hojujobs.com/adelaide",
+  },
+};
 
-function loadSavedFilters() {
-  try {
-    const raw = sessionStorage.getItem(FILTER_STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
-  return null;
+const DEFAULT_META = {
+  title: "Hoju Jobs - 호주 한인 구인구직",
+  description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보를 찾아보세요.",
+  canonical: "https://hojujobs.com/",
+};
+
+interface IndexProps {
+  cityFilter?: string;
 }
 
-const Index = () => {
-  const saved = useMemo(() => loadSavedFilters(), []);
+const Index = ({ cityFilter }: IndexProps) => {
+  const filterKey = cityFilter ? `hoju_filters_${cityFilter}` : "hoju_filters";
+
+  const saved = useMemo(() => {
+    try {
+      const raw = sessionStorage.getItem(filterKey);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return null;
+  }, []);
+
   const [keyword, setKeyword] = useState(saved?.keyword ?? "");
   const [selectedLocations, setSelectedLocations] = useState<string[]>(saved?.locations ?? []);
   const [industry, setIndustry] = useState(saved?.industry ?? "all");
@@ -47,27 +79,28 @@ const Index = () => {
   const [jobsData, setJobsData] = useState<Job[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
 
-  const { counts, increment, getCount } = useViewCounts();
-  const { user, signOut, isAdmin } = useAuth();
+  const { counts, getCount } = useViewCounts();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
+  const meta = cityFilter ? (CITY_META[cityFilter] ?? DEFAULT_META) : DEFAULT_META;
+
   useSEO({
-    title: "Hoju Jobs - 호주 한인 구인구직",
-    description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보를 찾아보세요.",
-    canonical: "https://hojujobs.com/",
+    title: meta.title,
+    description: meta.description,
+    canonical: meta.canonical,
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "Hoju Jobs",
-      url: "https://hojujobs.com/",
-      description: "호주 한인 커뮤니티 구인구직 게시판",
+      url: meta.canonical,
+      description: meta.description,
       inLanguage: "ko",
     },
   });
 
-  // Persist filters to sessionStorage
   useEffect(() => {
-    sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
+    sessionStorage.setItem(filterKey, JSON.stringify({
       keyword, locations: selectedLocations, industry, page, sortBy,
     }));
   }, [keyword, selectedLocations, industry, page, sortBy]);
@@ -89,7 +122,6 @@ const Index = () => {
     fetchJobs();
   }, []);
 
-  // Restore scroll position after returning from a job detail page
   const scrollRestored = useRef(false);
   useEffect(() => {
     if (!loadingJobs && !scrollRestored.current) {
@@ -102,14 +134,23 @@ const Index = () => {
     }
   }, [loadingJobs]);
 
+  // Pre-filter by city/state using SUBURB_EN state suffix
+  const cityJobs = useMemo(() => {
+    if (!cityFilter) return jobsData;
+    return jobsData.filter((job) =>
+      job.location.some((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`))
+    );
+  }, [jobsData, cityFilter]);
+
   const locations = useMemo(() => {
     const countMap: Record<string, number> = {};
-    jobsData.forEach((j) => { j.location.forEach((loc) => { countMap[loc] = (countMap[loc] || 0) + 1; }); });
-    const allLocs = jobsData.flatMap((j) => j.location);
+    cityJobs.forEach((j) => { j.location.forEach((loc) => { countMap[loc] = (countMap[loc] || 0) + 1; }); });
+    const allLocs = cityJobs.flatMap((j) => j.location);
     return [...new Set(allLocs)].sort((a, b) => (countMap[b] || 0) - (countMap[a] || 0));
-  }, [jobsData]);
+  }, [cityJobs]);
+
   const filtered = useMemo(() => {
-    const result = jobsData.filter((job) => {
+    const result = cityJobs.filter((job) => {
       const kw = keyword.toLowerCase();
       const matchKeyword = !kw || job.title.toLowerCase().includes(kw);
       const matchLocation = selectedLocations.length === 0 || job.location.some((loc) => selectedLocations.includes(loc));
@@ -124,27 +165,27 @@ const Index = () => {
     }
 
     return result;
-  }, [keyword, selectedLocations, industry, sortBy, counts, jobsData]);
+  }, [keyword, selectedLocations, industry, sortBy, counts, cityJobs]);
 
   const locationCounts = useMemo(() => {
     const c: Record<string, number> = {};
-    jobsData.forEach((j) => { j.location.forEach((loc) => { c[loc] = (c[loc] || 0) + 1; }); });
+    cityJobs.forEach((j) => { j.location.forEach((loc) => { c[loc] = (c[loc] || 0) + 1; }); });
     return c;
-  }, [jobsData]);
+  }, [cityJobs]);
 
   const industryCounts = useMemo(() => {
     const c: Record<string, number> = {};
-    jobsData.forEach((j) => { c[j.industry] = (c[j.industry] || 0) + 1; });
+    cityJobs.forEach((j) => { c[j.industry] = (c[j.industry] || 0) + 1; });
     return c;
-  }, [jobsData]);
+  }, [cityJobs]);
 
   const industries = useMemo(() => {
     const seen = new Set<string>();
-    return jobsData
+    return cityJobs
       .map((j) => j.industry)
       .filter((i): i is string => !!i && !seen.has(i) && !!seen.add(i))
       .sort((a, b) => (industryCounts[b] || 0) - (industryCounts[a] || 0));
-  }, [jobsData, industryCounts]);
+  }, [cityJobs, industryCounts]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentPage = Math.min(page, totalPages || 1);

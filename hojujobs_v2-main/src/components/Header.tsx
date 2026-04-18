@@ -1,8 +1,16 @@
 import hojuJobsLogo from "@/assets/hoju-jobs-logo.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { Plus, LogIn, LogOut, FileText, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { cn } from "@/lib/utils";
+
+const CITY_TABS = [
+  { label: "시드니", path: "/sydney" },
+  { label: "멜버른", path: "/melbourne" },
+  { label: "브리즈번", path: "/brisbane" },
+  { label: "애들레이드", path: "/adelaide" },
+];
 
 export function Header() {
   const { user, signOut, isAdmin } = useAuth();
@@ -10,8 +18,8 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-border">
-      <div className="max-w-6xl mx-auto px-4 py-4 sm:py-5">
-        <div className="flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 pt-4 sm:pt-5">
+        <div className="flex items-center justify-between pb-3 sm:pb-4">
           <img
             src={hojuJobsLogo}
             alt="Hoju Jobs"
@@ -48,7 +56,26 @@ export function Header() {
             )}
           </div>
         </div>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1">🇦🇺 호주 한인 구인구직 게시판</p>
+
+        {/* City tabs */}
+        <div className="flex gap-0 -mx-1">
+          {CITY_TABS.map(({ label, path }) => (
+            <NavLink
+              key={path}
+              to={path}
+              className={({ isActive }) =>
+                cn(
+                  "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
+                  isActive
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                )
+              }
+            >
+              {label}
+            </NavLink>
+          ))}
+        </div>
       </div>
     </header>
   );

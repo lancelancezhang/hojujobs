@@ -175,4 +175,7 @@ export const SUBURB_EN: Record<string, string> = {
   "타운스빌": "Townsville QLD",
   "웬트워스": "Wentworth Falls NSW",
   "윈덤": "Wyndham NSW",
+  "멜버른": "Melbourne VIC",
+  "애들레이드": "Adelaide SA",
+  "캔버라": "Canberra ACT",
 };

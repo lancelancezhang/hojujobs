@@ -25,7 +25,11 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Index key="all" />} />
+            <Route path="/sydney" element={<Index key="NSW" cityFilter="NSW" />} />
+            <Route path="/melbourne" element={<Index key="VIC" cityFilter="VIC" />} />
+            <Route path="/brisbane" element={<Index key="QLD" cityFilter="QLD" />} />
+            <Route path="/adelaide" element={<Index key="SA" cityFilter="SA" />} />
             <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/post-job" element={<PostJob />} />
