@@ -221,6 +221,7 @@ const Index = ({ cityFilter }: IndexProps) => {
               onReset={handleReset}
               locationCounts={locationCounts}
               industryCounts={industryCounts}
+              cityFilter={cityFilter}
             />
             </div>
           </div>

@@ -1,9 +1,17 @@
+import React, { useState, useMemo } from "react";
 import { MapPin, Store, RotateCcw, ChevronDown, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { REGION_GROUPS, SUBURB_TO_REGION } from "@/data/regionMap";
-import { useState, useMemo } from "react";
+
+const STATE_LABELS: Record<string, string> = {
+  NSW: "시드니 (NSW)",
+  VIC: "멜버른 (VIC)",
+  QLD: "브리즈번 (QLD)",
+  SA: "애들레이드 (SA)",
+  ACT: "캔버라 (ACT)",
+};
 
 interface CategorySidebarProps {
   locations: string[];
@@ -15,11 +23,12 @@ interface CategorySidebarProps {
   onReset: () => void;
   locationCounts: Record<string, number>;
   industryCounts: Record<string, number>;
+  cityFilter?: string;
 }
 
 export function CategorySidebar({
   locations, industries, selectedLocations, selectedIndustry,
-  onLocationsChange, onIndustryChange, onReset, locationCounts, industryCounts,
+  onLocationsChange, onIndustryChange, onReset, locationCounts, industryCounts, cityFilter,
 }: CategorySidebarProps) {
   const hasFilters = selectedLocations.length > 0 || selectedIndustry !== "all";
   const [expandedRegions, setExpandedRegions] = useState<Set<string>>(new Set());
@@ -36,8 +45,15 @@ export function CategorySidebar({
         return { ...g, suburbs: activeSuburbs, count: regionCount };
       })
       .filter((g) => g.suburbs.length > 0)
-      .sort((a, b) => b.count - a.count);
-  }, [locations, locationCounts, locationSearch]);
+      .sort((a, b) => {
+        if (!cityFilter) {
+          const stateOrder = ["NSW", "VIC", "QLD", "SA", "ACT"];
+          const stateDiff = stateOrder.indexOf(a.state) - stateOrder.indexOf(b.state);
+          if (stateDiff !== 0) return stateDiff;
+        }
+        return b.count - a.count;
+      });
+  }, [locations, locationCounts, locationSearch, cityFilter]);
 
   // Suburbs not mapped to any region
   const unmappedSuburbs = useMemo(() => {
@@ -113,69 +129,83 @@ export function CategorySidebar({
           )}
         </div>
         <ul className="space-y-1">
-          {activeRegionGroups.map((group) => {
-            const isExpanded = expandedRegions.has(group.region) || !!locationSearch;
-            const selectedInGroup = group.suburbs.filter((s) => selectedLocations.includes(s)).length;
-            const allSelected = selectedInGroup === group.suburbs.length;
-            const someSelected = selectedInGroup > 0;
-
-            return (
-              <li key={group.region}>
-                {/* Region header */}
-                <div className="flex items-center">
-                  <button
-                    onClick={() => toggleAllSuburbsInRegion(group.suburbs)}
-                    className={cn(
-                      "flex items-center gap-2 h-9 pl-3 pr-1.5 transition-colors",
-                      someSelected ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    <Checkbox
-                      checked={allSelected ? true : someSelected ? "indeterminate" : false}
-                      className="pointer-events-none h-3.5 w-3.5"
-                      tabIndex={-1}
-                    />
-                  </button>
-                  <button
-                    onClick={() => toggleRegion(group.region)}
-                    className={cn(
-                      "flex-1 flex items-center justify-between pr-3 h-9 rounded-r-lg text-sm transition-colors",
-                      someSelected
-                        ? "text-primary font-semibold"
-                        : "text-foreground hover:bg-muted"
-                    )}
-                  >
-                    <span className="truncate text-left">{group.region}</span>
-                    <span className="flex items-center gap-1">
-                      <span className={cn(
-                        "text-xs tabular-nums",
-                        someSelected ? "text-primary" : "text-muted-foreground/60"
-                      )}>{group.count}</span>
-                      <ChevronDown className={cn(
-                        "h-3.5 w-3.5 text-muted-foreground transition-transform",
-                        isExpanded && "rotate-180"
-                      )} />
+          {(() => {
+            const items: React.ReactNode[] = [];
+            let lastState: string | null = null;
+            activeRegionGroups.forEach((group) => {
+              if (!cityFilter && group.state !== lastState) {
+                lastState = group.state;
+                items.push(
+                  <li key={`divider-${group.state}`} className="pt-2 pb-0.5 first:pt-0">
+                    <span className="block px-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50">
+                      {STATE_LABELS[group.state] ?? group.state}
                     </span>
-                  </button>
-                </div>
+                  </li>
+                );
+              }
 
-                {/* Suburb list (expanded) */}
-                {isExpanded && (
-                  <ul className="ml-3 border-l border-border/50 pl-1 space-y-0">
-                    {group.suburbs.map((s) => (
-                      <LocationCheckItem
-                        key={s}
-                        label={s}
-                        count={locationCounts[s] || 0}
-                        checked={selectedLocations.includes(s)}
-                        onClick={() => toggleLocation(s)}
+              const isExpanded = expandedRegions.has(group.region) || !!locationSearch;
+              const selectedInGroup = group.suburbs.filter((s) => selectedLocations.includes(s)).length;
+              const allSelected = selectedInGroup === group.suburbs.length;
+              const someSelected = selectedInGroup > 0;
+
+              items.push(
+                <li key={group.region}>
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => toggleAllSuburbsInRegion(group.suburbs)}
+                      className={cn(
+                        "flex items-center gap-2 h-9 pl-3 pr-1.5 transition-colors",
+                        someSelected ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <Checkbox
+                        checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                        className="pointer-events-none h-3.5 w-3.5"
+                        tabIndex={-1}
                       />
-                    ))}
-                  </ul>
-                )}
-              </li>
-            );
-          })}
+                    </button>
+                    <button
+                      onClick={() => toggleRegion(group.region)}
+                      className={cn(
+                        "flex-1 flex items-center justify-between pr-3 h-9 rounded-r-lg text-sm transition-colors",
+                        someSelected
+                          ? "text-primary font-semibold"
+                          : "text-foreground hover:bg-muted"
+                      )}
+                    >
+                      <span className="truncate text-left">{group.region}</span>
+                      <span className="flex items-center gap-1">
+                        <span className={cn(
+                          "text-xs tabular-nums",
+                          someSelected ? "text-primary" : "text-muted-foreground/60"
+                        )}>{group.count}</span>
+                        <ChevronDown className={cn(
+                          "h-3.5 w-3.5 text-muted-foreground transition-transform",
+                          isExpanded && "rotate-180"
+                        )} />
+                      </span>
+                    </button>
+                  </div>
+
+                  {isExpanded && (
+                    <ul className="ml-3 border-l border-border/50 pl-1 space-y-0">
+                      {group.suburbs.map((s) => (
+                        <LocationCheckItem
+                          key={s}
+                          label={s}
+                          count={locationCounts[s] || 0}
+                          checked={selectedLocations.includes(s)}
+                          onClick={() => toggleLocation(s)}
+                        />
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            });
+            return items;
+          })()}
 
           {/* Unmapped suburbs */}
           {unmappedSuburbs.map((l) => (
