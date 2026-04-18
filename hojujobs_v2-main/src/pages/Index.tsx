@@ -143,11 +143,13 @@ const Index = ({ cityFilter }: IndexProps) => {
   }, [jobsData, cityFilter]);
 
   const locations = useMemo(() => {
+    const cityLocs = cityJobs.flatMap((j) =>
+      cityFilter ? j.location.filter((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`)) : j.location
+    );
     const countMap: Record<string, number> = {};
-    cityJobs.forEach((j) => { j.location.forEach((loc) => { countMap[loc] = (countMap[loc] || 0) + 1; }); });
-    const allLocs = cityJobs.flatMap((j) => j.location);
-    return [...new Set(allLocs)].sort((a, b) => (countMap[b] || 0) - (countMap[a] || 0));
-  }, [cityJobs]);
+    cityLocs.forEach((loc) => { countMap[loc] = (countMap[loc] || 0) + 1; });
+    return [...new Set(cityLocs)].sort((a, b) => (countMap[b] || 0) - (countMap[a] || 0));
+  }, [cityJobs, cityFilter]);
 
   const filtered = useMemo(() => {
     const result = cityJobs.filter((job) => {
@@ -169,9 +171,12 @@ const Index = ({ cityFilter }: IndexProps) => {
 
   const locationCounts = useMemo(() => {
     const c: Record<string, number> = {};
-    cityJobs.forEach((j) => { j.location.forEach((loc) => { c[loc] = (c[loc] || 0) + 1; }); });
+    cityJobs.forEach((j) => {
+      (cityFilter ? j.location.filter((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`)) : j.location)
+        .forEach((loc) => { c[loc] = (c[loc] || 0) + 1; });
+    });
     return c;
-  }, [cityJobs]);
+  }, [cityJobs, cityFilter]);
 
   const industryCounts = useMemo(() => {
     const c: Record<string, number> = {};

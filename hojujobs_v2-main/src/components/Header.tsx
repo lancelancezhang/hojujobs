@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 const CITY_TABS = [
+  { label: "전체", path: "/" },
   { label: "시드니", path: "/sydney" },
   { label: "멜버른", path: "/melbourne" },
   { label: "브리즈번", path: "/brisbane" },
@@ -63,6 +64,7 @@ export function Header() {
             <NavLink
               key={path}
               to={path}
+              end={path === "/"}
               className={({ isActive }) =>
                 cn(
                   "px-4 py-2 text-sm font-medium border-b-2 transition-colors",

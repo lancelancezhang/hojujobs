@@ -9,6 +9,7 @@ export interface RegionGroup {
 }
 
 export const REGION_GROUPS: RegionGroup[] = [
+  // NSW - Sydney
   {
     region: "시드니 시티",
     suburbs: [
@@ -59,11 +60,47 @@ export const REGION_GROUPS: RegionGroup[] = [
     suburbs: ["센트럴 코스트", "고스포드"],
   },
   {
-    region: "기타 지역",
+    region: "기타 NSW",
     suburbs: [
-      "브리즈번", "포트 맥쿼리", "울릉공", "울굴가", "굴번", "배서스트",
-      "코프스 하버", "타운스빌", "웬트워스", "윈덤",
+      "포트 맥쿼리", "울릉공", "울굴가", "굴번", "배서스트",
+      "코프스 하버", "웬트워스", "윈덤",
     ],
+  },
+
+  // VIC - Melbourne
+  {
+    region: "멜버른 CBD / 이너",
+    suburbs: ["멜버른 CBD", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "콜링우드", "피츠로이", "칼튼"],
+  },
+  {
+    region: "이너 이스트 멜버른",
+    suburbs: ["큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "Mt 웨이버리"],
+  },
+  {
+    region: "사우스 이스트 멜버른",
+    suburbs: ["채드스톤", "오클리", "오클리 이스트", "글렌 헌틀리", "헌팅데일", "카네기", "단데농", "비스"],
+  },
+  {
+    region: "노스 멜버른",
+    suburbs: ["브로드메도우스", "에핑 (VIC)", "크레이기번", "선샤인"],
+  },
+  {
+    region: "기타 빅토리아",
+    suburbs: ["질롱", "밸러렛", "벤디고"],
+  },
+
+  // QLD - Brisbane
+  {
+    region: "브리즈번",
+    suburbs: ["브리즈번"],
+  },
+  {
+    region: "골드코스트",
+    suburbs: ["골드코스트"],
+  },
+  {
+    region: "기타 퀸즐랜드",
+    suburbs: ["타운스빌", "케언즈", "선샤인 코스트"],
   },
 ];
 
@@ -165,17 +202,55 @@ export const SUBURB_EN: Record<string, string> = {
   "펜리스": "Penrith NSW",
   "센트럴 코스트": "Central Coast NSW",
   "고스포드": "Gosford NSW",
-  "브리즈번": "Brisbane QLD",
   "포트 맥쿼리": "Port Macquarie NSW",
   "울릉공": "Wollongong NSW",
   "울굴가": "Woolgoolga NSW",
   "굴번": "Goulburn NSW",
   "배서스트": "Bathurst NSW",
   "코프스 하버": "Coffs Harbour NSW",
-  "타운스빌": "Townsville QLD",
   "웬트워스": "Wentworth Falls NSW",
   "윈덤": "Wyndham NSW",
+  // VIC - Melbourne
   "멜버른": "Melbourne VIC",
+  "멜버른 CBD": "Melbourne CBD VIC",
+  "사우스 야라": "South Yarra VIC",
+  "프라란": "Prahran VIC",
+  "세인트 킬다": "St Kilda VIC",
+  "엘스터윅": "Elsternwick VIC",
+  "콜링우드": "Collingwood VIC",
+  "피츠로이": "Fitzroy VIC",
+  "칼튼": "Carlton VIC",
+  "큐": "Kew VIC",
+  "캠버웰": "Camberwell VIC",
+  "헤이쏜": "Hawthorn VIC",
+  "버우드 이스트": "Burwood East VIC",
+  "블랙번": "Blackburn VIC",
+  "글렌 웨이버리": "Glen Waverley VIC",
+  "Mt 웨이버리": "Mount Waverley VIC",
+  "채드스톤": "Chadstone VIC",
+  "오클리": "Oakleigh VIC",
+  "오클리 이스트": "Oakleigh East VIC",
+  "글렌 헌틀리": "Glen Huntly VIC",
+  "헌팅데일": "Huntingdale VIC",
+  "카네기": "Carnegie VIC",
+  "사우스 이스트 멜버른": "South East Melbourne VIC",
+  "단데농": "Dandenong VIC",
+  "비스": "Wantirna South VIC",
+  "브로드메도우스": "Broadmeadows VIC",
+  "에핑 (VIC)": "Epping VIC",
+  "크레이기번": "Craigieburn VIC",
+  "선샤인": "Sunshine VIC",
+  "질롱": "Geelong VIC",
+  "밸러렛": "Ballarat VIC",
+  "벤디고": "Bendigo VIC",
+  // QLD - Brisbane
+  "브리즈번": "Brisbane QLD",
+  "골드코스트": "Gold Coast QLD",
+  "타운스빌": "Townsville QLD",
+  "케언즈": "Cairns QLD",
+  "선샤인 코스트": "Sunshine Coast QLD",
+  // SA - Adelaide
   "애들레이드": "Adelaide SA",
+  // ACT
   "캔버라": "Canberra ACT",
 };
