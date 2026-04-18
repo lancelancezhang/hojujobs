@@ -67,7 +67,7 @@ export function Header() {
               end={path === "/"}
               className={({ isActive }) =>
                 cn(
-                  "px-2.5 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
+                  "flex-1 sm:flex-none text-center px-2.5 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
                   isActive
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
