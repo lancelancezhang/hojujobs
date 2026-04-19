@@ -6,7 +6,9 @@ import { MobileLocationFilter } from "@/components/MobileLocationFilter";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { JobCard } from "@/components/JobCard";
+import { PromotedJobCard } from "@/components/PromotedJobCard";
 import { Pagination } from "@/components/Pagination";
+import { PROMOTED_JOBS } from "@/data/promotedJobs";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
@@ -272,6 +274,17 @@ const Index = ({ cityFilter }: IndexProps) => {
                 </Select>
               </div>
             </div>
+
+            {/* Promoted jobs - only on page 1 with no active filters */}
+            {currentPage === 1 && !keyword && selectedLocations.length === 0 && industry === "all" && (
+              <div className="space-y-2 mb-5">
+                <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
+                {PROMOTED_JOBS.map((job) => (
+                  <PromotedJobCard key={job.id} job={job} />
+                ))}
+                <div className="border-t border-border/60 pt-1" />
+              </div>
+            )}
 
             <div className="space-y-3">
               {loadingJobs ? (
