@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { JobCard } from "@/components/JobCard";
 import { PromotedJobCard } from "@/components/PromotedJobCard";
 import { Pagination } from "@/components/Pagination";
-import { PROMOTED_JOBS, getPromotedViewCount } from "@/data/promotedJobs";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,6 +24,7 @@ interface Job {
   location: string[];
   industry: string;
   uploaded_at: string;
+  Promoted?: boolean | null;
 }
 
 const CITY_META: Record<string, { title: string; description: string; canonical: string }> = {
@@ -107,7 +107,7 @@ const Index = ({ cityFilter }: IndexProps) => {
     async function fetchJobs() {
       const { data, error } = await supabase
         .from("jobs")
-        .select("id, title, location, industry, uploaded_at")
+        .select("id, title, location, industry, uploaded_at, Promoted")
         .order("uploaded_at", { ascending: false });
 
       if (error) {
@@ -139,6 +139,8 @@ const Index = ({ cityFilter }: IndexProps) => {
       job.location.some((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`))
     );
   }, [jobsData, cityFilter]);
+
+  const promotedJobs = useMemo(() => cityJobs.filter((j) => j.Promoted === true), [cityJobs]);
 
   const locations = useMemo(() => {
     const cityLocs = cityJobs.flatMap((j) =>
@@ -276,11 +278,11 @@ const Index = ({ cityFilter }: IndexProps) => {
             </div>
 
             {/* Promoted jobs - only on page 1 with no active filters */}
-            {currentPage === 1 && !keyword && selectedLocations.length === 0 && industry === "all" && (
+            {currentPage === 1 && !keyword && selectedLocations.length === 0 && industry === "all" && promotedJobs.length > 0 && (
               <div className="space-y-2 mb-5">
                 <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
-                {PROMOTED_JOBS.map((job) => (
-                  <PromotedJobCard key={job.id} job={job} viewCount={getPromotedViewCount(job.id)} />
+                {promotedJobs.map((job) => (
+                  <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} />
                 ))}
                 {/* Promote-your-post CTA */}
                 <div className="rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-3">

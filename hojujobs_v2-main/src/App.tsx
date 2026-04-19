@@ -12,7 +12,6 @@ import MyPosts from "./pages/MyPosts";
 import EditJob from "./pages/EditJob";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
-import PromotedJobDetail from "./pages/PromotedJobDetail";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 
@@ -32,7 +31,6 @@ const App = () => (
             <Route path="/brisbane" element={<Index key="QLD" cityFilter="QLD" />} />
             <Route path="/adelaide" element={<Index key="SA" cityFilter="SA" />} />
             <Route path="/job/:id" element={<JobDetail />} />
-            <Route path="/promoted/:id" element={<PromotedJobDetail />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/post-job" element={<PostJob />} />
             <Route path="/my-posts" element={<MyPosts />} />
