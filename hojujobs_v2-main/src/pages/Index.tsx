@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { JobCard } from "@/components/JobCard";
 import { PromotedJobCard } from "@/components/PromotedJobCard";
 import { Pagination } from "@/components/Pagination";
-import { PROMOTED_JOBS } from "@/data/promotedJobs";
+import { PROMOTED_JOBS, getPromotedViewCount } from "@/data/promotedJobs";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
@@ -280,7 +280,7 @@ const Index = ({ cityFilter }: IndexProps) => {
               <div className="space-y-2 mb-5">
                 <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
                 {PROMOTED_JOBS.map((job) => (
-                  <PromotedJobCard key={job.id} job={job} />
+                  <PromotedJobCard key={job.id} job={job} viewCount={getPromotedViewCount(job.id)} />
                 ))}
                 {/* Promote-your-post CTA */}
                 <div className="rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-3">

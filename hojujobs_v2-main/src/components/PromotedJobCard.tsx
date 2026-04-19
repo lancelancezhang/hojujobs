@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { MapPin, Briefcase, ChevronRight, Eye, Calendar, Sparkles } from "lucide-react";
 import type { PromotedJob } from "@/data/promotedJobs";
 
@@ -12,9 +13,9 @@ function formatDate(dateStr: string) {
   return `${Math.floor(diffDays / 7)}주 전`;
 }
 
-export function PromotedJobCard({ job }: { job: PromotedJob }) {
+export function PromotedJobCard({ job, viewCount = 0 }: { job: PromotedJob; viewCount?: number }) {
   return (
-    <a href={job.url} target="_blank" rel="noopener noreferrer" className="block group">
+    <Link to={`/promoted/${job.id}`} className="block group">
       <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 h-[4.75rem] w-full flex items-center overflow-hidden hover:shadow-md hover:border-amber-400 transition-[box-shadow,border-color] duration-200">
         <div className="flex items-center justify-between gap-3 w-full min-w-0">
           <div className="flex-1 min-w-0">
@@ -28,12 +29,13 @@ export function PromotedJobCard({ job }: { job: PromotedJob }) {
             <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
               {job.location.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60 shrink-0" />{job.location.slice(0, 2).join(", ")}</span>}
               {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3 shrink-0" />{job.industry}</span>}
-              <span className="flex items-center gap-1 ml-auto shrink-0"><Calendar className="h-3 w-3" />{formatDate(job.time_posted)}</span>
+              <span className="flex items-center gap-1 ml-auto shrink-0"><Eye className="h-3 w-3" />{viewCount}</span>
+              <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate(job.time_posted)}</span>
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-amber-400 group-hover:text-amber-600 shrink-0 transition-colors" />
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
