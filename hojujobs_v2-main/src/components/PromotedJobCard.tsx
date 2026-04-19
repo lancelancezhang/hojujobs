@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, Briefcase, ChevronRight, Eye, Calendar, Sparkles } from "lucide-react";
+import { MapPin, Briefcase, ChevronRight, Eye, Sparkles } from "lucide-react";
 
 interface Job {
   id: number;
@@ -39,7 +39,6 @@ export function PromotedJobCard({ job, viewCount = 0 }: { job: Job; viewCount?: 
               {job.location?.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60 shrink-0" />{job.location.slice(0, 2).join(", ")}</span>}
               {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3 shrink-0" />{job.industry}</span>}
               <span className="flex items-center gap-1 ml-auto shrink-0"><Eye className="h-3 w-3" />{viewCount}</span>
-              <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate(job.uploaded_at)}</span>
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-amber-400 group-hover:text-amber-600 shrink-0 transition-colors" />
