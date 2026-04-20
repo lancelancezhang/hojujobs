@@ -113,7 +113,7 @@ const Index = ({ cityFilter }: IndexProps) => {
       if (error) {
         console.error("jobs fetch error:", error);
       } else if (data) {
-        setJobsData(data as Job[]);
+        setJobsData(data as unknown as Job[]);
       }
       setLoadingJobs(false);
     }
@@ -245,6 +245,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                     selectedLocations={selectedLocations}
                     onLocationsChange={(v) => { setSelectedLocations(v); setPage(1); }}
                     locationCounts={locationCounts}
+                    cityFilter={cityFilter}
                   />
                 </div>
                 <div className="lg:hidden contents sm:contents">
