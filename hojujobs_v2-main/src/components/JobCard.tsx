@@ -34,7 +34,7 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
               <h3 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
             </div>
             <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
-              {job.location && job.location.length > 0 && <span className="flex items-center gap-1 shrink-0"><MapPin className="h-3 w-3 text-accent/60 shrink-0" />{job.location.slice(0, 2).join(", ")}</span>}
+              {job.location && job.location.length > 0 && <span className="flex items-center gap-1 min-w-0 shrink"><MapPin className="h-3 w-3 text-accent/60 shrink-0" /><span className="truncate">{job.location.slice(0, 2).join(", ")}</span></span>}
               {job.industry && <span className="flex items-center gap-1 shrink-0"><Briefcase className="h-3 w-3 shrink-0" />{job.industry}</span>}
               <span className="flex items-center gap-1 ml-auto shrink-0"><Eye className="h-3 w-3" />{viewCount}</span>
               <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate(job.uploaded_at)}</span>
