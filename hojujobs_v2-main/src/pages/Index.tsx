@@ -140,7 +140,7 @@ const Index = ({ cityFilter }: IndexProps) => {
     );
   }, [jobsData, cityFilter]);
 
-  const promotedJobs = useMemo(() => cityJobs.filter((j) => j.Promoted === true), [cityJobs]);
+  const promotedJobs = useMemo(() => jobsData.filter((j) => j.Promoted === true), [jobsData]);
 
   const locations = useMemo(() => {
     const cityLocs = cityJobs.flatMap((j) =>
