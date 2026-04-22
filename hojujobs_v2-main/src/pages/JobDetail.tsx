@@ -94,12 +94,14 @@ export default function JobDetail() {
     title: job ? `${job.title} | Hoju Jobs` : "Hoju Jobs - 호주 한인 구인구직",
     description: job ? (job.description || "").slice(0, 155) : "호주 한인 커뮤니티 구인구직 게시판",
     canonical: job ? `https://hojujobs.com/job/${job.id}` : undefined,
+    htmlLang: "ko",
+    ogLocale: "ko_KR",
     jsonLd: jobJsonLd,
   });
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex w-full min-h-0 flex-1 items-center justify-center bg-background">
         <p className="text-muted-foreground">불러오는 중...</p>
       </div>
     );
@@ -107,7 +109,7 @@ export default function JobDetail() {
 
   if (!job) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex w-full min-h-0 flex-1 items-center justify-center bg-background">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">해당 공고를 찾을 수 없습니다.</p>
           <Link to="/" className="text-primary hover:underline">목록으로 돌아가기</Link>
@@ -119,7 +121,7 @@ export default function JobDetail() {
   const locations = job.location || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="mb-6">

@@ -1,13 +1,31 @@
 import { useEffect } from "react";
 
+function useDocumentLangOverride(lang: string | undefined) {
+  useEffect(() => {
+    if (lang == null) return;
+    const previous = document.documentElement.lang;
+    document.documentElement.lang = lang;
+    return () => {
+      document.documentElement.lang = previous;
+    };
+  }, [lang]);
+}
+
 interface SEOProps {
   title: string;
   description: string;
   canonical?: string;
+  keywords?: string;
+  /** Document language (BCP 47) for the active route, e.g. "ko" or "en". Resets on navigation. */
+  htmlLang?: string;
+  /** Open Graph locale, e.g. "ko_KR" or "en_AU" */
+  ogLocale?: string;
   jsonLd?: Record<string, unknown>;
 }
 
-export function useSEO({ title, description, canonical, jsonLd }: SEOProps) {
+export function useSEO({ title, description, canonical, keywords, htmlLang, ogLocale, jsonLd }: SEOProps) {
+  useDocumentLangOverride(htmlLang);
+
   useEffect(() => {
     document.title = title;
 
@@ -22,10 +40,16 @@ export function useSEO({ title, description, canonical, jsonLd }: SEOProps) {
     };
 
     setMeta("name", "description", description);
+    if (keywords) {
+      setMeta("name", "keywords", keywords);
+    }
     setMeta("property", "og:title", title);
     setMeta("property", "og:description", description);
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
+    if (ogLocale) {
+      setMeta("property", "og:locale", ogLocale);
+    }
 
     if (canonical) {
       let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -53,5 +77,5 @@ export function useSEO({ title, description, canonical, jsonLd }: SEOProps) {
       const script = document.querySelector('script[data-seo-jsonld]');
       if (script) script.remove();
     };
-  }, [title, description, canonical, jsonLd]);
+  }, [title, description, canonical, keywords, htmlLang, ogLocale, jsonLd]);
 }

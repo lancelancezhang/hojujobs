@@ -87,6 +87,8 @@ const Index = ({ cityFilter }: IndexProps) => {
     title: meta.title,
     description: meta.description,
     canonical: meta.canonical,
+    htmlLang: "ko",
+    ogLocale: "ko_KR",
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "WebSite",
@@ -204,7 +206,7 @@ const Index = ({ cityFilter }: IndexProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
 
       <div className="w-full max-w-6xl mx-auto px-4 py-8">
@@ -314,12 +316,6 @@ const Index = ({ cityFilter }: IndexProps) => {
           </div>
         </div>
       </div>
-
-      <footer className="border-t border-border bg-muted/30 py-6 mt-auto">
-        <div className="max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground">
-          <p>문의: <a href="mailto:admin.hojujobs@gmail.com" className="text-primary hover:underline">admin.hojujobs@gmail.com</a></p>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -60,11 +60,11 @@ export default function Admin() {
     }
   };
 
-  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">로딩 중...</div>;
+  if (loading) return <div className="flex w-full min-h-0 flex-1 items-center justify-center bg-background text-muted-foreground">로딩 중...</div>;
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-6 space-y-4">
           <Link to="/">

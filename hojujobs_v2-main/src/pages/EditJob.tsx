@@ -103,10 +103,10 @@ export default function EditJob() {
   };
 
   if (!user) return null;
-  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><p className="text-muted-foreground">불러오는 중...</p></div>;
+  if (loading) return <div className="flex w-full min-h-0 flex-1 items-center justify-center bg-background"><p className="text-muted-foreground">불러오는 중...</p></div>;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="mb-6">

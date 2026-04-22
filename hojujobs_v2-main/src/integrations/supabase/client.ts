@@ -2,16 +2,38 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
+const authOptions = {
+  storage: localStorage,
+  persistSession: true,
+  autoRefreshToken: true,
+} as const;
+
+function getSupabaseOrThrow() {
+  if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
+    return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth: authOptions });
   }
-});
+
+  if (import.meta.env.DEV) {
+    // Without env vars, createClient(undefined, …) throws at import time and React never mounts (blank page).
+    // Public demo anon key (Supabase docs); URL is invalid for real API calls — add .env.local to use your project.
+    const placeholderUrl = 'https://dev-placeholder.local';
+    const placeholderKey =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+    console.error(
+      '[Hoju Jobs] Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY. Create .env.local from .env.example and restart `npm run dev`. The app is using a dev placeholder — data and auth will not work until configured.',
+    );
+    return createClient<Database>(placeholderUrl, placeholderKey, { auth: authOptions });
+  }
+
+  throw new Error(
+    'Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY. Set them in the environment (e.g. Vercel project settings) or in .env / .env.production before building.',
+  );
+}
+
+export const supabase = getSupabaseOrThrow();

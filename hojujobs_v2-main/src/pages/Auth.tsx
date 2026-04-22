@@ -54,9 +54,9 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
-      <div className="flex items-center justify-center px-4 py-12">
+      <div className="flex flex-1 items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <p className="text-lg font-semibold text-foreground">

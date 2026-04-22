@@ -83,7 +83,7 @@ export default function PostJob() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="mb-6">
