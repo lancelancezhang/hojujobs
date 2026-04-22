@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { SiteFooter } from "@/components/SiteFooter";
 
 /**
@@ -8,6 +9,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 export function MainLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <ScrollToTop />
       <div className="flex min-h-0 flex-1 flex-col">
         <Outlet />
       </div>
