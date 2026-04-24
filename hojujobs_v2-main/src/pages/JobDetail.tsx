@@ -123,7 +123,7 @@ export default function JobDetail() {
   return (
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="w-full min-w-0 max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="mb-6">
           <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
@@ -146,7 +146,9 @@ export default function JobDetail() {
         {job.description && (
           <div className="bg-card border border-border rounded-xl p-6 mb-6">
             <h2 className="text-lg font-bold text-foreground mb-4">상세 내용</h2>
-            <div className="text-sm text-foreground/80 whitespace-pre-line leading-relaxed">{job.description}</div>
+            <div className="text-sm text-foreground/80 whitespace-pre-line leading-relaxed break-words [overflow-wrap:anywhere]">
+              {job.description}
+            </div>
           </div>
         )}
 
@@ -157,19 +159,21 @@ export default function JobDetail() {
               {job.contact && (
                 <div className="flex items-center gap-2.5 text-sm">
                   <Phone className="h-4 w-4 text-primary shrink-0" />
-                  <span className="text-foreground">{job.contact}</span>
+                  <span className="text-foreground break-words [overflow-wrap:anywhere]">{job.contact}</span>
                 </div>
               )}
               {job.email && job.email !== "정보없음" && (
                 <div className="flex items-center gap-2.5 text-sm">
                   <Mail className="h-4 w-4 text-primary shrink-0" />
-                  <a href={`mailto:${job.email}`} className="text-primary hover:underline">{job.email}</a>
+                  <a href={`mailto:${job.email}`} className="text-primary hover:underline break-words [overflow-wrap:anywhere]">
+                    {job.email}
+                  </a>
                 </div>
               )}
               {job.kakaoid && (
                 <div className="flex items-center gap-2.5 text-sm">
                   <MessageCircle className="h-4 w-4 text-yellow-500 shrink-0" />
-                  <span className="text-foreground">카카오톡: {job.kakaoid}</span>
+                  <span className="text-foreground break-words [overflow-wrap:anywhere]">카카오톡: {job.kakaoid}</span>
                 </div>
               )}
             </div>
