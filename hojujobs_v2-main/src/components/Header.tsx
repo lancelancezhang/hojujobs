@@ -30,22 +30,42 @@ export function Header() {
           <div className="flex items-center gap-1.5 sm:gap-2">
             {user ? (
               <>
-                <Button variant="outline" size="sm" onClick={() => navigate("/post-job")} className="gap-1 sm:gap-1.5 text-xs sm:text-sm px-2 sm:px-3">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => navigate("/post-job")}
+                  className="gap-1 px-2 text-xs sm:gap-1.5 sm:px-3 sm:text-sm"
+                >
                   <Plus className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">공고 등록</span>
                   <span className="sm:hidden">등록</span>
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => navigate("/my-posts")} className="gap-1 sm:gap-1.5 text-xs sm:text-sm px-2 sm:px-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/my-posts")}
+                  className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
+                >
                   <FileText className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">내 공고</span>
                   <span className="sm:hidden">내 글</span>
                 </Button>
                 {isAdmin && (
-                  <Button variant="outline" size="sm" onClick={() => navigate("/admin")} className="gap-1 sm:gap-1.5 text-xs sm:text-sm px-2 sm:px-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate("/admin")}
+                    className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
+                  >
                     <Shield className="h-3.5 w-3.5" /> 관리
                   </Button>
                 )}
-                <Button variant="ghost" size="sm" onClick={signOut} className="text-muted-foreground hover:text-foreground px-2 sm:px-3 gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={signOut}
+                  className="gap-1 px-2 text-muted-foreground hover:bg-slate-100 hover:text-primary sm:px-3"
+                >
                   <LogOut className="h-3.5 w-3.5" />
                   <span className="text-xs">로그아웃</span>
                 </Button>
@@ -55,8 +75,8 @@ export function Header() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate("/auth")}
-                  className="gap-1.5 border-border bg-white px-2 text-xs hover:bg-muted/50 sm:gap-1.5 sm:px-3 sm:text-sm"
+                  onClick={() => navigate({ pathname: "/auth" })}
+                  className="gap-1.5 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
                 >
                   <LogIn className="h-3.5 w-3.5" />
                   로그인

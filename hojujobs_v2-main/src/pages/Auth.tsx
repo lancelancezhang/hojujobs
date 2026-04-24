@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import hojuJobsLogo from "@/assets/hoju-jobs-logo.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,15 +19,12 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const { user, loading: authLoading } = useAuth();
 
-  const afterAuthPath = getPostAuthDestination(searchParams);
-
-  // OAuth (Google) returns here with a session; email/password sets session in-handler.
+  // After any successful session (email or OAuth), leave /auth and strip /auth#… — home unless ?next= is set (e.g. 공고 등록).
   useEffect(() => {
     if (authLoading) return;
     if (!user) return;
-    const next = getSafeNextPath(searchParams);
-    if (next == null) return;
-    navigate(next, { replace: true });
+    const dest = getPostAuthDestination(searchParams);
+    navigate(dest, { replace: true });
   }, [user, authLoading, searchParams, navigate]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -41,7 +37,7 @@ export default function Auth() {
         toast.error(error.message);
       } else {
         toast.success("로그인 성공!");
-        navigate(afterAuthPath, { replace: true });
+        // Redirect handled in useEffect once session is applied (avoids leaving /auth#)
       }
     } else {
       const { error } = await supabase.auth.signUp({
