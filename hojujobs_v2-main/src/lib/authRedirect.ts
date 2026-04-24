@@ -1,5 +1,7 @@
+import { getSiteOrigin } from "@/lib/siteUrl";
+
 /**
- * Validates `?next=` for post-login redirects (same-origin paths only).
+ * Validates `?next=` for post-login redirects (paths on the canonical site only).
  */
 export function getSafeNextPath(searchParams: URLSearchParams): string | null {
   const raw = searchParams.get("next");
@@ -12,8 +14,9 @@ export function getSafeNextPath(searchParams: URLSearchParams): string | null {
   }
   if (!decoded.startsWith("/") || decoded.startsWith("//")) return null;
   try {
-    const u = new URL(decoded, window.location.origin);
-    if (u.origin !== window.location.origin) return null;
+    const base = getSiteOrigin();
+    const u = new URL(decoded, base);
+    if (u.origin !== base && u.origin !== window.location.origin) return null;
     return u.pathname + u.search + u.hash;
   } catch {
     return null;

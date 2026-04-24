@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { useAuth } from "@/hooks/useAuth";
 import { getPostAuthDestination, getSafeNextPath } from "@/lib/authRedirect";
+import { getSiteOrigin } from "@/lib/siteUrl";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,7 +44,7 @@ export default function Auth() {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: window.location.origin },
+        options: { emailRedirectTo: getSiteOrigin() },
       });
       if (error) {
         toast.error(error.message);
@@ -56,10 +57,11 @@ export default function Auth() {
 
   const handleGoogleSignIn = async () => {
     const next = getSafeNextPath(searchParams);
+    const origin = getSiteOrigin();
     const returnUrl =
       next != null
-        ? `${window.location.origin}/auth?${new URLSearchParams({ next })}`
-        : `${window.location.origin}/auth`;
+        ? `${origin}/auth?${new URLSearchParams({ next })}`
+        : `${origin}/auth`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
