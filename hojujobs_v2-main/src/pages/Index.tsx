@@ -107,16 +107,22 @@ const Index = ({ cityFilter }: IndexProps) => {
 
   useEffect(() => {
     async function fetchJobs() {
-      const { data, error } = await supabase
-        .from("jobs")
-        .select("id, title, location, industry, uploaded_at, Promoted")
-        .order("uploaded_at", { ascending: false });
-
-      if (error) {
-        console.error("jobs fetch error:", error);
-      } else if (data) {
-        setJobsData(data as unknown as Job[]);
+      const PAGE = 1000;
+      let all: Job[] = [];
+      let from = 0;
+      while (true) {
+        const { data, error } = await supabase
+          .from("jobs")
+          .select("id, title, location, industry, uploaded_at, Promoted")
+          .order("uploaded_at", { ascending: false })
+          .range(from, from + PAGE - 1);
+        if (error) { console.error("jobs fetch error:", error); break; }
+        if (!data || data.length === 0) break;
+        all = all.concat(data as unknown as Job[]);
+        if (data.length < PAGE) break;
+        from += PAGE;
       }
+      setJobsData(all);
       setLoadingJobs(false);
     }
     fetchJobs();
