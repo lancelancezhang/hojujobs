@@ -41,7 +41,7 @@ export default function PostJob() {
   const industries = useMemo(() => [...new Set(existingJobs.map((j) => j.industry).filter(Boolean))].sort() as string[], [existingJobs]);
 
   if (!user) {
-    navigate("/auth");
+    navigate("/auth?next=/post-job");
     return null;
   }
 

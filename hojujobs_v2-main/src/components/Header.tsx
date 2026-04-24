@@ -51,9 +51,27 @@ export function Header() {
                 </Button>
               </>
             ) : (
-              <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5">
-                <LogIn className="h-3.5 w-3.5" /> 로그인
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/auth")}
+                  className="gap-1.5 border-border bg-white px-2 text-xs hover:bg-muted/50 sm:gap-1.5 sm:px-3 sm:text-sm"
+                >
+                  <LogIn className="h-3.5 w-3.5" />
+                  로그인
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => navigate("/auth?next=/post-job")}
+                  className="gap-1 px-2 text-xs sm:gap-1.5 sm:px-3 sm:text-sm"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">공고 등록</span>
+                  <span className="sm:hidden">등록</span>
+                </Button>
+              </>
             )}
           </div>
         </div>
