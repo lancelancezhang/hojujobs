@@ -83,20 +83,20 @@ export default function PostJob() {
   };
 
   return (
-    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col">
       <Header />
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="mb-6">
+      <div className="w-full max-w-6xl mx-auto px-4 py-8">
+        <div className="mb-8">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
             홈으로
           </Link>
         </div>
 
-        <h2 className="text-xl font-bold text-foreground mb-6">새 공고 등록</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-8">새 공고 등록</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <Label>제목 *</Label>
               <Input value={form.title} onChange={(e) => updateField("title", e.target.value)} required placeholder="예: 주방 보조" />
@@ -149,7 +149,7 @@ export default function PostJob() {
             <Textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="상세한 공고 내용을 입력해주세요" rows={6} />
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={loading}>
+          <Button type="submit" className="w-full mt-2" size="lg" disabled={loading}>
             {loading ? "등록 중..." : "공고 등록하기"}
           </Button>
         </form>
