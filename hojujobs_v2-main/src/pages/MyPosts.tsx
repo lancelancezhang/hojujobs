@@ -64,37 +64,37 @@ export default function MyPosts() {
   if (!user) return null;
 
   return (
-    <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
+    <div className="flex w-full min-h-0 flex-1 flex-col">
       <Header />
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="mb-6">
+      <div className="w-full max-w-6xl mx-auto px-4 py-8">
+        <div className="mb-8">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
             홈으로
           </Link>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-foreground">내 공고 관리</h2>
-          <Button onClick={() => navigate("/post-job")} size="sm">
-            <Plus className="h-4 w-4 mr-1" /> 새 공고
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-foreground">내 공고 관리</h2>
+          <Button onClick={() => navigate("/post-job")}>
+            <Plus className="h-4 w-4 mr-1.5" /> 새 공고
           </Button>
         </div>
 
         {loading ? (
-          <p className="text-center py-12 text-muted-foreground">불러오는 중...</p>
+          <p className="text-center py-16 text-muted-foreground">불러오는 중...</p>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-16 space-y-4">
-            <Briefcase className="h-12 w-12 text-muted-foreground/40 mx-auto" />
+          <div className="text-center py-24 space-y-5">
+            <Briefcase className="h-14 w-14 text-muted-foreground/30 mx-auto" />
             <p className="text-muted-foreground">등록한 공고가 없습니다.</p>
             <Button onClick={() => navigate("/post-job")}>첫 공고 등록하기</Button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 max-w-3xl">
             {jobs.map((job) => (
-              <div key={job.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-4">
+              <div key={job.id} className="bg-card border border-border rounded-xl px-5 py-4 flex items-center justify-between gap-4 hover:shadow-sm transition-shadow">
                 <div className="min-w-0">
-                  <Link to={`/job/${job.id}`} className="text-sm font-bold text-foreground hover:text-primary transition-colors truncate block">
+                  <Link to={`/job/${job.id}`} className="text-sm font-bold text-foreground hover:text-primary transition-colors truncate block mb-0.5">
                     {job.title}
                   </Link>
                   <p className="text-xs text-muted-foreground">
