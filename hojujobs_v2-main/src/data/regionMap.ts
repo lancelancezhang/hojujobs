@@ -24,6 +24,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "세인트 아이브스", "워리우드", "혼스비", "고든", "노던 비치", "린필드", "맨리", "발고울라",
     "브룩베일", "나라위나", "디 와이", "워링가",
     "노스쇼어", "뉴포트", "노던 비치스", "콜라로이", "포레스트빌", "헌터스 힐", "크로즈 네스트",
+    "쿠강갈라", "월로비", "투라무라",
   ]},
   { state: "NSW", region: "라이드 / 이스트우드", suburbs: [
     "라이드", "이스트우드", "에핑", "웨스트 라이드", "탑라이드", "메도우뱅크", "맥쿼리", "맥쿼리빌", "어밍톤",
@@ -43,7 +44,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "허스트빌", "사우스 허스트빌", "마스콧", "본다이", "본다이 정션",
     "랜드윅", "로즈랜즈", "로즈랜드", "미란다", "울리 크릭", "쿠지", "킹스포드",
     "리버우드", "마트라빌", "로즈 베이", "이스트가든스", "픽허스트",
-    "켄싱턴", "도버 하이츠", "마루브라",
+    "켄싱턴", "도버 하이츠", "마루브라", "웨이벌리", "코가라",
   ]},
   { state: "NSW", region: "사우스웨스트", suburbs: [
     "캠벨타운", "마운트 드루이트", "스프링우드", "리버풀", "뱅크스타운", "페어필드", "펜리스", "웨스턴 에어리어",
@@ -54,6 +55,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "포트 맥쿼리", "울릉공", "울굴가", "굴번", "배서스트",
     "코프스 하버", "웬트워스", "윈덤", "샌디 비치", "쿠퍼스 하버",
     "뉴카슬", "카툼바", "헌터 밸리", "콥스 하버", "울골", "봄발라",
+    "캡스 하버", "그래프턴", "싱글턴", "부카",
   ]},
 
   // VIC - Melbourne
@@ -71,7 +73,10 @@ export const REGION_GROUPS: RegionGroup[] = [
   { state: "VIC", region: "노스 멜버른", suburbs: [
     "브로드메도우스", "에핑 (VIC)", "크레이기번", "선샤인", "노스 멜버른",
   ]},
-  { state: "VIC", region: "기타 빅토리아", suburbs: ["질롱", "밸러렛", "벤디고"] },
+  { state: "VIC", region: "기타 빅토리아", suburbs: ["질롱", "밸러렛", "벤디고", "드라르고"] },
+
+  // SA - Adelaide
+  { state: "SA", region: "애들레이드", suburbs: ["글렌리그"] },
 
   // QLD - Brisbane
   { state: "QLD", region: "골드코스트", suburbs: ["골드코스트"] },
@@ -147,6 +152,9 @@ export const SUBURB_EN: Record<string, string> = {
   "포레스트빌": "Forestville NSW",
   "헌터스 힐": "Hunters Hill NSW",
   "크로즈 네스트": "Crows Nest NSW",
+  "쿠강갈라": "Ku-ring-gai NSW",
+  "월로비": "Willoughby NSW",
+  "투라무라": "Turramurra NSW",
   "워링가": "Warringah NSW",
   "라이드": "Ryde NSW",
   "이스트우드": "Eastwood NSW",
@@ -220,6 +228,8 @@ export const SUBURB_EN: Record<string, string> = {
   "켄싱턴": "Kensington NSW",
   "도버 하이츠": "Dover Heights NSW",
   "마루브라": "Maroubra NSW",
+  "웨이벌리": "Waverley NSW",
+  "코가라": "Kogarah NSW",
   "캠벨타운": "Campbelltown NSW",
   "마운트 드루이트": "Mount Druitt NSW",
   "스프링우드": "Springwood NSW",
@@ -246,6 +256,10 @@ export const SUBURB_EN: Record<string, string> = {
   "콥스 하버": "Coffs Harbour NSW",
   "울골": "Woolgoolga NSW",
   "봄발라": "Bombala NSW",
+  "캡스 하버": "Coffs Harbour NSW",
+  "그래프턴": "Grafton NSW",
+  "싱글턴": "Singleton NSW",
+  "부카": "Bucca NSW",
   "샌디 비치": "Sandy Beach NSW",
   "쿠퍼스 하버": "Sydney NSW",
   "웬트워스": "Wentworth Falls NSW",
@@ -295,6 +309,7 @@ export const SUBURB_EN: Record<string, string> = {
   "질롱": "Geelong VIC",
   "밸러렛": "Ballarat VIC",
   "벤디고": "Bendigo VIC",
+  "드라르고": "Dargo VIC",
   // QLD - Brisbane
   "브리즈번": "Brisbane QLD",
   "골드코스트": "Gold Coast QLD",
@@ -303,6 +318,7 @@ export const SUBURB_EN: Record<string, string> = {
   "선샤인 코스트": "Sunshine Coast QLD",
   // SA - Adelaide
   "애들레이드": "Adelaide SA",
+  "글렌리그": "Glenelg SA",
   // ACT
   "캔버라": "Canberra ACT",
 };
