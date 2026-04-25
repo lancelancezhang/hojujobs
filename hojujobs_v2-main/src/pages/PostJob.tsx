@@ -86,16 +86,16 @@ export default function PostJob() {
     <div className="flex w-full min-h-0 flex-1 flex-col">
       <Header />
       <div className="w-full max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-8">
+        <div className="mb-8 max-w-3xl mx-auto">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
             홈으로
           </Link>
         </div>
 
-        <h2 className="text-2xl font-bold text-foreground mb-8">새 공고 등록</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-8 max-w-3xl mx-auto">새 공고 등록</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <Label>제목 *</Label>
