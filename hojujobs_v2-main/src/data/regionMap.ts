@@ -64,14 +64,14 @@ export const REGION_GROUPS: RegionGroup[] = [
   ]},
   { state: "VIC", region: "이너 이스트 멜버른", suburbs: [
     "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "글렌 웨이벌리", "Mt 웨이버리", "마운트 웨이버리", "마운트 웨이벌리",
-    "말번", "볼윈",
+    "말번", "볼윈", "돈캐스터",
   ]},
   { state: "VIC", region: "사우스 이스트 멜버른", suburbs: [
     "사우스 이스트 멜버른", "채드스톤", "오클리", "오클리 이스트", "글렌 헌틀리", "헌팅데일", "카네기", "단데농", "댄드농", "녹스", "비스",
     "스프링베일", "클레이턴",
   ]},
   { state: "VIC", region: "노스 멜버른", suburbs: [
-    "브로드메도우스", "에핑 (VIC)", "크레이기번", "선샤인", "노스 멜버른",
+    "브로드메도우스", "에핑 (VIC)", "크레이기번", "선샤인", "노스 멜버른", "윌리엄스 랜딩",
   ]},
   { state: "VIC", region: "기타 빅토리아", suburbs: ["질롱", "밸러렛", "벤디고", "드라르고"] },
 
@@ -296,6 +296,8 @@ export const SUBURB_EN: Record<string, string> = {
   "마운트 웨이벌리": "Mount Waverley VIC",
   "말번": "Malvern VIC",
   "볼윈": "Balwyn VIC",
+  "돈캐스터": "Doncaster VIC",
+  "윌리엄스 랜딩": "Williams Landing VIC",
   "채드스톤": "Chadstone VIC",
   "오클리": "Oakleigh VIC",
   "오클리 이스트": "Oakleigh East VIC",
