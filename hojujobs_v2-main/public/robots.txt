@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hojujobs.lovable.app/sitemap.xml
+Sitemap: https://hojujobs.com/sitemap.xml
