@@ -32,17 +32,25 @@ export async function incrementViewCount(jobId: number): Promise<number> {
 }
 
 export async function fetchAllViewCounts(): Promise<Record<number, number>> {
-  const { data, error } = await supabase
-    .from("view_counts")
-    .select("job_id, count");
-  if (error) {
-    console.error("Error fetching view counts:", error);
-    return {};
-  }
+  const PAGE = 1000;
   const counts: Record<number, number> = {};
-  data?.forEach((row) => {
-    counts[row.job_id] = row.count;
-  });
+  let from = 0;
+  while (true) {
+    const { data, error } = await supabase
+      .from("view_counts")
+      .select("job_id, count")
+      .range(from, from + PAGE - 1);
+    if (error) {
+      console.error("Error fetching view counts:", error);
+      break;
+    }
+    if (!data || data.length === 0) break;
+    data.forEach((row) => {
+      counts[row.job_id] = row.count;
+    });
+    if (data.length < PAGE) break;
+    from += PAGE;
+  }
   return counts;
 }
 
