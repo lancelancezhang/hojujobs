@@ -45,8 +45,10 @@ export function useSEO({ title, description, canonical, keywords, htmlLang, ogLo
     }
     setMeta("property", "og:title", title);
     setMeta("property", "og:description", description);
+    setMeta("property", "og:site_name", "Hoju Jobs");
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
+    setMeta("name", "twitter:site", "@hojujobs");
     if (ogLocale) {
       setMeta("property", "og:locale", ogLocale);
     }
