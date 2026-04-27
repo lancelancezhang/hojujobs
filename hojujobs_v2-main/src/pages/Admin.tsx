@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ArrowLeft, Trash2, Shield, ExternalLink, Pencil } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +29,7 @@ interface Job {
 }
 
 export default function Admin() {
+  useSEO({ title: "관리자 | Hoju Jobs", description: "Hoju Jobs 관리자 페이지", noindex: true });
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);

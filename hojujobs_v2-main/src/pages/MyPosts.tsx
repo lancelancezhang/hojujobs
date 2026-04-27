@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ArrowLeft, Plus, Pencil, Trash2, Briefcase } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 interface Job {
   id: number;
@@ -16,6 +17,7 @@ interface Job {
 }
 
 export default function MyPosts() {
+  useSEO({ title: "내 공고 | Hoju Jobs", description: "Hoju Jobs 내 공고 관리", noindex: true });
   const { user } = useAuth();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);

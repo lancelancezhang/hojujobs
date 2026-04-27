@@ -27,26 +27,38 @@ interface Job {
   Promoted?: boolean | null;
 }
 
-const CITY_META: Record<string, { title: string; description: string; canonical: string }> = {
+const CITY_META: Record<string, { title: string; description: string; canonical: string; h1: string; tagline: string; keywords: string }> = {
   NSW: {
     title: "Hoju Jobs - 시드니 한인 구인구직",
     description: "시드니 한인 구인구직 게시판. 시드니 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/sydney",
+    h1: "시드니 한인 구인구직",
+    tagline: "시드니 CBD, 이스트우드, 채스우드, 파라마타 등 전 지역 한인 채용정보",
+    keywords: "시드니 구인구직, 시드니 한인 구인, 시드니 구인, Sydney Korean jobs, 시드니 취업",
   },
   VIC: {
     title: "Hoju Jobs - 멜버른 한인 구인구직",
     description: "멜버른 한인 구인구직 게시판. 멜버른 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/melbourne",
+    h1: "멜버른 한인 구인구직",
+    tagline: "멜버른 CBD, 글렌 웨이벌리, 박스힐 등 전 지역 한인 채용정보",
+    keywords: "멜버른 구인구직, 멜번 한인 구인, 멜버른 구인, Melbourne Korean jobs, 멜번 취업",
   },
   QLD: {
     title: "Hoju Jobs - 브리즈번 한인 구인구직",
     description: "브리즈번 한인 구인구직 게시판. 브리즈번 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/brisbane",
+    h1: "브리즈번 한인 구인구직",
+    tagline: "브리즈번 CBD, 골드코스트 등 전 지역 한인 채용정보",
+    keywords: "브리즈번 구인구직, 브리즈번 한인 구인, Brisbane Korean jobs, 브리즈번 취업",
   },
   SA: {
     title: "Hoju Jobs - 애들레이드 한인 구인구직",
     description: "애들레이드 한인 구인구직 게시판. 애들레이드 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/adelaide",
+    h1: "애들레이드 한인 구인구직",
+    tagline: "애들레이드 전 지역 한인 채용정보",
+    keywords: "애들레이드 구인구직, 애들레이드 한인 구인, Adelaide Korean jobs, 애들레이드 취업",
   },
 };
 
@@ -54,6 +66,9 @@ const DEFAULT_META = {
   title: "Hoju Jobs - 호주 한인 구인구직",
   description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보를 찾아보세요.",
   canonical: "https://hojujobs.com/",
+  h1: "호주 한인 구인구직",
+  tagline: "시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보",
+  keywords: "호주 구인구직, 호주 한인 구인구직, 호주 구인, 시드니 구인, 멜번 구인, 브리즈번 구인, Korean jobs Australia, 호주 취업, 워홀 구인",
 };
 
 interface IndexProps {
@@ -87,15 +102,38 @@ const Index = ({ cityFilter }: IndexProps) => {
     title: meta.title,
     description: meta.description,
     canonical: meta.canonical,
+    keywords: meta.keywords,
     htmlLang: "ko",
     ogLocale: "ko_KR",
-    jsonLd: {
+    jsonLd: cityFilter ? {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Hoju Jobs",
+      "@type": "CollectionPage",
+      name: meta.title,
       url: meta.canonical,
       description: meta.description,
       inLanguage: "ko",
+      isPartOf: { "@type": "WebSite", name: "Hoju Jobs", url: "https://hojujobs.com" },
+    } : {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          name: "Hoju Jobs",
+          alternateName: ["호주잡스", "호주 구인구직", "호주 한인 구인구직"],
+          url: "https://hojujobs.com",
+          description: meta.description,
+          inLanguage: "ko",
+        },
+        {
+          "@type": "Organization",
+          name: "Hoju Jobs",
+          alternateName: ["호주잡스", "호주 구인구직"],
+          url: "https://hojujobs.com",
+          logo: { "@type": "ImageObject", url: "https://hojujobs.com/favicon.png" },
+          description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보.",
+          contactPoint: { "@type": "ContactPoint", email: "admin.hojujobs@gmail.com", contactType: "customer support" },
+        },
+      ],
     },
   });
 
@@ -235,6 +273,11 @@ const Index = ({ cityFilter }: IndexProps) => {
           </div>
 
           <div className="min-w-0">
+            <div className="mb-5">
+              <h1 className="text-lg font-bold text-foreground">{meta.h1}</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">{meta.tagline}</p>
+            </div>
+
             <div className="space-y-3 mb-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

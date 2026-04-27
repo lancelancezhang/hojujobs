@@ -10,8 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Mail, Lock } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Auth() {
+  useSEO({ title: "로그인 | Hoju Jobs", description: "Hoju Jobs 로그인 페이지", noindex: true });
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

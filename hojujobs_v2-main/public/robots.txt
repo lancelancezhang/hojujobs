@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /auth
+Disallow: /my-posts
+Disallow: /post-job
+Disallow: /admin
+Disallow: /edit-job/
 
 Sitemap: https://hojujobs.com/sitemap.xml

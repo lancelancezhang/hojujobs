@@ -21,9 +21,11 @@ interface SEOProps {
   /** Open Graph locale, e.g. "ko_KR" or "en_AU" */
   ogLocale?: string;
   jsonLd?: Record<string, unknown>;
+  /** Prevent search engines from indexing this page */
+  noindex?: boolean;
 }
 
-export function useSEO({ title, description, canonical, keywords, htmlLang, ogLocale, jsonLd }: SEOProps) {
+export function useSEO({ title, description, canonical, keywords, htmlLang, ogLocale, jsonLd, noindex }: SEOProps) {
   useDocumentLangOverride(htmlLang);
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export function useSEO({ title, description, canonical, keywords, htmlLang, ogLo
     setMeta("property", "og:title", title);
     setMeta("property", "og:description", description);
     setMeta("property", "og:site_name", "Hoju Jobs");
+    setMeta("name", "robots", noindex ? "noindex, nofollow" : "index, follow");
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
     setMeta("name", "twitter:site", "@hojujobs");

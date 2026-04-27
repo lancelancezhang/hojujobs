@@ -11,8 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LocationPicker } from "@/components/LocationPicker";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function PostJob() {
+  useSEO({ title: "공고 등록 | Hoju Jobs", description: "Hoju Jobs 공고 등록", noindex: true });
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

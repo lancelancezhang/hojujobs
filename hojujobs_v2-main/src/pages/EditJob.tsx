@@ -10,8 +10,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { LocationPicker } from "@/components/LocationPicker";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function EditJob() {
+  useSEO({ title: "공고 수정 | Hoju Jobs", description: "Hoju Jobs 공고 수정", noindex: true });
   const { id } = useParams();
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
