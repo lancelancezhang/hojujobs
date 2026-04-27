@@ -28,13 +28,13 @@ export const REGION_GROUPS: RegionGroup[] = [
   ]},
   { state: "NSW", region: "라이드 / 이스트우드", suburbs: [
     "라이드", "이스트우드", "에핑", "웨스트 라이드", "탑라이드", "메도우뱅크", "맥쿼리", "맥쿼리빌", "어밍톤",
-    "리달미어", "맥쿼리 파크",
+    "리달미어", "맥쿼리 파크", "글레이즈빌",
   ]},
   { state: "NSW", region: "파라마타 / 웨스트", suburbs: [
     "파라마타", "실버워터", "리드컴", "로즈", "스트라스필드", "버우드", "애쉬필드", "웬트워스 포인트",
     "노스 스트라스필드", "뉴잉턴", "사우스 스트라스필드", "오번", "캠시", "플레밍턴", "해리스 파크",
     "레드콤브", "버른", "지라윈", "노스 파라마타", "그랜빌", "던다스",
-    "콩코드", "콩코드 웨스트", "올림픽 파크", "홈부쉬", "홈부시", "메릴랜즈",
+    "콩코드", "콩코드 웨스트", "올림픽 파크", "홈부쉬", "홈부시", "메릴랜즈", "비르와",
   ]},
   { state: "NSW", region: "힐스 지구", suburbs: [
     "노웨스트", "켈리빌", "라우스 힐", "스탠호프 가든스", "체리브룩", "카슬힐", "듀럴", "노스 록스", "스카트필드", "칼링포드", "페넌트 힐스",
@@ -170,6 +170,7 @@ export const SUBURB_EN: Record<string, string> = {
   "어밍톤": "Ermington NSW",
   "리달미어": "Rydalmere NSW",
   "맥쿼리 파크": "Macquarie Park NSW",
+  "글레이즈빌": "Gladesville NSW",
   "파라마타": "Parramatta NSW",
   "실버워터": "Silverwater NSW",
   "리드컴": "Lidcombe NSW",
@@ -196,6 +197,7 @@ export const SUBURB_EN: Record<string, string> = {
   "올림픽 파크": "Sydney Olympic Park NSW",
   "홈부쉬": "Homebush NSW",
   "홈부시": "Homebush NSW",
+  "비르와": "Birriwa NSW",
   "메릴랜즈": "Merrylands NSW",
   "노웨스트": "Norwest NSW",
   "켈리빌": "Kellyville NSW",
