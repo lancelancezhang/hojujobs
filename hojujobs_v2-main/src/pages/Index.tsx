@@ -33,7 +33,7 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
     description: "시드니 한인 구인구직 게시판. 시드니 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/sydney",
     h1: "시드니 한인 구인구직",
-    tagline: "시드니 CBD, 이스트우드, 채스우드, 파라마타 등 전 지역 한인 채용정보",
+    tagline: "시드니 전 지역 한인 채용정보",
     keywords: "시드니 구인구직, 시드니 한인 구인, 시드니 구인, Sydney Korean jobs, 시드니 취업",
   },
   VIC: {
