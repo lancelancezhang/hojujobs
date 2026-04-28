@@ -9,9 +9,21 @@
   "lang": "ko",
   "icons": [
     {
-      "src": "/favicon.png",
+      "src": "/favicon-48x48.png",
       "type": "image/png",
-      "sizes": "any",
+      "sizes": "48x48",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
       "purpose": "any maskable"
     }
   ]
