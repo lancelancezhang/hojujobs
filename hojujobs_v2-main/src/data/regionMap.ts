@@ -45,7 +45,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "허스트빌", "사우스 허스트빌", "마스콧", "본다이", "본다이 정션",
     "랜드윅", "로즈랜즈", "로즈랜드", "미란다", "울리 크릭", "쿠지", "킹스포드",
     "리버우드", "마트라빌", "로즈 베이", "이스트가든스", "픽허스트",
-    "켄싱턴", "도버 하이츠", "마루브라", "웨이벌리", "코가라", "카링바", "더블 베이", "킹스그로브", "울루워라",
+    "켄싱턴", "도버 하이츠", "마루브라", "웨이벌리", "코가라", "카링바", "더블 베이", "킹스그로브", "울루워라", "보타니",
   ]},
   { state: "NSW", region: "사우스웨스트", suburbs: [
     "캠벨타운", "마운트 드루이트", "스프링우드", "리버풀", "뱅크스타운", "페어필드", "펜리스", "웨스턴 에어리어",
@@ -57,7 +57,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "코프스 하버", "웬트워스", "윈덤", "샌디 비치", "쿠퍼스 하버",
     "뉴카슬", "카툼바", "헌터 밸리", "콥스 하버", "울골", "봄발라",
     "캡스 하버", "그래프턴", "싱글턴", "부카",
-    "엔스워", "웨어하우스", "래빙턴",
+    "엔스워", "웨어하우스", "래빙턴", "윈저",
   ]},
 
   // VIC - Melbourne
@@ -71,12 +71,12 @@ export const REGION_GROUPS: RegionGroup[] = [
   ]},
   { state: "VIC", region: "사우스 이스트 멜버른", suburbs: [
     "사우스 이스트 멜버른", "채드스톤", "오클리", "오클리 이스트", "글렌 헌틀리", "헌팅데일", "카네기", "단데농", "댄드농", "녹스", "비스",
-    "스프링베일", "클레이턴", "엔데버 힐스", "무라빈",
+    "스프링베일", "클레이턴", "엔데버 힐스", "무라빈", "휠러스 힐", "멀그레이브",
   ]},
   { state: "VIC", region: "노스 멜버른", suburbs: [
     "브로드메도우스", "에핑 (VIC)", "크레이기번", "선샤인", "노스 멜버른", "윌리엄스 랜딩", "디어 파크",
   ]},
-  { state: "VIC", region: "기타 빅토리아", suburbs: ["질롱", "밸러렛", "벤디고", "드라르고"] },
+  { state: "VIC", region: "기타 빅토리아", suburbs: ["질롱", "밸러렛", "벤디고", "드라르고", "메리스빌"] },
 
   // SA - Adelaide
   { state: "SA", region: "애들레이드", suburbs: ["글렌리그"] },
@@ -284,6 +284,8 @@ export const SUBURB_EN: Record<string, string> = {
   "엔스워": "NSW Australia",
   "웨어하우스": "Sydney NSW",
   "래빙턴": "Lavington NSW",
+  "윈저": "Windsor NSW",
+  "보타니": "Botany NSW",
   "샌디 비치": "Sandy Beach NSW",
   "쿠퍼스 하버": "Sydney NSW",
   "웬트워스": "Wentworth Falls NSW",
@@ -346,6 +348,9 @@ export const SUBURB_EN: Record<string, string> = {
   "밸러렛": "Ballarat VIC",
   "벤디고": "Bendigo VIC",
   "드라르고": "Dargo VIC",
+  "메리스빌": "Marysville VIC",
+  "휠러스 힐": "Wheelers Hill VIC",
+  "멀그레이브": "Mulgrave VIC",
   // QLD - Brisbane
   "브리즈번": "Brisbane QLD",
   "골드코스트": "Gold Coast QLD",
