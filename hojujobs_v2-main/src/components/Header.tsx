@@ -32,7 +32,7 @@ export function Header() {
               className="h-8 w-8 sm:h-10 sm:w-10"
               aria-hidden="true"
             />
-            <span className="text-base font-black uppercase leading-none tracking-[0.12em] text-[#061b43] sm:text-2xl">
+            <span className="text-xl font-black uppercase leading-none tracking-[0.08em] text-[#061b43] sm:text-[2.35rem]">
               HOJU JOBS
             </span>
           </button>
