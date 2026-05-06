@@ -64,7 +64,7 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
 
 const DEFAULT_META = {
   title: "Hoju Jobs - 호주 한인 구인구직",
-  description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보를 찾아보세요.",
+  description: "시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보. 호주 한인 커뮤니티 구인구직 게시판.",
   canonical: "https://hojujobs.com/",
   h1: "호주 한인 구인구직",
   tagline: "시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보",
