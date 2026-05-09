@@ -152,6 +152,8 @@ const Index = ({ cityFilter }: IndexProps) => {
 
   useEffect(() => {
     async function fetchJobs() {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 7);
       const PAGE = 1000;
       let all: Job[] = [];
       let from = 0;
@@ -159,6 +161,7 @@ const Index = ({ cityFilter }: IndexProps) => {
         const { data, error } = await supabase
           .from("jobs")
           .select("id, title, location, industry, uploaded_at, Promoted")
+          .gte("uploaded_at", cutoff.toISOString())
           .order("uploaded_at", { ascending: false })
           .range(from, from + PAGE - 1);
         if (error) { console.error("jobs fetch error:", error); break; }

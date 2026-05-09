@@ -90,13 +90,21 @@ export default function JobDetail() {
     };
   }, [job]);
 
+  const isExpired = useMemo(() => {
+    if (!job?.uploaded_at) return false;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 7);
+    return new Date(job.uploaded_at) < cutoff;
+  }, [job]);
+
   useSEO({
     title: job ? `${job.title} | Hoju Jobs` : "Hoju Jobs - 호주 한인 구인구직",
     description: job ? (job.description || "").slice(0, 155) : "호주 한인 커뮤니티 구인구직 게시판",
     canonical: job ? `https://hojujobs.com/job/${job.id}` : undefined,
     htmlLang: "ko",
     ogLocale: "ko_KR",
-    jsonLd: jobJsonLd,
+    jsonLd: isExpired ? undefined : jobJsonLd,
+    noindex: isExpired,
   });
 
   if (loading) {
@@ -113,6 +121,24 @@ export default function JobDetail() {
         <div className="text-center">
           <p className="text-muted-foreground mb-4">해당 공고를 찾을 수 없습니다.</p>
           <Link to="/" className="text-primary hover:underline">목록으로 돌아가기</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (isExpired) {
+    return (
+      <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
+        <Header />
+        <div className="flex flex-1 items-center justify-center px-4">
+          <div className="text-center max-w-sm">
+            <div className="text-4xl mb-4">📋</div>
+            <h1 className="text-xl font-bold text-foreground mb-2">이 공고는 만료되었습니다</h1>
+            <p className="text-sm text-muted-foreground mb-6">게시된 지 7일이 지난 공고입니다.</p>
+            <Link to="/" className="inline-block bg-primary text-primary-foreground text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+              최신 공고 보기
+            </Link>
+          </div>
         </div>
       </div>
     );
