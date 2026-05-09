@@ -133,8 +133,7 @@ export default function JobDetail() {
         <div className="flex flex-1 items-center justify-center px-4">
           <div className="text-center max-w-sm">
             <div className="text-4xl mb-4">📋</div>
-            <h1 className="text-xl font-bold text-foreground mb-2">이 공고는 만료되었습니다</h1>
-            <p className="text-sm text-muted-foreground mb-6">게시된 지 7일이 지난 공고입니다.</p>
+            <h1 className="text-xl font-bold text-foreground mb-6">이 공고는 만료되었습니다</h1>
             <Link to="/" className="inline-block bg-primary text-primary-foreground text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
               최신 공고 보기
             </Link>
