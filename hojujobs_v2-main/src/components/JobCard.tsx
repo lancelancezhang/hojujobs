@@ -17,7 +17,7 @@ function formatDate(dateStr?: string) {
   const nowDate = new Date(nowSyd);
   const postDate = new Date(dateSyd);
   const diffDays = Math.round((nowDate.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays === 0) return "오늘";
+  if (diffDays <= 0) return "오늘";
   if (diffDays === 1) return "어제";
   if (diffDays < 7) return `${diffDays}일 전`;
   if (diffDays < 30) return `${Math.floor(diffDays / 7)}주 전`;
