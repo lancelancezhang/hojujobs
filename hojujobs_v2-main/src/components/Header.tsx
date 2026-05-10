@@ -1,5 +1,5 @@
 import { useNavigate, NavLink } from "react-router-dom";
-import { Plus, LogIn, LogOut, FileText, Shield } from "lucide-react";
+import { Plus, LogIn, LogOut, FileText, Shield, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -60,14 +60,24 @@ export function Header() {
                   <span className="sm:hidden">내 글</span>
                 </Button>
                 {isAdmin && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate("/admin")}
-                    className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
-                  >
-                    <Shield className="h-3.5 w-3.5" /> 관리
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate("/dashboard")}
+                      className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
+                    >
+                      <LayoutDashboard className="h-3.5 w-3.5" /> 대시보드
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate("/admin")}
+                      className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
+                    >
+                      <Shield className="h-3.5 w-3.5" /> 관리
+                    </Button>
+                  </>
                 )}
                 <Button
                   variant="ghost"
