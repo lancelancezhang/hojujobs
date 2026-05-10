@@ -13,6 +13,7 @@ import MyPosts from "./pages/MyPosts";
 import EditJob from "./pages/EditJob";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import Dashboard from "./pages/Dashboard";
 import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import Faq from "./pages/Faq";
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="/my-posts" element={<MyPosts />} />
               <Route path="/edit-job/:id" element={<EditJob />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/about" element={<About />} />
               <Route path="/faq" element={<Faq />} />
               <Route path="/blog" element={<Blog />} />
