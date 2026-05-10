@@ -118,6 +118,10 @@ function faviconUrl(domain: string) {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 }
 
+function translatedNewsUrl(url: string) {
+  return `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(url)}`;
+}
+
 function formatRateUpdatedAt(date: Date) {
   return new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Australia/Sydney",
@@ -548,7 +552,7 @@ export default function Dashboard() {
             {CURRENT_NEWS_ARTICLES.map((article, i) => (
               <a
                 key={i}
-                href={article.link}
+                href={translatedNewsUrl(article.link)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-3 px-4 py-3.5 hover:bg-muted/40 transition-colors group"
