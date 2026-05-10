@@ -7,6 +7,13 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Prevent react-remove-scroll from adding padding compensation when a
+   Radix dropdown opens — scrollbar-gutter: stable already reserves the space */
+body[data-scroll-locked] {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
 /* Prevent iOS Safari from zooming in on input focus (requires font-size >= 16px) */
 @media screen and (max-width: 767px) {
   input, select, textarea {
