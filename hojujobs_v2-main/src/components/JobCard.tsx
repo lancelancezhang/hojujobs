@@ -16,6 +16,7 @@ function formatDate(dateStr?: string) {
   const dateSyd = new Date(dateStr).toLocaleDateString("en-CA", { timeZone: tz });
   if (dateSyd >= nowSyd) return "오늘";
   const diffDays = Math.round((new Date(nowSyd).getTime() - new Date(dateSyd).getTime()) / (1000 * 60 * 60 * 24));
+  if (diffDays === 1) return "어제";
   return `${diffDays}일 전`;
 }
 
