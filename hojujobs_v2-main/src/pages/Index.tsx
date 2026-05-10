@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
 
-const ITEMS_PER_PAGE = 25;
+const ITEMS_PER_PAGE = 50;
 
 type SortOption = "recent" | "views";
 

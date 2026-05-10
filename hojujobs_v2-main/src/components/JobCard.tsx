@@ -31,7 +31,7 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
         <div className="flex items-center justify-between gap-3 w-full min-w-0">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
+              <h3 className="text-xs sm:text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{job.title}</h3>
             </div>
             <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
               {job.location && job.location.length > 0 && <span className="flex items-center gap-1 min-w-0 shrink"><MapPin className="h-3 w-3 text-accent/60 shrink-0" /><span className="truncate">{job.location.slice(0, 2).join(", ")}</span></span>}
