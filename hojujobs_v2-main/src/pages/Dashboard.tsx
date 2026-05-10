@@ -16,6 +16,7 @@ interface RateData {
 
 const CONVERSION_AMOUNTS = [100_000, 500_000, 1_000_000, 5_000_000];
 const CALCULATOR_PRESETS = [500_000, 1_000_000, 3_000_000];
+const RATE_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
 const EXTRA_RATES = [
   { code: "USD", flag: "🇺🇸", label: "미국 달러" },
@@ -287,13 +288,21 @@ export default function Dashboard() {
   }, [user, isAdmin, loading]);
 
   useEffect(() => {
-    if (isAdmin) fetchRate();
+    if (!isAdmin) return;
+
+    fetchRate();
+    const intervalId = window.setInterval(() => {
+      fetchRate({ silent: true });
+    }, RATE_REFRESH_INTERVAL_MS);
+
+    return () => window.clearInterval(intervalId);
   }, [isAdmin]);
 
-  const fetchRate = async () => {
-    setLoadingRate(true);
+  const fetchRate = async ({ silent = false } = {}) => {
+    if (!silent) setLoadingRate(true);
+    const cacheBuster = `t=${Date.now()}`;
     try {
-      const res = await fetch("https://open.er-api.com/v6/latest/KRW");
+      const res = await fetch(`https://open.er-api.com/v6/latest/KRW?${cacheBuster}`);
       const data = await res.json();
       if (data.result === "success") {
         const updatedDate = data.time_last_update_unix ? new Date(data.time_last_update_unix * 1000) : new Date();
@@ -311,7 +320,7 @@ export default function Dashboard() {
       throw new Error();
     } catch {
       try {
-        const res = await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.json");
+        const res = await fetch(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.json?${cacheBuster}`);
         const data = await res.json();
         const updatedDate = new Date();
         setRates({
@@ -326,7 +335,7 @@ export default function Dashboard() {
         setRates(null);
       }
     }
-    setLoadingRate(false);
+    if (!silent) setLoadingRate(false);
   };
 
   if (loading) return <div className="flex w-full min-h-0 flex-1 items-center justify-center text-muted-foreground">로딩 중...</div>;
