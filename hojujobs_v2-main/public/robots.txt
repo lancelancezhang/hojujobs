@@ -6,4 +6,12 @@ Disallow: /post-job
 Disallow: /admin
 Disallow: /edit-job/
 
+User-agent: Yeti
+Allow: /
+Disallow: /auth
+Disallow: /my-posts
+Disallow: /post-job
+Disallow: /admin
+Disallow: /edit-job/
+
 Sitemap: https://hojujobs.com/sitemap.xml
