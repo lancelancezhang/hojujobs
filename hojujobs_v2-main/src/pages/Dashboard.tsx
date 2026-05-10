@@ -121,8 +121,7 @@ function faviconUrl(domain: string) {
 function formatRateUpdatedAt(date: Date) {
   return new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Australia/Sydney",
-    year: "numeric",
-    month: "2-digit",
+    month: "long",
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
@@ -308,7 +307,7 @@ export default function Dashboard() {
                     🇦🇺 A$1 = ₩{Math.round(1 / rates.aud).toLocaleString()}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    마지막 업데이트: {rates.updatedAt} (AEST/AEDT)
+                    업데이트: {rates.updatedAt}
                   </p>
                 </div>
                 <div className="divide-y border-b">
