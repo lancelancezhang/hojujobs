@@ -222,7 +222,7 @@ export function MobileLocationFilter({
           "w-full flex items-center justify-between px-3 py-2 rounded-md border text-sm",
           selectedLocations.length > 0
             ? "border-primary/50 bg-primary/5 text-primary"
-            : "border-input bg-background text-muted-foreground"
+            : "border-input bg-muted/40 text-muted-foreground"
         )}>
           <span className="flex items-center gap-2 truncate">
             <MapPin className="h-3.5 w-3.5 shrink-0" />
