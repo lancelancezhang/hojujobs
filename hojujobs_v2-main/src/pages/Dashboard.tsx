@@ -165,9 +165,11 @@ function skyscannerUrl(from: string, to: string, selectedMonth: string) {
   return `https://www.skyscanner.net/transport/flights/${from}/${to}/${yy}${mm}01/?adults=1&rtn=0&cabinclass=economy&market=AU&locale=en-AU&currency=AUD`;
 }
 
-function naverFlightsUrl(destination: string, selectedMonth: string) {
-  const query = `${monthLabel(selectedMonth)} 인천 ${destination} 항공권 네이버 항공권`;
-  return `https://search.naver.com/search.naver?query=${encodeURIComponent(query)}`;
+function naverFlightsUrl(from: string, to: string, selectedMonth: string, isDirect: boolean) {
+  const [year, month] = selectedMonth.split("-");
+  const date = `${year}${month.padStart(2, "0")}01`;
+  const route = `${from.toUpperCase()}:airport-${to.toUpperCase()}:airport-${date}`;
+  return `https://flight.naver.com/flights/international/${route}?adult=1&fareType=Y&isDirect=${isDirect}`;
 }
 
 function flightPrice(price: number, source: FlightSource) {
@@ -511,7 +513,7 @@ export default function Dashboard() {
                           key={`${route.codes}-${deal.airline.iata}`}
                           href={
                             selectedFlightSource === "naver"
-                              ? naverFlightsUrl(route.label, selectedFlightMonth)
+                              ? naverFlightsUrl(route.from, route.to, selectedFlightMonth, deal.direct)
                               : skyscannerUrl(route.from, route.to, selectedFlightMonth)
                           }
                           target="_blank"
