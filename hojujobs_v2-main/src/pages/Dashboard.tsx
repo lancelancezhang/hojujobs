@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import hojuJobsLogo from "@/assets/hoju-jobs-logo.png";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useSEO } from "@/hooks/useSEO";
+import { Header } from "@/components/Header";
 import { RefreshCw, ExternalLink } from "lucide-react";
 
 interface ExchangeRate {
@@ -56,13 +56,12 @@ export default function Dashboard() {
 
   return (
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
+      <Header />
       <div className="max-w-4xl mx-auto px-4 py-8 w-full">
 
-        {/* Header */}
+        {/* Date */}
         <div className="flex items-center justify-between mb-6">
-          <Link to="/">
-            <img src={hojuJobsLogo} alt="Hoju Jobs" className="h-7 hover:opacity-80 transition-opacity" />
-          </Link>
+          <h1 className="text-base font-bold text-foreground">대시보드</h1>
           <span className="text-sm font-medium text-muted-foreground">{todayLabel()}</span>
         </div>
 
