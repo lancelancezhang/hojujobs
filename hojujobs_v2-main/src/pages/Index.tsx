@@ -30,7 +30,7 @@ interface Job {
 
 const CITY_META: Record<string, { title: string; description: string; canonical: string; h1: string; tagline: string; keywords: string }> = {
   NSW: {
-    title: "Hoju Jobs - 시드니 한인 구인구직",
+    title: "호주잡스 - 시드니 한인 구인구직",
     description: "시드니 한인 구인구직 게시판. 시드니 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/sydney",
     h1: "시드니 한인 구인구직",
@@ -38,7 +38,7 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
     keywords: "시드니 구인구직, 시드니 한인 구인, 시드니 구인, Sydney Korean jobs, 시드니 취업",
   },
   VIC: {
-    title: "Hoju Jobs - 멜버른 한인 구인구직",
+    title: "호주잡스 - 멜버른 한인 구인구직",
     description: "멜버른 한인 구인구직 게시판. 멜버른 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/melbourne",
     h1: "멜버른 한인 구인구직",
@@ -46,7 +46,7 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
     keywords: "멜버른 구인구직, 멜번 한인 구인, 멜버른 구인, Melbourne Korean jobs, 멜번 취업",
   },
   QLD: {
-    title: "Hoju Jobs - 브리즈번 한인 구인구직",
+    title: "호주잡스 - 브리즈번 한인 구인구직",
     description: "브리즈번 한인 구인구직 게시판. 브리즈번 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/brisbane",
     h1: "브리즈번 한인 구인구직",
@@ -54,7 +54,7 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
     keywords: "브리즈번 구인구직, 브리즈번 한인 구인, Brisbane Korean jobs, 브리즈번 취업",
   },
   SA: {
-    title: "Hoju Jobs - 애들레이드 한인 구인구직",
+    title: "호주잡스 - 애들레이드 한인 구인구직",
     description: "애들레이드 한인 구인구직 게시판. 애들레이드 전 지역 한인 채용정보를 찾아보세요.",
     canonical: "https://hojujobs.com/adelaide",
     h1: "애들레이드 한인 구인구직",
@@ -64,7 +64,7 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
 };
 
 const DEFAULT_META = {
-  title: "Hoju Jobs - 호주 구인구직 | 한인 채용정보",
+  title: "호주잡스 - 호주 구인구직 | 한인 채용정보",
   description: "호주 구인구직 게시판. 호주 잡스에서 시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보를 찾아보세요.",
   canonical: "https://hojujobs.com/",
   h1: "호주 구인구직",

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE_NAME = "Hoju Jobs";
+const SITE_NAME = "호주잡스";
 
 function useDocumentLangOverride(lang: string | undefined) {
   useEffect(() => {
