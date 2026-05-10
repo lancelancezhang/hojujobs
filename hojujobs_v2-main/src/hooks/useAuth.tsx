@@ -23,10 +23,14 @@ export const useAuth = () => useContext(AuthContext);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [sessionLoading, setSessionLoading] = useState(true);
+  const [adminLoading, setAdminLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const loading = sessionLoading || adminLoading;
+
   const checkAdmin = async (userId: string) => {
+    setAdminLoading(true);
     const { data } = await supabase
       .from("user_roles")
       .select("role")
@@ -34,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq("role", "admin")
       .maybeSingle();
     setIsAdmin(!!data);
+    setAdminLoading(false);
   };
 
   useEffect(() => {
@@ -41,22 +46,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
         if (session?.user) {
-          setTimeout(() => checkAdmin(session.user.id), 0);
+          checkAdmin(session.user.id);
         } else {
           setIsAdmin(false);
+          setAdminLoading(false);
         }
+        setSessionLoading(false);
       }
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
       if (session?.user) {
         checkAdmin(session.user.id);
       }
+      setSessionLoading(false);
     });
 
     return () => subscription.unsubscribe();
