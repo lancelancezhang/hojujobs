@@ -311,8 +311,8 @@ const Index = ({ cityFilter }: IndexProps) => {
                 </div>
                 <div className="lg:hidden contents sm:contents">
                   <Select value={industry} onValueChange={(v) => { setIndustry(v); setPage(1); }}>
-                    <SelectTrigger className={cn("w-full gap-2", industry !== "all" ? "border-primary/50 bg-primary/5 text-primary" : "bg-muted/40")}>
-                      <Briefcase className="h-3.5 w-3.5 shrink-0 opacity-60" />
+                    <SelectTrigger className={cn("w-full gap-2 h-auto py-2 text-sm", industry !== "all" ? "border-primary/50 bg-primary/5 text-primary" : "border-input bg-muted/40 text-muted-foreground")}>
+                      <Briefcase className="h-3.5 w-3.5 shrink-0" />
                       <SelectValue placeholder="전체 업종" />
                     </SelectTrigger>
                     <SelectContent>
