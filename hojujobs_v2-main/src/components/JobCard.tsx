@@ -14,14 +14,9 @@ function formatDate(dateStr?: string) {
   const tz = "Australia/Sydney";
   const nowSyd = new Date().toLocaleDateString("en-CA", { timeZone: tz });
   const dateSyd = new Date(dateStr).toLocaleDateString("en-CA", { timeZone: tz });
-  const nowDate = new Date(nowSyd);
-  const postDate = new Date(dateSyd);
-  const diffDays = Math.round((nowDate.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays <= 0) return "오늘";
-  if (diffDays === 1) return "어제";
-  if (diffDays < 7) return `${diffDays}일 전`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}주 전`;
-  return `${Math.floor(diffDays / 30)}개월 전`;
+  if (dateSyd >= nowSyd) return "오늘";
+  const diffDays = Math.round((new Date(nowSyd).getTime() - new Date(dateSyd).getTime()) / (1000 * 60 * 60 * 24));
+  return `${diffDays}일 전`;
 }
 
 export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {

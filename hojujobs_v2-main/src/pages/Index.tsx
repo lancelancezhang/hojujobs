@@ -64,12 +64,12 @@ const CITY_META: Record<string, { title: string; description: string; canonical:
 };
 
 const DEFAULT_META = {
-  title: "Hoju Jobs - 호주 한인 구인구직",
-  description: "시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보. 호주 한인 커뮤니티 구인구직 게시판.",
+  title: "Hoju Jobs - 호주 구인구직 | 한인 채용정보",
+  description: "호주 구인구직 게시판. 호주 잡스에서 시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보를 찾아보세요.",
   canonical: "https://hojujobs.com/",
-  h1: "호주 한인 구인구직",
+  h1: "호주 구인구직",
   tagline: "시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보",
-  keywords: "호주 구인구직, 호주 한인 구인구직, 호주 구인, 시드니 구인, 멜번 구인, 브리즈번 구인, Korean jobs Australia, 호주 취업, 워홀 구인",
+  keywords: "호주 구인구직, 호주 잡스, 호주잡스, 호주 한인 구인구직, 호주 구인, 시드니 구인, 멜번 구인, 브리즈번 구인, Korean jobs Australia, 호주 취업, 워홀 구인",
 };
 
 interface IndexProps {
@@ -126,7 +126,7 @@ const Index = ({ cityFilter }: IndexProps) => {
           "@type": "WebSite",
           "@id": "https://hojujobs.com/#website",
           name: "Hoju Jobs",
-          alternateName: ["호주잡스", "호주 구인구직", "호주 한인 구인구직"],
+          alternateName: ["호주잡스", "호주 잡스", "호주 구인구직", "호주 한인 구인구직"],
           url: "https://hojujobs.com/",
           description: meta.description,
           inLanguage: "ko",
@@ -135,7 +135,7 @@ const Index = ({ cityFilter }: IndexProps) => {
           "@type": "Organization",
           "@id": "https://hojujobs.com/#organization",
           name: "Hoju Jobs",
-          alternateName: ["호주잡스", "호주 구인구직"],
+          alternateName: ["호주잡스", "호주 잡스", "호주 구인구직"],
           url: "https://hojujobs.com/",
           logo: { "@type": "ImageObject", url: "https://hojujobs.com/favicon.png" },
           description: "호주 한인 커뮤니티 구인구직 게시판. 시드니, 멜번, 브리즈번 등 호주 전역 한인 채용정보.",
