@@ -199,10 +199,10 @@ const FLIGHT_ROUTES = [
     from: "icn",
     to: "syd",
     deals: [
-      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 10시간 10분", direct: true, priceByMonth: [420, 430, 450, 470, 520, 610, 560, 500, 470, 440, 430, 580] },
-      { airline: { iata: "KE", name: "대한항공" }, duration: "약 10시간 10분", direct: true, priceByMonth: [680, 710, 740, 760, 820, 960, 900, 820, 760, 720, 700, 980] },
-      { airline: { iata: "QF", name: "콴타스" }, duration: "약 10시간 10분", direct: true, priceByMonth: [650, 690, 720, 750, 790, 940, 890, 810, 750, 700, 680, 940] },
-      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 15–18시간", direct: false, priceByMonth: [390, 405, 430, 455, 500, 590, 540, 480, 440, 410, 400, 560] },
+      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 15시간 35분", direct: false, priceByMonth: [360, 370, 390, 415, 455, 376, 490, 440, 405, 380, 370, 520] },
+      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 10시간 15분", direct: true, priceByMonth: [420, 430, 450, 470, 520, 444, 560, 500, 470, 440, 430, 580] },
+      { airline: { iata: "TW", name: "티웨이항공" }, duration: "약 10시간 45분", direct: true, priceByMonth: [520, 540, 570, 610, 660, 644, 720, 650, 600, 555, 540, 740] },
+      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 33시간 05분", direct: false, priceByMonth: [470, 490, 520, 560, 620, 521, 675, 610, 560, 515, 495, 700] },
     ],
   },
   {
@@ -212,10 +212,10 @@ const FLIGHT_ROUTES = [
     from: "icn",
     to: "mel",
     deals: [
-      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 14–17시간", direct: false, priceByMonth: [310, 320, 350, 380, 430, 520, 480, 420, 380, 340, 325, 500] },
-      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 13–16시간", direct: false, priceByMonth: [330, 340, 365, 390, 450, 540, 500, 440, 395, 360, 345, 520] },
-      { airline: { iata: "SQ", name: "싱가포르항공" }, duration: "약 14–18시간", direct: false, priceByMonth: [590, 620, 650, 700, 760, 920, 860, 780, 710, 660, 630, 900] },
-      { airline: { iata: "CX", name: "캐세이퍼시픽" }, duration: "약 14–17시간", direct: false, priceByMonth: [560, 590, 630, 680, 730, 880, 830, 750, 690, 630, 600, 850] },
+      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 14–17시간", direct: false, priceByMonth: [310, 320, 350, 380, 430, 365, 480, 420, 380, 340, 325, 500] },
+      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 13–16시간", direct: false, priceByMonth: [330, 340, 365, 390, 450, 395, 500, 440, 395, 360, 345, 520] },
+      { airline: { iata: "VN", name: "베트남항공" }, duration: "약 17–20시간", direct: false, priceByMonth: [390, 410, 445, 480, 540, 438, 580, 520, 480, 435, 420, 610] },
+      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 20–24시간", direct: false, priceByMonth: [410, 430, 465, 505, 560, 472, 610, 550, 505, 465, 445, 640] },
     ],
   },
   {
@@ -225,10 +225,10 @@ const FLIGHT_ROUTES = [
     from: "icn",
     to: "bne",
     deals: [
-      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 9시간 35분", direct: true, priceByMonth: [360, 375, 395, 420, 470, 560, 520, 470, 430, 390, 380, 540] },
-      { airline: { iata: "KE", name: "대한항공" }, duration: "약 9시간 35분", direct: true, priceByMonth: [650, 680, 710, 760, 820, 960, 900, 820, 770, 710, 690, 940] },
-      { airline: { iata: "SQ", name: "싱가포르항공" }, duration: "약 14–17시간", direct: false, priceByMonth: [560, 590, 630, 680, 740, 890, 840, 760, 700, 640, 610, 860] },
-      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 14–18시간", direct: false, priceByMonth: [340, 355, 380, 410, 460, 550, 510, 450, 410, 370, 360, 520] },
+      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 14–18시간", direct: false, priceByMonth: [340, 355, 380, 410, 460, 389, 510, 450, 410, 370, 360, 520] },
+      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 18–22시간", direct: false, priceByMonth: [360, 375, 405, 440, 490, 422, 530, 475, 435, 395, 380, 550] },
+      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 9시간 35분", direct: true, priceByMonth: [360, 375, 395, 420, 470, 468, 520, 470, 430, 390, 380, 540] },
+      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 20–25시간", direct: false, priceByMonth: [420, 440, 475, 520, 570, 492, 615, 555, 510, 465, 445, 650] },
     ],
   },
 ];
