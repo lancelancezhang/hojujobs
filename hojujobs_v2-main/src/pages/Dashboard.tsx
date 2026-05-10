@@ -15,6 +15,7 @@ interface RateData {
 }
 
 const CONVERSION_AMOUNTS = [100_000, 500_000, 1_000_000, 5_000_000];
+const CALCULATOR_PRESETS = [500_000, 1_000_000, 3_000_000];
 
 const EXTRA_RATES = [
   { code: "USD", flag: "🇺🇸", label: "미국 달러" },
@@ -157,11 +158,19 @@ function skyscannerUrl(from: string, to: string, selectedMonth: string) {
   const [year, month] = selectedMonth.split("-");
   const yy = year.slice(2);
   const mm = month.padStart(2, "0");
-  return `https://www.skyscanner.net/transport/flights/${from}/${to}/${yy}${mm}01/?adults=1&rtn=0&cabinclass=economy`;
+  return `https://www.skyscanner.net/transport/flights/${from}/${to}/${yy}${mm}01/?adults=1&rtn=0&cabinclass=economy&market=AU&locale=en-AU&currency=AUD`;
 }
 
 function flightPrice(price: number) {
   return `A$${price.toLocaleString()}`;
+}
+
+function formatAud(amount: number) {
+  return `A$${amount.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function formatKrw(amount: number) {
+  return `₩${amount.toLocaleString("ko-KR")}`;
 }
 
 const FLIGHT_ROUTES = [
@@ -213,6 +222,7 @@ export default function Dashboard() {
   const [rates, setRates] = useState<RateData | null>(null);
   const [loadingRate, setLoadingRate] = useState(true);
   const [selectedFlightMonth, setSelectedFlightMonth] = useState(() => getUpcomingFlightMonths()[0].value);
+  const [krwAmount, setKrwAmount] = useState("1000000");
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) navigate("/");
@@ -267,6 +277,8 @@ export default function Dashboard() {
   const rateForCode = (code: string) => rates?.[code.toLowerCase() as keyof RateData] as number | undefined;
   const flightMonths = getUpcomingFlightMonths();
   const selectedFlightMonthIndex = Number(selectedFlightMonth.split("-")[1]) - 1;
+  const calculatorKrw = Number(krwAmount.replace(/[^\d]/g, ""));
+  const calculatorAud = rates ? calculatorKrw * rates.aud : 0;
 
   return (
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
@@ -321,6 +333,41 @@ export default function Dashboard() {
                       </div>
                     );
                   })}
+                </div>
+                <div className="border-t px-4 py-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-bold text-foreground">KRW → AUD 계산기</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">보유한 원화를 호주 달러로 바로 계산</p>
+                    </div>
+                    <p className="shrink-0 text-lg font-bold text-primary">{formatAud(calculatorAud)}</p>
+                  </div>
+                  <div className="mt-3 flex items-center gap-2 rounded-md border border-input bg-white px-3 py-2">
+                    <span className="text-sm font-semibold text-muted-foreground">₩</span>
+                    <input
+                      value={calculatorKrw ? calculatorKrw.toLocaleString("ko-KR") : ""}
+                      onChange={(event) => setKrwAmount(event.target.value.replace(/[^\d]/g, ""))}
+                      inputMode="numeric"
+                      placeholder="금액 입력"
+                      className="min-w-0 flex-1 bg-transparent text-sm font-semibold text-foreground outline-none placeholder:text-muted-foreground"
+                      aria-label="원화 금액"
+                    />
+                  </div>
+                  <div className="mt-2 grid grid-cols-3 gap-1.5">
+                    {CALCULATOR_PRESETS.map((amount) => (
+                      <button
+                        key={amount}
+                        type="button"
+                        onClick={() => setKrwAmount(String(amount))}
+                        className="h-8 rounded-md border border-border bg-white px-2 text-xs font-semibold text-muted-foreground transition-colors hover:border-primary/40 hover:bg-muted/40 hover:text-foreground"
+                      >
+                        {formatKrw(amount)}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+                    실제 환전 금액은 은행·환전 수수료와 카드사 적용 환율에 따라 달라질 수 있습니다.
+                  </p>
                 </div>
               </div>
             ) : (
