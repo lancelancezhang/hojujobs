@@ -30,52 +30,58 @@ const CITY_LINKS = [
 
 const NEWS_ARTICLES = [
   {
-    title: "워킹홀리데이 비자 신청 수수료 A$670으로 인상",
-    date: "2025년 7월 1일",
+    title: "워홀러 88일 지역 근무, WA 관광지 기준 논란",
+    date: "2026년 4월 3일",
+    year: 2026,
     tag: "비자",
-    summary: "2025년 7월 1일부터 워킹홀리데이 비자(417·462) 신청 수수료가 $635에서 $670으로 인상됐습니다. CPI에 따른 정기 조정으로, 7월 이후 신청자는 새 수수료를 적용받습니다.",
-    link: "https://pvtistes.net/en/australia-whv-fee-increase/",
-    source: "pvtistes.net",
+    summary: "ABC는 로트네스트 아일랜드는 원격 지역으로 인정되지만 마가렛 리버 등 일부 관광지는 인정되지 않아, 2차 비자를 준비하는 워홀러와 지역 카페·숙박업체 모두 인력 확보에 어려움을 겪고 있다고 보도했습니다.",
+    link: "https://www.abc.net.au/news/2026-04-03/backpacker-visa-rules-south-west-wa-rottnest/106478874",
+    source: "ABC News",
   },
   {
-    title: "호주 최저임금 3.5% 인상 — 시간당 A$24.95",
-    date: "2025년 7월 1일",
+    title: "2026 최저임금 인상 논의 — 워홀 일자리 임금도 영향",
+    date: "2026년 3월 26일",
+    year: 2026,
     tag: "임금",
-    summary: "공정근로위원회가 2025년 7월 1일부터 최저임금을 시간당 $24.95(주 38시간 기준 주당 $948)로 확정했습니다. 워킹홀리데이 소지자도 동일 적용되며, 미달 지급 시 Fair Work Ombudsman에 신고 가능합니다.",
-    link: "https://www.fairwork.gov.au/about-us/workplace-laws/annual-wage-review/annual-wage-review-2024-2025",
-    source: "fairwork.gov.au",
+    summary: "연방정부가 2026년 연례 임금 심사에서 물가상승률보다 높은 최저·어워드 임금 인상을 요청했습니다. 카페, 식당, 리테일 등 워홀러가 많이 일하는 업종의 시급 기준을 확인해두면 좋습니다.",
+    link: "https://www.abc.net.au/news/2026-03-26/lift-minimum-wage-above-inflation-federal-government-says/106497922",
+    source: "ABC News",
   },
   {
-    title: "슈퍼애뉴에이션 12%로 인상 — 출국 시 환급 가능",
-    date: "2025년 7월 1일",
-    tag: "연금",
-    summary: "고용주 의무 연금 기여율이 11.5%에서 12%로 최종 인상됐습니다. 워홀러는 출국 시 DASP를 통해 적립금을 환급받을 수 있으나, 환급액의 65%가 세금으로 공제되므로 주의가 필요합니다.",
-    link: "https://gettingdownunder.com/working-holiday-visa-australia-updates-from-july-2025/",
-    source: "gettingdownunder.com",
-  },
-  {
-    title: "2차 비자 지역 근무 인정 지역 확대 — 재해 복구 포함",
-    date: "2025년 4월",
-    tag: "2차 비자",
-    summary: "2차·3차 워킹홀리데이 비자를 위한 지정 업무 인정 지역이 확대돼 산불·홍수·사이클론 피해 복구 작업도 88일 조건에 포함됩니다. 농업·과수원·수산업 등 기존 인정 업종은 그대로 유지됩니다.",
-    link: "https://crossborderedu.org/news/big-changes-in-australia-s-2025-working-holiday-visa-program",
-    source: "crossborderedu.org",
-  },
-  {
-    title: "이주 노동자 착취 방지 신법 — 워홀러 보호 강화",
-    date: "2024–2025",
+    title: "이주 노동자 임금 체불 보고서 — 현금잡 주의",
+    date: "2026년 5월",
+    year: 2026,
     tag: "법률",
-    summary: "비자 소지 근로자를 착취하는 고용주에 형사처벌이 가능해졌습니다. 착취 피해 워홀러는 '직장 정의 비자(6개월)'를 신청할 수 있으며, 신고해도 비자가 취소되지 않는 보호 장치가 마련됐습니다.",
-    link: "https://www.roammigrationlaw.com/new-migration-laws-will-help-protect-exploited-workers/",
-    source: "roammigrationlaw.com",
+    summary: "Migrant Justice Institute의 새 보고서를 인용한 보도에 따르면 임금 체불, 슈퍼 미지급, 불법 공제 등 임시비자 노동자 착취가 여전히 큰 문제입니다. 출국 전에는 페이슬립, TFN, 슈퍼 계좌, 고용계약을 꼭 확인하세요.",
+    link: "https://www.news.com.au/finance/work/at-work/international-students-cheated-out-of318bn-in-annual-wages-new-report-finds/news-story/28981750cb1f6db3b0f1ea9095165ed4",
+    source: "news.com.au",
   },
   {
-    title: "2026년 생활비 현황 — 시드니·멜번·브리즈번 비교",
+    title: "아웃백 일자리 감소 — 연료비 상승이 지역 워홀 구직에 영향",
+    date: "2026년 4월 14일",
+    year: 2026,
+    tag: "2차 비자",
+    summary: "ABC는 연료비 부담과 관광객 감소로 일부 아웃백 로드하우스와 지역 사업장이 시즌 직원을 줄이고 있다고 보도했습니다. 88일 지역 근무를 계획한다면 숙소·교통·실제 근무 가능 여부를 먼저 확인하는 편이 안전합니다.",
+    link: "https://www.abc.net.au/news/2026-04-15/outback-workers-cut-as-tourists-stay-away-fuel-crisis-sa/106537958",
+    source: "ABC News",
+  },
+  {
+    title: "호주 호스텔 트렌드 변화 — 조용한 숙소·개인공간 수요 증가",
+    date: "2026년 4월 22일",
+    year: 2026,
+    tag: "숙소",
+    summary: "가디언은 호주 백패커 숙소가 대형 도미토리와 파티 중심에서 프라이버시, 소셜 공간, 지역 경험을 함께 제공하는 방향으로 바뀌고 있다고 소개했습니다. 도착 초반 숙소를 잡을 때 위치와 장기 숙박 할인도 함께 비교해보세요.",
+    link: "https://www.theguardian.com/travel/2026/apr/22/backpacking-hostel-changes-private-rooms-luxury",
+    source: "The Guardian",
+  },
+  {
+    title: "2026 호주 생활비 가이드 — 도시별 예산 먼저 잡기",
     date: "2026년",
+    year: 2026,
     tag: "생활비",
-    summary: "1인 기준 방 1개 아파트 월세는 시드니 약 $2,700, 멜번 $2,460, 브리즈번 $2,600 수준입니다. 쉐어하우스를 활용하면 주당 $200~$350까지 절감 가능하며, Aldi 이용 시 식료품비도 20~30% 낮출 수 있습니다.",
-    link: "https://lifecalculators.com.au/guides/cost-living-australia",
-    source: "lifecalculators.com.au",
+    summary: "2026년 호주 생활비는 도시와 숙소 형태에 따라 차이가 큽니다. 입국 전 첫 4주 숙소비, 교통카드, 유심, 식비, 보증금까지 계산해두면 첫 구직 기간을 훨씬 안정적으로 버틸 수 있습니다.",
+    link: "https://www.switchliving.com.au/en/student-guide/cost-of-living-in-australia-for-international-students-in-2026-a-complete-guide/",
+    source: "Switch Living",
   },
 ];
 
@@ -85,8 +91,12 @@ const TAG_COLORS: Record<string, string> = {
   "연금": "bg-purple-50 text-purple-700",
   "2차 비자": "bg-orange-50 text-orange-700",
   "법률": "bg-red-50 text-red-700",
+  "숙소": "bg-cyan-50 text-cyan-700",
   "생활비": "bg-yellow-50 text-yellow-700",
 };
+
+const CURRENT_NEWS_YEAR = 2026;
+const CURRENT_NEWS_ARTICLES = NEWS_ARTICLES.filter((article) => article.year === CURRENT_NEWS_YEAR);
 
 function skyscannerUrl(from: string, to: string) {
   const d = new Date();
@@ -303,11 +313,11 @@ export default function Dashboard() {
         {/* News */}
         <div className="rounded-lg border bg-card overflow-hidden">
           <div className="px-4 py-3 border-b">
-            <h2 className="text-sm font-bold text-foreground">📰 워킹홀리데이 최신 뉴스</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">호주 워킹홀리데이 관련 최신 정보</p>
+            <h2 className="text-sm font-bold text-foreground">📰 2026 워킹홀리데이 뉴스</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">호주 입국 전 알아두면 좋은 비자·일자리·생활 정보</p>
           </div>
           <div className="divide-y">
-            {NEWS_ARTICLES.map((article, i) => (
+            {CURRENT_NEWS_ARTICLES.map((article, i) => (
               <a
                 key={i}
                 href={article.link}

@@ -1,6 +1,7 @@
-import { useNavigate, NavLink } from "react-router-dom";
-import { Plus, LogIn, LogOut, FileText, Shield, LayoutDashboard } from "lucide-react";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
+import { Plus, LogIn, LogOut, FileText, Shield, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +16,8 @@ const CITY_TABS = [
 export function Header() {
   const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isInfoActive = location.pathname === "/blog" || location.pathname.startsWith("/blog/") || location.pathname === "/dashboard";
 
   return (
     <header className="bg-white border-b border-border">
@@ -60,24 +63,14 @@ export function Header() {
                   <span className="sm:hidden">내 글</span>
                 </Button>
                 {isAdmin && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate("/dashboard")}
-                      className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
-                    >
-                      <LayoutDashboard className="h-3.5 w-3.5" /> 대시보드
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate("/admin")}
-                      className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
-                    >
-                      <Shield className="h-3.5 w-3.5" /> 관리
-                    </Button>
-                  </>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate("/admin")}
+                    className="gap-1 border-border bg-white px-2 text-xs hover:border-primary/40 hover:bg-slate-50 hover:text-primary sm:gap-1.5 sm:px-3 sm:text-sm"
+                  >
+                    <Shield className="h-3.5 w-3.5" /> 관리
+                  </Button>
                 )}
                 <Button
                   variant="ghost"
@@ -136,19 +129,23 @@ export function Header() {
               </NavLink>
             ))}
           </nav>
-          <NavLink
-            to="/blog"
-            className={({ isActive }) =>
-              cn(
-                "ml-auto flex-none px-2.5 py-2 text-center text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
-                isActive
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger
+              className={cn(
+                "ml-auto flex flex-none items-center gap-1 px-2.5 py-2 text-center text-xs font-medium border-b-2 transition-colors whitespace-nowrap outline-none",
+                isInfoActive
                   ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-              )
-            }
-          >
-            블로그
-          </NavLink>
+              )}
+            >
+              블로그
+              <ChevronDown className="h-3 w-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate("/blog")}>블로그</DropdownMenuItem>
+              {isAdmin && <DropdownMenuItem onClick={() => navigate("/dashboard")}>뉴스</DropdownMenuItem>}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
