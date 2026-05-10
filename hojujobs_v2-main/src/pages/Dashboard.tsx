@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSEO } from "@/hooks/useSEO";
 import { Header } from "@/components/Header";
 import { RefreshCw, ExternalLink, ArrowRight } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface RateData {
   aud: number;
@@ -323,18 +322,18 @@ export default function Dashboard() {
                 <h2 className="text-sm font-bold text-foreground">🇰🇷 최저가 항공편</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">인천 출발 편도 기준 · Skyscanner 확인</p>
               </div>
-              <Select value={selectedFlightMonth} onValueChange={setSelectedFlightMonth}>
-                <SelectTrigger className="h-8 w-[116px] text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent align="end">
-                  {flightMonths.map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
-                      {month.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select
+                value={selectedFlightMonth}
+                onChange={(event) => setSelectedFlightMonth(event.target.value)}
+                className="h-8 w-[116px] rounded-md border border-input bg-background px-2 text-xs font-medium text-foreground outline-none transition-colors hover:border-primary/40 focus:border-primary focus:ring-2 focus:ring-ring focus:ring-offset-1"
+                aria-label="항공편 월 선택"
+              >
+                {flightMonths.map((month) => (
+                  <option key={month.value} value={month.value}>
+                    {month.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="divide-y">
               {FLIGHT_ROUTES.map((route) => {
