@@ -382,8 +382,8 @@ export default function Dashboard() {
                   <h2 className="text-sm font-bold text-foreground">🇰🇷 최저가 항공편</h2>
                   <p className="text-xs text-muted-foreground mt-0.5">인천 출발 편도 기준 · Skyscanner 확인</p>
                 </div>
-                <div className="flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 py-1 text-xs font-semibold text-primary">
-                  <CalendarDays className="h-3.5 w-3.5" />
+                <div className="flex h-8 w-[116px] shrink-0 items-center justify-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 text-xs font-semibold text-primary">
+                  <CalendarDays className="h-3.5 w-3.5 shrink-0" />
                   {monthLabel(selectedFlightMonth)}
                 </div>
               </div>
