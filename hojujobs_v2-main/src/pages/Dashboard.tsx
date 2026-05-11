@@ -434,13 +434,13 @@ export default function Dashboard() {
                   <h2 className="text-sm font-bold text-foreground">🇰🇷 최저가 항공편</h2>
                   <p className="text-xs text-muted-foreground mt-0.5">인천 출발 편도 기준 · {activeFlightSource?.label} 확인</p>
                 </div>
-                <div className="grid w-[176px] shrink-0 grid-cols-2 gap-1 rounded-md border border-border bg-muted/40 p-1" aria-label="항공권 검색 소스 선택">
+                <div className="flex shrink-0 gap-1 rounded-md border border-border bg-muted/40 p-1" aria-label="항공권 검색 소스 선택">
                   {FLIGHT_SOURCE_OPTIONS.map((source) => (
                     <button
                       key={source.id}
                       type="button"
                       onClick={() => setSelectedFlightSource(source.id)}
-                      className={`flex h-7 items-center justify-center gap-1.5 rounded px-1.5 text-[11px] font-semibold transition-colors ${
+                      className={`flex h-7 w-[84px] items-center justify-center gap-1.5 rounded px-2 text-[11px] font-semibold transition-colors ${
                         selectedFlightSource === source.id
                           ? source.id === "skyscanner"
                             ? "bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-200"
