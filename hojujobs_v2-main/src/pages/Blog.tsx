@@ -51,12 +51,11 @@ export default function Blog() {
 
         <header className="space-y-3">
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            호주 워킹홀리데이 한인 카페 · 호스피탈리티 일자리 구직 가이드 (멜버른 · 시드니)
+            호주 워홀 카페 일자리 찾는 법
           </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            이 블로그는 호주 워킹홀리데이로 멜버른과 시드니에 온 한국인들이 한인 카페와 호스피탈리티
-            일자리를 가장 빠르게 구할 수 있도록 만든 실전 구직 가이드입니다. 카페 알바를 구하는 방법,
-            자주 떨어지는 이유, 그리고 현재 올라온 한인 구인 정보를 한눈에 확인하는 방법까지 정리했습니다.
+            멜버른과 시드니에서 카페 알바를 찾는 워홀러를 위해 쉽게 정리했어요.
+            어디서 공고를 보고, 어떻게 연락하고, 왜 지원이 잘 안 되는지까지 차근차근 알려드립니다.
           </p>
         </header>
 
