@@ -356,7 +356,7 @@ export default function Dashboard() {
               <div>
                 <div className="px-4 py-4 border-b">
                   <p className="text-2xl font-bold text-foreground">
-                    ₩1,000 = <span className="text-primary">A${(rates.aud * 1000).toFixed(5)}</span>
+                    ₩1,000 = <span className="text-primary">A${(rates.aud * 1000).toFixed(3)}</span>
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     🇦🇺 A$1 = ₩{Math.round(1 / rates.aud).toLocaleString()}
