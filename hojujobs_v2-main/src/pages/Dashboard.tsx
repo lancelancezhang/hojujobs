@@ -311,10 +311,6 @@ export default function Dashboard() {
         .single();
       if (error || !data) throw error;
       const fetchedAt = new Date(data.fetched_at);
-      const staleMs = Date.now() - fetchedAt.getTime();
-      if (staleMs > RATE_REFRESH_INTERVAL_MS) {
-        supabase.functions.invoke("refresh-exchange-rates").then(() => fetchRate(true)).catch(() => {});
-      }
       setRates({
         aud: Number(data.aud),
         usd: Number(data.usd),

@@ -1,0 +1,17 @@
+name: Refresh Exchange Rates
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call edge function
+        run: |
+          curl -sf -X POST \
+            https://khxkzudzkklfyivgnmmq.supabase.co/functions/v1/refresh-exchange-rates \
+            -H "Content-Type: application/json" \
+            -d '{}'
