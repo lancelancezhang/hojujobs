@@ -114,8 +114,8 @@ export function Header() {
         </div>
 
         {/* City tabs */}
-        <div className="-mx-1 flex items-center gap-0">
-          <nav className="flex min-w-0 flex-1 gap-0" aria-label="지역별 공고">
+        <div className="-mx-1 grid grid-cols-5 items-center gap-0 sm:flex">
+          <nav className="contents sm:flex sm:min-w-0 sm:flex-1 sm:gap-0" aria-label="지역별 공고">
             {CITY_TABS.map(({ label, path }) => (
               <NavLink
                 key={path}
@@ -123,7 +123,7 @@ export function Header() {
                 end={path === "/"}
                 className={({ isActive }) =>
                   cn(
-                    "flex-1 sm:flex-none text-center px-2.5 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
+                    "min-w-0 px-1 py-2 text-center text-xs font-medium border-b-2 transition-colors whitespace-nowrap sm:flex-none sm:px-2.5",
                     isActive
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
@@ -155,7 +155,7 @@ export function Header() {
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger
               className={cn(
-                "ml-auto flex w-[4.75rem] flex-none items-center justify-center gap-0.5 px-1.5 py-1.5 text-center text-xs font-semibold transition-colors whitespace-nowrap outline-none rounded-md sm:hidden",
+                "flex w-full min-w-0 flex-none items-center justify-center gap-0.5 px-1 py-1.5 text-center text-xs font-semibold transition-colors whitespace-nowrap outline-none rounded-md sm:hidden",
                 isInfoActive
                   ? "text-primary bg-primary/8"
                   : "text-primary bg-primary/10 hover:bg-primary/15 hover:text-primary"
