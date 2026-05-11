@@ -18,7 +18,7 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isInfoActive = location.pathname === "/blog" || location.pathname.startsWith("/blog/") || location.pathname === "/dashboard";
-  const infoLabel = location.pathname === "/dashboard" ? "워홀정보" : "블로그";
+  const infoLabel = "워홀정보";
 
   return (
     <header className="bg-white border-b border-border">
