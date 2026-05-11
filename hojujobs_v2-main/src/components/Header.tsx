@@ -133,18 +133,18 @@ export function Header() {
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger
               className={cn(
-                "ml-auto flex flex-none items-center gap-1 px-2.5 py-2 text-center text-xs font-medium border-b-2 transition-colors whitespace-nowrap outline-none",
+                "ml-auto flex flex-none items-center gap-1 px-2.5 py-2 text-center text-xs font-semibold border-b-2 transition-colors whitespace-nowrap outline-none",
                 isInfoActive
                   ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                  : "border-transparent text-primary/70 hover:text-primary hover:border-primary/40"
               )}
             >
               {infoLabel}
               <ChevronDown className="h-3 w-3" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate("/dashboard")}>워홀정보</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/blog")}>블로그</DropdownMenuItem>
-              {isAdmin && <DropdownMenuItem onClick={() => navigate("/dashboard")}>워홀정보</DropdownMenuItem>}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

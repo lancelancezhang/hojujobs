@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/useSEO";
 import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
@@ -200,10 +199,10 @@ const FLIGHT_ROUTES = [
     from: "icn",
     to: "syd",
     deals: [
-      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 15시간 35분", direct: false, priceByMonth: [360, 370, 390, 415, 455, 376, 490, 440, 405, 380, 370, 520] },
-      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 10시간 15분", direct: true, priceByMonth: [420, 430, 450, 470, 520, 444, 560, 500, 470, 440, 430, 580] },
-      { airline: { iata: "TW", name: "티웨이항공" }, duration: "약 10시간 45분", direct: true, priceByMonth: [520, 540, 570, 610, 660, 644, 720, 650, 600, 555, 540, 740] },
-      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 33시간 05분", direct: false, priceByMonth: [470, 490, 520, 560, 620, 521, 675, 610, 560, 515, 495, 700] },
+      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 15시간 35분", direct: false, priceByMonth: [360, 370, 390, 415, 455, 365, 480, 435, 398, 372, 385, 520] },
+      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 10시간 15분", direct: true, priceByMonth: [420, 430, 450, 470, 520, 449, 555, 492, 462, 435, 458, 580] },
+      { airline: { iata: "TW", name: "티웨이항공" }, duration: "약 10시간 45분", direct: true, priceByMonth: [520, 540, 570, 610, 660, 589, 699, 635, 582, 542, 561, 740] },
+      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 33시간 05분", direct: false, priceByMonth: [470, 490, 520, 560, 620, 499, 655, 592, 542, 495, 515, 700] },
     ],
   },
   {
@@ -213,10 +212,10 @@ const FLIGHT_ROUTES = [
     from: "icn",
     to: "mel",
     deals: [
-      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 14–17시간", direct: false, priceByMonth: [310, 320, 350, 380, 430, 365, 480, 420, 380, 340, 325, 500] },
-      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 13–16시간", direct: false, priceByMonth: [330, 340, 365, 390, 450, 395, 500, 440, 395, 360, 345, 520] },
-      { airline: { iata: "VN", name: "베트남항공" }, duration: "약 17–20시간", direct: false, priceByMonth: [390, 410, 445, 480, 540, 438, 580, 520, 480, 435, 420, 610] },
-      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 20–24시간", direct: false, priceByMonth: [410, 430, 465, 505, 560, 472, 610, 550, 505, 465, 445, 640] },
+      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 14–17시간", direct: false, priceByMonth: [310, 320, 350, 380, 430, 355, 472, 412, 372, 338, 358, 500] },
+      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 13–16시간", direct: false, priceByMonth: [330, 340, 365, 390, 450, 385, 492, 432, 388, 355, 375, 520] },
+      { airline: { iata: "VN", name: "베트남항공" }, duration: "약 17–20시간", direct: false, priceByMonth: [390, 410, 445, 480, 540, 428, 569, 509, 469, 425, 445, 610] },
+      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 20–24시간", direct: false, priceByMonth: [410, 430, 465, 505, 560, 458, 599, 539, 495, 452, 472, 640] },
     ],
   },
   {
@@ -226,10 +225,10 @@ const FLIGHT_ROUTES = [
     from: "icn",
     to: "bne",
     deals: [
-      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 14–18시간", direct: false, priceByMonth: [340, 355, 380, 410, 460, 389, 510, 450, 410, 370, 360, 520] },
-      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 18–22시간", direct: false, priceByMonth: [360, 375, 405, 440, 490, 422, 530, 475, 435, 395, 380, 550] },
-      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 9시간 35분", direct: true, priceByMonth: [360, 375, 395, 420, 470, 468, 520, 470, 430, 390, 380, 540] },
-      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 20–25시간", direct: false, priceByMonth: [420, 440, 475, 520, 570, 492, 615, 555, 510, 465, 445, 650] },
+      { airline: { iata: "CZ", name: "중국남방항공" }, duration: "약 14–18시간", direct: false, priceByMonth: [340, 355, 380, 410, 460, 379, 502, 442, 402, 362, 378, 520] },
+      { airline: { iata: "MU", name: "중국동방항공" }, duration: "약 18–22시간", direct: false, priceByMonth: [360, 375, 405, 440, 490, 412, 522, 465, 425, 385, 405, 550] },
+      { airline: { iata: "JQ", name: "제트스타" }, duration: "약 9시간 35분", direct: true, priceByMonth: [360, 375, 395, 420, 470, 455, 512, 458, 418, 378, 398, 540] },
+      { airline: { iata: "VJ", name: "비엣젯항공" }, duration: "약 20–25시간", direct: false, priceByMonth: [420, 440, 475, 520, 570, 479, 605, 542, 498, 452, 472, 650] },
     ],
   },
 ];
@@ -277,9 +276,7 @@ const NAVER_FLIGHT_ROUTES = [
 ];
 
 export default function Dashboard() {
-  useSEO({ title: "대시보드 | 호주잡스", description: "호주잡스 관리자 대시보드", noindex: true });
-  const { user, isAdmin, loading } = useAuth();
-  const navigate = useNavigate();
+  useSEO({ title: "워홀정보 | 호주잡스", description: "호주 워킹홀리데이 환율, 항공, 최신 뉴스 정보" });
   const [rates, setRates] = useState<RateData | null>(null);
   const [loadingRate, setLoadingRate] = useState(true);
   const [selectedFlightMonth, setSelectedFlightMonth] = useState(() => getUpcomingFlightMonths()[0].value);
@@ -287,19 +284,12 @@ export default function Dashboard() {
   const [krwAmount, setKrwAmount] = useState("1000000");
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) navigate("/");
-  }, [user, isAdmin, loading]);
-
-  useEffect(() => {
-    if (!isAdmin) return;
-
     fetchRate();
     const intervalId = window.setInterval(() => {
       fetchRate(true);
     }, RATE_REFRESH_INTERVAL_MS);
-
     return () => window.clearInterval(intervalId);
-  }, [isAdmin]);
+  }, []);
 
   const fetchRate = async (silent = false) => {
     if (!silent) setLoadingRate(true);
@@ -325,8 +315,6 @@ export default function Dashboard() {
     if (!silent) setLoadingRate(false);
   };
 
-  if (loading) return <div className="flex w-full min-h-0 flex-1 items-center justify-center text-muted-foreground">로딩 중...</div>;
-  if (!isAdmin) return null;
 
   const rateForCode = (code: string) => rates?.[code.toLowerCase() as keyof RateData] as number | undefined;
   const flightMonths = getUpcomingFlightMonths();
