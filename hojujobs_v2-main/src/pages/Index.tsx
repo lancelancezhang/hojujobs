@@ -12,10 +12,11 @@ import { Pagination } from "@/components/Pagination";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
-import { SUBURB_EN } from "@/data/regionMap";
+import { REGION_GROUPS, SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
 
 const ITEMS_PER_PAGE = 50;
+const BACKGROUND_FETCH_PAGE_SIZE = 1000;
 
 type SortOption = "recent" | "views";
 
@@ -71,6 +72,24 @@ const DEFAULT_META = {
   tagline: "시드니·멜번·브리즈번·애들레이드 최신 한인 채용정보",
   keywords: "호주 구인구직, 호주 잡스, 호주잡스, 호주 한인 구인구직, 호주 구인, 시드니 구인, 멜번 구인, 브리즈번 구인, Korean jobs Australia, 호주 취업, 워홀 구인",
 };
+
+function getCityLocations(state: string) {
+  const suburbSet = new Set<string>();
+
+  REGION_GROUPS
+    .filter((group) => group.state === state)
+    .forEach((group) => {
+      group.suburbs.forEach((suburb) => suburbSet.add(suburb));
+    });
+
+  Object.entries(SUBURB_EN).forEach(([suburb, englishName]) => {
+    if (englishName.endsWith(` ${state}`)) {
+      suburbSet.add(suburb);
+    }
+  });
+
+  return [...suburbSet];
+}
 
 interface IndexProps {
   cityFilter?: string;
@@ -152,30 +171,70 @@ const Index = ({ cityFilter }: IndexProps) => {
   }, [keyword, selectedLocations, industry, page, sortBy]);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 7);
+
+    const cityLocations = cityFilter ? getCityLocations(cityFilter) : [];
+
+    function buildJobsQuery(from: number, to: number) {
+      let query = supabase
+        .from("jobs")
+        .select("id, title, location, industry, uploaded_at, Promoted")
+        .gte("uploaded_at", cutoff.toISOString());
+
+      if (cityLocations.length > 0) {
+        query = query.overlaps("location", cityLocations);
+      }
+
+      return query.order("uploaded_at", { ascending: false }).range(from, to);
+    }
+
     async function fetchJobs() {
-      const cutoff = new Date();
-      cutoff.setDate(cutoff.getDate() - 7);
-      const PAGE = 1000;
-      let all: Job[] = [];
-      let from = 0;
+      setLoadingJobs(true);
+
+      const initial = await buildJobsQuery(0, ITEMS_PER_PAGE - 1);
+
+      if (cancelled) return;
+
+      if (initial.error) {
+        console.error("jobs fetch error:", initial.error);
+        setJobsData([]);
+        setLoadingJobs(false);
+        return;
+      }
+
+      const firstPageJobs = (initial.data as unknown as Job[]) || [];
+      setJobsData(firstPageJobs);
+      setLoadingJobs(false);
+
+      if (firstPageJobs.length < ITEMS_PER_PAGE) {
+        return;
+      }
+
+      let all = firstPageJobs;
+      let from = ITEMS_PER_PAGE;
       while (true) {
-        const { data, error } = await supabase
-          .from("jobs")
-          .select("id, title, location, industry, uploaded_at, Promoted")
-          .gte("uploaded_at", cutoff.toISOString())
-          .order("uploaded_at", { ascending: false })
-          .range(from, from + PAGE - 1);
+        const { data, error } = await buildJobsQuery(from, from + BACKGROUND_FETCH_PAGE_SIZE - 1);
+        if (cancelled) return;
+
         if (error) { console.error("jobs fetch error:", error); break; }
         if (!data || data.length === 0) break;
+
         all = all.concat(data as unknown as Job[]);
-        if (data.length < PAGE) break;
-        from += PAGE;
+        setJobsData(all);
+
+        if (data.length < BACKGROUND_FETCH_PAGE_SIZE) break;
+        from += BACKGROUND_FETCH_PAGE_SIZE;
       }
-      setJobsData(all);
-      setLoadingJobs(false);
     }
+
     fetchJobs();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [cityFilter]);
 
   const scrollRestored = useRef(false);
   useEffect(() => {
