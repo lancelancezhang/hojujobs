@@ -106,7 +106,7 @@ export default function MyPosts() {
                   </Link>
                   <p className="text-xs text-muted-foreground">
                     {(job.location || []).join(", ")}
-                    {job.industry ? ` · ${job.industry}` : ""}
+                    {job.industry ? `  ${job.industry}` : ""}
                   </p>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">

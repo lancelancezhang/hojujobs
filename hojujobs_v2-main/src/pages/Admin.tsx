@@ -102,8 +102,8 @@ export default function Admin() {
                   </div>
                   <p className="text-sm text-muted-foreground truncate">
                     {(job.location || []).join(", ")}
-                    {job.industry ? ` · ${job.industry}` : ""}
-                    {job.uploaded_at ? ` · ${new Date(job.uploaded_at).toLocaleDateString("ko-KR")}` : ""}
+                    {job.industry ? `  ${job.industry}` : ""}
+                    {job.uploaded_at ? `  ${new Date(job.uploaded_at).toLocaleDateString("ko-KR")}` : ""}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">

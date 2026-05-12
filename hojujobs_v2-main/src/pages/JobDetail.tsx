@@ -231,7 +231,7 @@ export default function JobDetail() {
                       <div className="absolute inset-0 bg-transparent group-hover:bg-black/5 transition-colors flex items-end justify-end p-3">
                         <span className="flex items-center gap-1.5 text-xs font-medium bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-border text-foreground">
                           <ExternalLink className="h-3 w-3" />
-                          {loc} · Google Maps에서 보기
+                          {loc}  Google Maps에서 보기
                         </span>
                       </div>
                     </div>

@@ -512,7 +512,7 @@ export default function Dashboard() {
         <div className="rounded-lg border bg-card overflow-hidden">
           <div className="px-4 py-3 border-b">
             <h2 className="text-sm font-bold text-foreground">최근 호주 뉴스</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">비자·일자리·생활 정보</p>
+            <p className="text-xs text-muted-foreground mt-0.5">비자, 일자리, 생활 정보</p>
           </div>
           <div className="divide-y divide-border/40">
             {CURRENT_NEWS_ARTICLES.map((article, i) => (
