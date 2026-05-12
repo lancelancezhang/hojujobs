@@ -1,5 +1,5 @@
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
-import { Plus, LogIn, LogOut, FileText, Shield, ChevronDown } from "lucide-react";
+import { Plus, LogIn, FileText, Shield, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,7 +18,7 @@ const INFO_TABS = [
 ];
 
 export function Header() {
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isInfoActive = location.pathname === "/blog" || location.pathname.startsWith("/blog/") || location.pathname === "/dashboard";
@@ -26,7 +26,7 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-border">
-      <div className="max-w-6xl mx-auto px-4 pt-4 sm:pt-5">
+      <div className="max-w-6xl mx-auto px-5 sm:px-4 pt-4 sm:pt-5">
         <div className="flex items-center justify-between pb-7 sm:pb-8">
           <button
             type="button"
@@ -77,15 +77,6 @@ export function Header() {
                     <Shield className="h-3.5 w-3.5" /> 관리
                   </Button>
                 )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={signOut}
-                  className="gap-1 px-2 text-muted-foreground hover:bg-slate-100 hover:text-primary sm:px-3"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span className="text-xs">로그아웃</span>
-                </Button>
               </>
             ) : (
               <>

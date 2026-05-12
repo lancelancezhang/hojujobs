@@ -28,7 +28,6 @@ const CITY_LINKS = [
   { label: "시드니 구인구직", path: "/sydney", sub: "NSW 전 지역" },
   { label: "멜버른 구인구직", path: "/melbourne", sub: "VIC 전 지역" },
   { label: "브리즈번 구인구직", path: "/brisbane", sub: "QLD 전 지역" },
-  { label: "애들레이드 구인구직", path: "/adelaide", sub: "SA 전 지역" },
 ];
 
 const NEWS_ARTICLES = [

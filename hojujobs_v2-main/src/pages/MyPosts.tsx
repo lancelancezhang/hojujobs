@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Pencil, Trash2, Briefcase } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Briefcase, LogOut } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 
 interface Job {
@@ -18,7 +18,7 @@ interface Job {
 
 export default function MyPosts() {
   useSEO({ title: "내 공고 | Hoju Jobs", description: "Hoju Jobs 내 공고 관리", noindex: true });
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,9 +78,14 @@ export default function MyPosts() {
 
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-foreground">내 공고 관리</h2>
-          <Button onClick={() => navigate("/post-job")}>
-            <Plus className="h-4 w-4 mr-1.5" /> 새 공고
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => navigate("/post-job")}>
+              <Plus className="h-4 w-4 mr-1.5" /> 새 공고
+            </Button>
+            <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-muted-foreground hover:text-primary">
+              <LogOut className="h-4 w-4" /> 로그아웃
+            </Button>
+          </div>
         </div>
 
         {loading ? (

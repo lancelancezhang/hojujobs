@@ -33,7 +33,7 @@ export function PromotedJobCard({ job, viewCount = 0 }: { job: Job; viewCount?: 
                 <Sparkles className="h-2.5 w-2.5" />
                 추천
               </span>
-              <h3 className="text-sm font-bold text-foreground truncate group-hover:text-amber-700 transition-colors">{job.title}</h3>
+              <h3 className="text-xs sm:text-sm font-bold text-foreground truncate group-hover:text-amber-700 transition-colors">{job.title}</h3>
             </div>
             <div className="flex items-center gap-x-3 text-xs text-muted-foreground overflow-hidden">
               {job.location?.length > 0 && <span className="flex items-center gap-1 min-w-0 shrink"><MapPin className="h-3 w-3 text-accent/60 shrink-0" /><span className="truncate">{job.location.slice(0, 2).join(", ")}</span></span>}
