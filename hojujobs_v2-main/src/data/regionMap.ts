@@ -26,6 +26,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "브룩베일", "나라위나", "디 와이", "워링가",
     "노스쇼어", "뉴포트", "노던 비치스", "콜라로이", "포레스트빌", "헌터스 힐", "크로즈 네스트",
     "쿠강갈라", "욀로비", "투라무라", "윌로비", "프레시워터", "노먼허스트", "뉴트럴베이", "뉴트럴 베이", "프렌치스 포레스트",
+    "핌블",
   ]},
   { state: "NSW", region: "라이드 / 이스트우드", suburbs: [
     "라이드", "이스트우드", "에핑", "웨스트 라이드", "탑라이드", "메도우뱅크", "맥쿼리", "맥쿼리빌", "어밍톤",
@@ -64,6 +65,7 @@ export const REGION_GROUPS: RegionGroup[] = [
   { state: "VIC", region: "멜버른 CBD / 이너", suburbs: [
     "멜버른 CBD", "도클랜드", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "엘스터닉", "콜링우드", "피츠로이", "칼튼",
     "앨버트 파크", "사우스뱅크", "세든", "풋스크레이", "매리비농", "칼턴", "브런즈윅",
+    "리치몬드",
   ]},
   { state: "VIC", region: "이너 이스트 멜버른", suburbs: [
     "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "글렌 웨이벌리", "Mt 웨이버리", "마운트 웨이버리", "마운트 웨이벌리",
@@ -147,6 +149,7 @@ export const SUBURB_EN: Record<string, string> = {
   "고든": "Gordon NSW",
   "노던 비치": "Northern Beaches NSW",
   "린필드": "Lindfield NSW",
+  "핌블": "Pymble NSW",
   "맨리": "Manly NSW",
   "발고울라": "Balgowlah NSW",
   "브룩베일": "Brookvale NSW",
@@ -323,6 +326,7 @@ export const SUBURB_EN: Record<string, string> = {
   "칼튼": "Carlton VIC",
   "앨버트 파크": "Albert Park VIC",
   "사우스뱅크": "Southbank VIC",
+  "리치몬드": "Richmond VIC",
   "큐": "Kew VIC",
   "캠버웰": "Camberwell VIC",
   "헤이쏜": "Hawthorn VIC",
