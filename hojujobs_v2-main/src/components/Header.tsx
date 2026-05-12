@@ -55,7 +55,7 @@ export function Header() {
                 >
                   <Plus className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">공고 등록</span>
-                  <span className="sm:hidden">등록</span>
+                  <span className="sm:hidden">공고등록</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -65,7 +65,7 @@ export function Header() {
                 >
                   <FileText className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">내 공고</span>
-                  <span className="sm:hidden">내 글</span>
+                  <span className="sm:hidden">내 프로필</span>
                 </Button>
                 {isAdmin && (
                   <Button
