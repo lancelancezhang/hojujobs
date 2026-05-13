@@ -31,6 +31,7 @@ export function JobCard({ job, viewCount = 0, showEditButton = false }: { job: J
 
   const openJob = () => {
     sessionStorage.setItem("hoju_scroll_y", String(window.scrollY));
+    sessionStorage.setItem(`hoju_job_view_count_${job.id}`, String(viewCount));
     navigate(`/job/${job.id}`);
   };
 

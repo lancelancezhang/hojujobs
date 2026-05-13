@@ -26,17 +26,32 @@ interface Job {
   uploaded_at: string | null;
 }
 
+function readCachedViewCount(id?: string) {
+  if (!id) return null;
+
+  const cached = sessionStorage.getItem(`hoju_job_view_count_${id}`);
+  if (cached == null) return null;
+
+  const count = Number(cached);
+  return Number.isFinite(count) ? count : null;
+}
+
+function cacheViewCount(jobId: number, count: number) {
+  sessionStorage.setItem(`hoju_job_view_count_${jobId}`, String(count));
+}
+
 export default function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
-  const [viewCount, setViewCount] = useState(0);
+  const [viewCount, setViewCount] = useState<number | null>(() => readCachedViewCount(id));
 
   useEffect(() => {
     let cancelled = false;
 
     async function fetchJob() {
       setLoading(true);
+      setViewCount(readCachedViewCount(id));
 
       const { data, error } = await supabase
         .from("jobs")
@@ -64,7 +79,9 @@ export default function JobDetail() {
               .eq("job_id", data.id)
               .maybeSingle();
             if (cancelled) return;
-            setViewCount(vcRow?.count ?? 0);
+            const count = vcRow?.count ?? 0;
+            setViewCount(count);
+            cacheViewCount(data.id, count);
             return;
           }
         }
@@ -72,6 +89,7 @@ export default function JobDetail() {
         const newCount = await incrementViewCount(data.id);
         if (cancelled) return;
         setViewCount(newCount);
+        cacheViewCount(data.id, newCount);
         window.localStorage.setItem(storageKey, String(now));
         return;
       }
@@ -179,7 +197,7 @@ export default function JobDetail() {
           </div>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />등록일: {formatDate(job.uploaded_at)}</span>
-            <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" />조회 {viewCount}회</span>
+            <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" />조회 {viewCount ?? "-"}회</span>
           </div>
         </div>
 
