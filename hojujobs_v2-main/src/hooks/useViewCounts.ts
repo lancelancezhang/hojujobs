@@ -54,6 +54,27 @@ export async function fetchAllViewCounts(): Promise<Record<number, number>> {
   return counts;
 }
 
+export async function fetchViewCountsByJobIds(jobIds: number[]): Promise<Record<number, number>> {
+  const uniqueIds = [...new Set(jobIds)];
+  if (uniqueIds.length === 0) return {};
+
+  const { data, error } = await supabase
+    .from("view_counts")
+    .select("job_id, count")
+    .in("job_id", uniqueIds);
+
+  if (error) {
+    console.error("Error fetching view counts:", error);
+    return {};
+  }
+
+  const counts: Record<number, number> = {};
+  data?.forEach((row) => {
+    counts[row.job_id] = row.count;
+  });
+  return counts;
+}
+
 export function useViewCounts() {
   const [counts, setCounts] = useState<Record<number, number>>({});
 
@@ -85,10 +106,14 @@ export function useViewCounts() {
     return newCount;
   }, []);
 
+  const hydrateCounts = useCallback((nextCounts: Record<number, number>) => {
+    setCounts((prev) => ({ ...prev, ...nextCounts }));
+  }, []);
+
   const getCount = useCallback(
     (jobId: number) => counts[jobId] || 0,
     [counts]
   );
 
-  return { counts, increment, getCount };
+  return { counts, increment, getCount, hydrateCounts };
 }

@@ -10,7 +10,7 @@ import { JobCard } from "@/components/JobCard";
 import { PromotedJobCard } from "@/components/PromotedJobCard";
 import { Pagination } from "@/components/Pagination";
 import { CategorySidebar } from "@/components/CategorySidebar";
-import { useViewCounts } from "@/hooks/useViewCounts";
+import { fetchViewCountsByJobIds, useViewCounts } from "@/hooks/useViewCounts";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { REGION_GROUPS, SUBURB_EN } from "@/data/regionMap";
@@ -131,7 +131,7 @@ const Index = ({ cityFilter }: IndexProps) => {
   const [allJobsLoaded, setAllJobsLoaded] = useState(false);
   const [totalJobsCount, setTotalJobsCount] = useState<number | null>(null);
 
-  const { counts, getCount } = useViewCounts();
+  const { counts, getCount, hydrateCounts } = useViewCounts();
   const { isAdmin } = useAuth();
 
   const meta = cityFilter ? (CITY_META[cityFilter] ?? DEFAULT_META) : DEFAULT_META;
@@ -256,6 +256,10 @@ const Index = ({ cityFilter }: IndexProps) => {
         console.error("promoted jobs fetch error:", promoted.error);
       }
 
+      const initialCounts = await fetchViewCountsByJobIds(all.map((job) => job.id));
+      if (cancelled) return;
+
+      hydrateCounts(initialCounts);
       setJobsData(all);
       setTotalJobsCount(totalCount);
       setLoadingJobs(false);
@@ -274,7 +278,12 @@ const Index = ({ cityFilter }: IndexProps) => {
         if (error) { console.error("jobs fetch error:", error); break; }
         if (!data || data.length === 0) break;
 
-        all = mergeJobsById(all, data as unknown as Job[]);
+        const batchJobs = data as unknown as Job[];
+        const batchCounts = await fetchViewCountsByJobIds(batchJobs.map((job) => job.id));
+        if (cancelled) return;
+
+        hydrateCounts(batchCounts);
+        all = mergeJobsById(all, batchJobs);
 
         if (data.length < BACKGROUND_FETCH_PAGE_SIZE) break;
         from += BACKGROUND_FETCH_PAGE_SIZE;
@@ -288,7 +297,7 @@ const Index = ({ cityFilter }: IndexProps) => {
     return () => {
       cancelled = true;
     };
-  }, [cityFilter, page]);
+  }, [cityFilter, page, hydrateCounts]);
 
   const scrollRestored = useRef(false);
   useEffect(() => {
