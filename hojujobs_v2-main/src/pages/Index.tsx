@@ -11,6 +11,7 @@ import { PromotedJobCard } from "@/components/PromotedJobCard";
 import { Pagination } from "@/components/Pagination";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { useViewCounts } from "@/hooks/useViewCounts";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { REGION_GROUPS, SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
@@ -131,6 +132,7 @@ const Index = ({ cityFilter }: IndexProps) => {
   const [totalJobsCount, setTotalJobsCount] = useState<number | null>(null);
 
   const { counts, getCount } = useViewCounts();
+  const { isAdmin } = useAuth();
 
   const meta = cityFilter ? (CITY_META[cityFilter] ?? DEFAULT_META) : DEFAULT_META;
 
@@ -470,7 +472,7 @@ const Index = ({ cityFilter }: IndexProps) => {
               <div className="space-y-2 mb-5">
                 <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
                 {promotedJobs.map((job) => (
-                  <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} />
+                  <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} />
                 ))}
                 {/* Promote-your-post CTA */}
                 <div className="rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-3">
@@ -490,7 +492,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                 <div className="text-center py-16 text-muted-foreground">불러오는 중...</div>
               ) : regularPaginatedJobs.length > 0 ? (
                 regularPaginatedJobs.map((job) => (
-                  <JobCard key={job.id} job={job} viewCount={getCount(job.id)} />
+                  <JobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} />
                 ))
               ) : showPromotedSection ? (
                 null

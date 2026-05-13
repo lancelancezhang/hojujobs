@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { MapPin, Briefcase, ChevronRight, Eye, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { MapPin, Briefcase, ChevronRight, Eye, Calendar, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Job {
   id: number;
@@ -25,9 +26,16 @@ function formatDate(dateStr?: string) {
   return `${diffDays}일 전`;
 }
 
-export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }) {
+export function JobCard({ job, viewCount = 0, showEditButton = false }: { job: Job; viewCount?: number; showEditButton?: boolean }) {
+  const navigate = useNavigate();
+
+  const openJob = () => {
+    sessionStorage.setItem("hoju_scroll_y", String(window.scrollY));
+    navigate(`/job/${job.id}`);
+  };
+
   return (
-    <Link to={`/job/${job.id}`} className="block group" onClick={() => sessionStorage.setItem("hoju_scroll_y", String(window.scrollY))}>
+    <div className="block group cursor-pointer" role="link" tabIndex={0} onClick={openJob} onKeyDown={(e) => { if (e.key === "Enter") openJob(); }}>
       <div className="bg-card border border-border rounded-lg px-4 h-[4.75rem] w-full flex items-center overflow-hidden hover:shadow-md hover:border-primary/30 transition-[box-shadow,border-color] duration-200">
         <div className="flex items-center justify-between gap-3 w-full min-w-0">
           <div className="flex-1 min-w-0">
@@ -41,9 +49,23 @@ export function JobCard({ job, viewCount = 0 }: { job: Job; viewCount?: number }
               <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" />{formatDate(job.uploaded_at)}</span>
             </div>
           </div>
+          {showEditButton && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5 shrink-0 text-xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/edit-job/${job.id}?from=admin`);
+              }}
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              수정
+            </Button>
+          )}
           <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary shrink-0 transition-colors" />
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
