@@ -49,7 +49,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "랜드윅", "로즈랜즈", "로즈랜드", "미란다", "울리 크릭", "쿠지", "킹스포드",
     "리버우드", "마트라빌", "로즈 베이", "이스트가든스", "픽허스트",
     "켄싱턴", "도버 하이츠", "마루브라", "웨이벌리", "코가라", "카링바", "더블 베이", "킹스그로브", "울루워라", "보타니", "안클리프", "에지클리프", "록데일",
-    "이스턴 서버브", "실바니아",
+    "이스턴 서버브", "이스터른 서버어브", "실바니아",
   ]},
   { state: "NSW", region: "사우스웨스트", suburbs: [
     "캠벨타운", "마운트 드루이트", "스프링우드", "리버풀", "뱅크스타운", "페어필드", "펜리스", "웨스턴 에어리어",
@@ -314,6 +314,7 @@ export const SUBURB_EN: Record<string, string> = {
   "에지클리프": "Edgecliff NSW",
   "록데일": "Rockdale NSW",
   "이스턴 서버브": "Eastern Suburbs Sydney NSW",
+  "이스터른 서버어브": "Eastern Suburbs Sydney NSW",
   "실바니아": "Sylvania NSW",
   "출로라": "Chullora NSW",
   "오트랜즈": "Oatlands NSW",
