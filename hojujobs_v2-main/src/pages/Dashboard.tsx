@@ -455,9 +455,7 @@ export default function Dashboard() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-bold text-foreground">🇰🇷 최저가 항공편</h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {selectedFlightSource === "naver" ? "인천 출발 편도, 24시간 미만 기준" : "인천 출발 편도 기준"}
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">인천 출발 편도 기준</p>
                 </div>
                 <div className="flex shrink-0 gap-1 rounded-md border border-border bg-muted/40 p-1" aria-label="항공권 검색 소스 선택">
                   {FLIGHT_SOURCE_OPTIONS.map((source) => (
