@@ -615,17 +615,17 @@ const Index = ({ cityFilter }: IndexProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3">
+                <div className="rounded-lg border border-teal-100 bg-gradient-to-r from-teal-50/80 to-indigo-50/70 px-4 py-3 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-sky-800 mb-0.5">호주 생활 정보도 확인해보세요</p>
-                      <p className="text-xs text-sky-900/70 leading-relaxed">환율, 최신 호주 뉴스, 구직 팁을 한곳에서 볼 수 있습니다.</p>
+                      <p className="text-xs font-bold text-slate-900 mb-0.5">호주 생활 정보도 확인해보세요</p>
+                      <p className="text-xs text-slate-600 leading-relaxed">환율, 최신 호주 뉴스, 구직 팁을 한곳에서 볼 수 있습니다.</p>
                     </div>
                     <div className="flex shrink-0 items-center gap-1.5">
-                      <Link to="/news" className="inline-flex h-8 items-center justify-center rounded-md bg-sky-600 px-2.5 text-[11px] font-semibold text-white shadow-sm hover:bg-sky-700">
+                      <Link to="/news" className="inline-flex h-8 items-center justify-center rounded-md border border-teal-200 bg-teal-100 px-2.5 text-[11px] font-semibold text-teal-800 hover:bg-teal-200">
                         워홀정보
                       </Link>
-                      <Link to="/blog" className="inline-flex h-8 items-center justify-center rounded-md bg-violet-600 px-2.5 text-[11px] font-semibold text-white shadow-sm hover:bg-violet-700">
+                      <Link to="/blog" className="inline-flex h-8 items-center justify-center rounded-md border border-indigo-200 bg-indigo-100 px-2.5 text-[11px] font-semibold text-indigo-800 hover:bg-indigo-200">
                         블로그
                       </Link>
                     </div>
