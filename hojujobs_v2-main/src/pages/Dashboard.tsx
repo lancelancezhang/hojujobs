@@ -336,7 +336,45 @@ export default function Dashboard() {
               {rates && <span className="text-xs text-muted-foreground">업데이트: {rates.updatedAt}</span>}
             </div>
             {loadingRate ? (
-              <div className="px-4 py-8 text-sm text-muted-foreground text-center">불러오는 중...</div>
+              <div className="min-h-[360px]" aria-busy="true">
+                <div className="px-4 py-4 border-b">
+                  <div className="h-8 w-48 rounded bg-muted animate-pulse" />
+                  <div className="mt-2 h-4 w-28 rounded bg-muted animate-pulse" />
+                </div>
+                <div className="divide-y border-b">
+                  {CONVERSION_AMOUNTS.map((krw) => (
+                    <div key={krw} className="flex items-center justify-between px-4 py-2">
+                      <span className="h-4 w-20 rounded bg-muted animate-pulse" />
+                      <span className="h-4 w-24 rounded bg-muted animate-pulse" />
+                    </div>
+                  ))}
+                </div>
+                <div className="px-4 py-3 space-y-2">
+                  <div className="h-3 w-36 rounded bg-muted animate-pulse" />
+                  {EXTRA_RATES.map(({ code }) => (
+                    <div key={code} className="flex items-center justify-between">
+                      <span className="h-4 w-24 rounded bg-muted animate-pulse" />
+                      <span className="h-4 w-20 rounded bg-muted animate-pulse" />
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t px-4 py-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="h-4 w-28 rounded bg-muted animate-pulse" />
+                      <div className="mt-2 h-3 w-36 rounded bg-muted animate-pulse" />
+                    </div>
+                    <div className="h-6 w-20 rounded bg-muted animate-pulse" />
+                  </div>
+                  <div className="mt-3 h-10 rounded-md border border-input bg-white" />
+                  <div className="mt-2 grid grid-cols-3 gap-1.5">
+                    {CALCULATOR_PRESETS.map((amount) => (
+                      <div key={amount} className="h-8 rounded-md border border-border bg-white" />
+                    ))}
+                  </div>
+                  <div className="mt-2 h-3 w-full rounded bg-muted animate-pulse" />
+                </div>
+              </div>
             ) : rates ? (
               <div>
                 <div className="px-4 py-4 border-b">
