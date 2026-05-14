@@ -641,7 +641,7 @@ const Index = ({ cityFilter }: IndexProps) => {
 
             {/* Promoted jobs - only on page 1 with no active filters */}
             {showPromotedSection && (
-              <div className="space-y-2 mb-5">
+              <div className="space-y-2 mb-2">
                 <div className="rounded-lg border border-teal-100 bg-gradient-to-r from-teal-50/80 to-indigo-50/70 px-4 py-3 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
@@ -671,7 +671,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="border-t border-border/60 pt-1" />
+                <div className="border-t border-border/60" />
               </div>
             )}
 
