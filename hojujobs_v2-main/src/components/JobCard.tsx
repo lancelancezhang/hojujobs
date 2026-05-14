@@ -1,6 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { MapPin, Briefcase, ChevronRight, Eye, Calendar, Pencil } from "lucide-react";
+import { MapPin, Briefcase, ChevronRight, Eye, Calendar, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Job {
   id: number;
@@ -26,7 +37,17 @@ function formatDate(dateStr?: string) {
   return `${diffDays}일 전`;
 }
 
-export function JobCard({ job, viewCount = 0, showEditButton = false }: { job: Job; viewCount?: number; showEditButton?: boolean }) {
+export function JobCard({
+  job,
+  viewCount = 0,
+  showEditButton = false,
+  onDelete,
+}: {
+  job: Job;
+  viewCount?: number;
+  showEditButton?: boolean;
+  onDelete?: (job: Job) => void | Promise<void>;
+}) {
   const navigate = useNavigate();
 
   const openJob = () => {
@@ -51,18 +72,47 @@ export function JobCard({ job, viewCount = 0, showEditButton = false }: { job: J
             </div>
           </div>
           {showEditButton && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 gap-1.5 shrink-0 text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/edit-job/${job.id}?from=admin`);
-              }}
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              수정
-            </Button>
+            <div className="flex shrink-0 items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 text-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/edit-job/${job.id}?from=admin`);
+                }}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                수정
+              </Button>
+              {onDelete && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-1.5 border-destructive/30 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      삭제
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>공고를 삭제하시겠습니까?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        "{job.title}" 공고가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>취소</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => void onDelete(job)}>삭제</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </div>
           )}
           <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary shrink-0 transition-colors" />
         </div>

@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { REGION_GROUPS, SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 50;
 const BACKGROUND_FETCH_PAGE_SIZE = 1000;
@@ -156,6 +157,30 @@ function writeListingCache(key: string, cache: Omit<ListingCache, "cachedAt" | "
       version: LISTING_CACHE_VERSION,
       cachedAt: Date.now(),
     }));
+  } catch {}
+}
+
+function removeJobFromListingCaches(jobId: number) {
+  try {
+    Object.keys(sessionStorage).forEach((key) => {
+      if (!key.startsWith("hoju_listing_cache_")) return;
+
+      const cached = readListingCache(key);
+      if (!cached) return;
+
+      const nextJobs = cached.jobsData.filter((job) => job.id !== jobId);
+      const nextCounts = { ...cached.counts };
+      delete nextCounts[jobId];
+
+      sessionStorage.setItem(key, JSON.stringify({
+        ...cached,
+        jobsData: nextJobs,
+        totalJobsCount: cached.totalJobsCount === null ? null : Math.max(0, cached.totalJobsCount - 1),
+        counts: nextCounts,
+        cachedAt: Date.now(),
+      }));
+    });
+    sessionStorage.removeItem(`hoju_job_view_count_${jobId}`);
   } catch {}
 }
 
@@ -513,6 +538,21 @@ const Index = ({ cityFilter }: IndexProps) => {
     setPage(1);
   };
 
+  const handleDeleteJob = async (job: Job) => {
+    if (!isAdmin) return;
+
+    const { error } = await supabase.from("jobs").delete().eq("id", job.id);
+    if (error) {
+      toast.error("삭제 실패: " + error.message);
+      return;
+    }
+
+    setJobsData((prev) => prev.filter((item) => item.id !== job.id));
+    setTotalJobsCount((prev) => (prev === null ? prev : Math.max(0, prev - 1)));
+    removeJobFromListingCaches(job.id);
+    toast.success("공고가 삭제되었습니다.");
+  };
+
   return (
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
@@ -620,7 +660,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                 </div>
                 <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
                 {promotedJobs.map((job) => (
-                  <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} />
+                  <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} onDelete={isAdmin ? handleDeleteJob : undefined} />
                 ))}
                 {/* Promote-your-post CTA */}
                 <div className="rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-3">
@@ -640,7 +680,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                 <div className="text-center py-16 text-muted-foreground">불러오는 중...</div>
               ) : regularPaginatedJobs.length > 0 ? (
                 regularPaginatedJobs.map((job) => (
-                  <JobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} />
+                  <JobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} onDelete={isAdmin ? handleDeleteJob : undefined} />
                 ))
               ) : showPromotedSection ? (
                 null
