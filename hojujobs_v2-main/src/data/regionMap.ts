@@ -412,4 +412,12 @@ export const SUBURB_EN: Record<string, string> = {
   "보몬트 힐스": "Beaumont Hills NSW",
   // ACT
   "캔버라": "Canberra ACT",
+  // Additional suburbs
+  "토트넘": "Tottenham VIC",
+  "무어뱅크": "Moorebank NSW",
+  "드라모인": "Drummoyne NSW",
+  "레이컴바": "Lakemba NSW",
+  "애스펜데일": "Aspendale VIC",
+  "테일러스 레이크": "Taylors Lakes VIC",
+  "벨라 비스타": "Bella Vista NSW",
 };
