@@ -89,6 +89,75 @@ export type Database = {
         }
         Relationships: []
       }
+      sales_deals: {
+        Row: {
+          comments_count: number
+          created_at: string
+          deal_url: string
+          delivery_ko: string | null
+          description_ko: string[]
+          id: string
+          image_url: string | null
+          is_active: boolean
+          original_price: string | null
+          posted_at: string | null
+          posted_by: string | null
+          price: string
+          retailer: string
+          retailer_domain: string
+          retailer_url: string | null
+          score: number
+          source_node_id: number | null
+          source_url: string
+          title_ko: string
+          updated_at: string
+        }
+        Insert: {
+          comments_count?: number
+          created_at?: string
+          deal_url: string
+          delivery_ko?: string | null
+          description_ko?: string[]
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          original_price?: string | null
+          posted_at?: string | null
+          posted_by?: string | null
+          price: string
+          retailer: string
+          retailer_domain: string
+          retailer_url?: string | null
+          score?: number
+          source_node_id?: number | null
+          source_url: string
+          title_ko: string
+          updated_at?: string
+        }
+        Update: {
+          comments_count?: number
+          created_at?: string
+          deal_url?: string
+          delivery_ko?: string | null
+          description_ko?: string[]
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          original_price?: string | null
+          posted_at?: string | null
+          posted_by?: string | null
+          price?: string
+          retailer?: string
+          retailer_domain?: string
+          retailer_url?: string | null
+          score?: number
+          source_node_id?: number | null
+          source_url?: string
+          title_ko?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

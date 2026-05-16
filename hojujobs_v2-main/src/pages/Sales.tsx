@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ExternalLink, ShoppingBag, Truck } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useSEO } from "@/hooks/useSEO";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Deal {
   id: string;
@@ -14,6 +15,7 @@ interface Deal {
   delivery?: string;
   retailer: string;
   retailerDomain: string;
+  sourceUrl: string;
   postedBy: string;
   postedAt: string;
   score: number;
@@ -23,44 +25,78 @@ interface Deal {
   dealUrl: string;
 }
 
-const CURRENT_DEALS: Deal[] = [
-  {
-    id: "samsung-55-u8500f-jb-hi-fi",
-    title: "삼성 55인치 U8500F 크리스탈 UHD 4K 스마트 TV (2025)",
-    price: "$552",
-    originalPrice: "$691",
-    delivery: "무료 클릭앤콜렉트 / 매장 수령",
-    retailer: "JB Hi-Fi",
-    retailerDomain: "jbhifi.com.au",
-    postedBy: "Gavy1370",
-    postedAt: "16/05/2026 20:58",
-    score: 13,
-    comments: 0,
-    description: [
-      "55인치 TV로 괜찮아 보이는 딜입니다.",
-      "화면: 강력한 4K 업스케일링을 지원하는 55인치 4K UHD LED 디스플레이",
-      "게임 시 자동 저지연 모드를 지원하는 100 스무스 모션 레이트",
-      "스마트 기능: 자동 콘텐츠 추천 기능이 있는 One UI Tizen OS",
-    ],
-    imageUrl: "",
-    dealUrl: "https://www.jbhifi.com.au/",
-  },
-];
-
 function faviconUrl(domain: string) {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+}
+
+function formatPostedAt(value: string | null) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Australia/Sydney",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(value));
 }
 
 export default function Sales() {
   useSEO({ title: "세일중 | Hoju Jobs", description: "관리자용 현재 세일 정보", noindex: true });
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [loadingDeals, setLoadingDeals] = useState(true);
+  const [dealsError, setDealsError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
       navigate("/");
     }
   }, [user, isAdmin, loading, navigate]);
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+
+    const fetchDeals = async () => {
+      setLoadingDeals(true);
+      setDealsError(null);
+      const { data, error } = await supabase
+        .from("sales_deals")
+        .select("id, title_ko, price, original_price, delivery_ko, retailer, retailer_domain, source_url, posted_by, posted_at, score, comments_count, description_ko, image_url, deal_url")
+        .eq("is_active", true)
+        .order("posted_at", { ascending: false });
+
+      if (error) {
+        setDeals([]);
+        setDealsError("딜 정보를 불러올 수 없습니다. sales_deals 테이블 마이그레이션을 확인해 주세요.");
+        setLoadingDeals(false);
+        return;
+      }
+
+      setDeals((data ?? []).map((deal) => ({
+        id: deal.id,
+        title: deal.title_ko,
+        price: deal.price,
+        originalPrice: deal.original_price ?? undefined,
+        delivery: deal.delivery_ko ?? undefined,
+        retailer: deal.retailer,
+        retailerDomain: deal.retailer_domain,
+        sourceUrl: deal.source_url,
+        postedBy: deal.posted_by ?? "",
+        postedAt: formatPostedAt(deal.posted_at),
+        score: deal.score,
+        comments: deal.comments_count,
+        description: deal.description_ko,
+        imageUrl: deal.image_url ?? undefined,
+        dealUrl: deal.deal_url,
+      })));
+      setLoadingDeals(false);
+    };
+
+    fetchDeals();
+  }, [user, isAdmin]);
 
   if (loading) {
     return (
@@ -89,7 +125,19 @@ export default function Sales() {
         </section>
 
         <section className="space-y-3">
-          {CURRENT_DEALS.map((deal) => (
+          {loadingDeals ? (
+            <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
+              딜 정보를 불러오는 중...
+            </div>
+          ) : dealsError ? (
+            <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
+              {dealsError}
+            </div>
+          ) : deals.length === 0 ? (
+            <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
+              현재 등록된 딜이 없습니다.
+            </div>
+          ) : deals.map((deal) => (
             <article key={deal.id} className="overflow-hidden rounded-lg border bg-card">
               <div className="grid gap-4 p-4 sm:grid-cols-[72px_minmax(0,1fr)_180px]">
                 <div className="flex sm:block">
@@ -116,6 +164,9 @@ export default function Sales() {
                     <span>등록 {deal.postedAt}</span>
                     <img src={faviconUrl(deal.retailerDomain)} alt="" className="h-4 w-4 rounded-sm" />
                     <span className="font-semibold text-blue-700">{deal.retailerDomain}</span>
+                    <a href={deal.sourceUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:underline">
+                      원문 보기
+                    </a>
                   </div>
 
                   <div className="mt-3 space-y-1 text-sm leading-relaxed text-foreground sm:text-base">
