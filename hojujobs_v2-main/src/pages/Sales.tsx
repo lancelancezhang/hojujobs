@@ -119,7 +119,7 @@ export default function Sales() {
           </div>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <div className="grid gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
           <aside className="space-y-4">
             <button
               onClick={() => setSelectedProductType("all")}
@@ -157,7 +157,7 @@ export default function Sales() {
             </div>
           </aside>
 
-          <section className="space-y-3">
+          <section className="space-y-2.5">
             {loadingDeals ? (
               <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
                 딜 정보를 불러오는 중...
@@ -175,19 +175,19 @@ export default function Sales() {
                 선택한 상품 종류에 해당하는 딜이 없습니다.
               </div>
             ) : filteredDeals.map((deal) => (
-              <article key={deal.id} className="overflow-hidden rounded-lg border bg-card">
-                <div className="grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_180px]">
+              <article key={deal.id} className="overflow-hidden rounded-md border bg-card">
+                <div className="grid gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_150px]">
                   <div className="min-w-0">
-                    <div className="mb-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded-md bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{deal.productType}</span>
-                      <img src={faviconUrl(deal.retailerDomain)} alt="" className="h-4 w-4 rounded-sm" />
-                      <span className="text-sm font-semibold text-blue-700">{deal.retailerDomain}</span>
-                      <a href={deal.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-blue-700 hover:underline">
+                    <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[11px] font-semibold text-primary">{deal.productType}</span>
+                      <img src={faviconUrl(deal.retailerDomain)} alt="" className="h-3.5 w-3.5 rounded-sm" />
+                      <span className="text-xs font-semibold text-blue-700">{deal.retailerDomain}</span>
+                      <a href={deal.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-blue-700 hover:underline">
                         원문 보기
                       </a>
                     </div>
 
-                    <h2 className="text-xl font-bold leading-tight text-foreground sm:text-2xl">
+                    <h2 className="text-lg font-bold leading-snug text-foreground sm:text-xl">
                       {deal.title} <span className="text-primary">{deal.price}</span>
                       {deal.originalPrice && (
                         <span className="font-semibold text-muted-foreground"> 정가 {deal.originalPrice}</span>
@@ -198,14 +198,14 @@ export default function Sales() {
                       <span className="font-semibold text-foreground"> 판매처 {deal.retailer}</span>
                     </h2>
 
-                    <div className="mt-3 space-y-1 text-sm leading-relaxed text-foreground sm:text-base">
+                    <div className="mt-2 space-y-0.5 text-xs leading-relaxed text-foreground sm:text-sm">
                       {deal.description.map((line) => (
                         <p key={line}>{line}</p>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1.5">
                     <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md border bg-white">
                       {deal.imageUrl ? (
                         <img src={deal.imageUrl} alt={deal.title} className="h-full w-full object-contain" />
@@ -213,10 +213,10 @@ export default function Sales() {
                         <ShoppingBag className="h-10 w-10 text-muted-foreground/50" />
                       )}
                     </div>
-                    <Button asChild className="gap-1.5">
+                    <Button asChild size="sm" className="h-8 gap-1.5 text-xs">
                       <a href={deal.dealUrl} target="_blank" rel="noopener noreferrer">
                         딜 보러가기
-                        <ExternalLink className="h-3.5 w-3.5" />
+                        <ExternalLink className="h-3 w-3" />
                       </a>
                     </Button>
                     {deal.delivery && (
