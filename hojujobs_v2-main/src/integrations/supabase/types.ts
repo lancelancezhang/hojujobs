@@ -103,6 +103,7 @@ export type Database = {
           posted_at: string | null
           posted_by: string | null
           price: string
+          product_type_ko: string
           retailer: string
           retailer_domain: string
           retailer_url: string | null
@@ -125,6 +126,7 @@ export type Database = {
           posted_at?: string | null
           posted_by?: string | null
           price: string
+          product_type_ko?: string
           retailer: string
           retailer_domain: string
           retailer_url?: string | null
@@ -147,6 +149,7 @@ export type Database = {
           posted_at?: string | null
           posted_by?: string | null
           price?: string
+          product_type_ko?: string
           retailer?: string
           retailer_domain?: string
           retailer_url?: string | null
