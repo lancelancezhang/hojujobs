@@ -27,6 +27,24 @@ function faviconUrl(domain: string) {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 }
 
+function priceNumber(value?: string) {
+  if (!value) return null;
+  const parsed = Number(value.replace(/[^\d.]/g, ""));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function discountPercent(price: string, originalPrice?: string) {
+  const current = priceNumber(price);
+  const original = priceNumber(originalPrice);
+  if (!current || !original || current >= original) return null;
+  return Math.round(((original - current) / original) * 100);
+}
+
+function summariseDeal(deal: Deal) {
+  const detail = deal.description.find((line) => line.startsWith("화면:")) ?? deal.description[0] ?? "";
+  return detail.replace(/^화면:\s*/, "");
+}
+
 export default function Sales() {
   useSEO({ title: "세일중 | Hoju Jobs", description: "관리자용 현재 세일 정보", noindex: true });
   const { user, isAdmin, loading } = useAuth();
@@ -106,19 +124,7 @@ export default function Sales() {
   return (
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
-      <main className="mx-auto w-full max-w-6xl space-y-5 px-4 pb-8 pt-4">
-        <section className="rounded-lg border bg-card px-4 py-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <ShoppingBag className="h-5 w-5 text-primary" />
-                <h1 className="text-xl font-bold text-foreground">세일중</h1>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">현재 확인 중인 딜을 관리자만 볼 수 있습니다.</p>
-            </div>
-          </div>
-        </section>
-
+      <main className="mx-auto w-full max-w-6xl px-4 pb-8 pt-4">
         <div className="grid gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
           <aside className="space-y-4">
             <button
@@ -174,7 +180,10 @@ export default function Sales() {
               <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
                 선택한 상품 종류에 해당하는 딜이 없습니다.
               </div>
-            ) : filteredDeals.map((deal) => (
+            ) : filteredDeals.map((deal) => {
+              const discount = discountPercent(deal.price, deal.originalPrice);
+
+              return (
               <article key={deal.id} className="overflow-hidden rounded-md border bg-card">
                 <div className="grid gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_150px]">
                   <div className="min-w-0">
@@ -182,26 +191,40 @@ export default function Sales() {
                       <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[11px] font-semibold text-primary">{deal.productType}</span>
                       <img src={faviconUrl(deal.retailerDomain)} alt="" className="h-3.5 w-3.5 rounded-sm" />
                       <span className="text-xs font-semibold text-blue-700">{deal.retailerDomain}</span>
+                      <span className="text-xs text-muted-foreground">판매처 {deal.retailer}</span>
                       <a href={deal.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-blue-700 hover:underline">
                         원문 보기
                       </a>
                     </div>
 
-                    <h2 className="text-lg font-bold leading-snug text-foreground sm:text-xl">
-                      {deal.title} <span className="text-primary">{deal.price}</span>
+                    <h2 className="text-base font-bold leading-snug text-foreground sm:text-lg">{deal.title}</h2>
+
+                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                      {summariseDeal(deal)}
+                    </p>
+
+                    <div className="mt-3 flex flex-wrap items-end gap-x-4 gap-y-2">
+                      <div>
+                        <p className="text-[11px] font-semibold text-muted-foreground">할인가</p>
+                        <p className="text-xl font-bold text-primary">{deal.price}</p>
+                      </div>
                       {deal.originalPrice && (
-                        <span className="font-semibold text-muted-foreground"> 정가 {deal.originalPrice}</span>
+                        <div>
+                          <p className="text-[11px] font-semibold text-muted-foreground">정가</p>
+                          <p className="text-sm font-semibold text-muted-foreground line-through">{deal.originalPrice}</p>
+                        </div>
+                      )}
+                      {discount !== null && (
+                        <span className="rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700">
+                          {discount}% 할인
+                        </span>
                       )}
                       {deal.delivery && (
-                        <span className="font-semibold text-foreground"> + 배송 ({deal.delivery})</span>
+                        <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                          <Truck className="h-3 w-3" />
+                          {deal.delivery}
+                        </span>
                       )}
-                      <span className="font-semibold text-foreground"> 판매처 {deal.retailer}</span>
-                    </h2>
-
-                    <div className="mt-2 space-y-0.5 text-xs leading-relaxed text-foreground sm:text-sm">
-                      {deal.description.map((line) => (
-                        <p key={line}>{line}</p>
-                      ))}
                     </div>
                   </div>
 
@@ -219,16 +242,11 @@ export default function Sales() {
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     </Button>
-                    {deal.delivery && (
-                      <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
-                        <Truck className="h-3.5 w-3.5" />
-                        {deal.delivery}
-                      </div>
-                    )}
                   </div>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </section>
         </div>
       </main>
