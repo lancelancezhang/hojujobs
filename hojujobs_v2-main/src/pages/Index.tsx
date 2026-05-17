@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search, ArrowUpDown, Briefcase } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search, ArrowUpDown } from "lucide-react";
 import { Header } from "@/components/Header";
 import { MobileLocationFilter } from "@/components/MobileLocationFilter";
+import { MobileIndustryFilter } from "@/components/MobileIndustryFilter";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { JobCard } from "@/components/JobCard";
 import { PromotedJobCard } from "@/components/PromotedJobCard";
@@ -604,18 +603,12 @@ const Index = ({ cityFilter }: IndexProps) => {
                   />
                 </div>
                 <div className="lg:hidden contents sm:contents">
-                  <Select value={industry} onValueChange={(v) => { setIndustry(v); setPage(1); }}>
-                    <SelectTrigger className={cn("w-full h-auto py-2 text-sm", industry !== "all" ? "border-primary/50 bg-primary/5 text-primary" : "border-input bg-muted/40 text-muted-foreground")}>
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Briefcase className="h-3.5 w-3.5 shrink-0" />
-                        <SelectValue placeholder="전체 업종" />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">전체 업종</SelectItem>
-                      {industries.map((i) => <SelectItem key={i} value={i}>{i}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                  <MobileIndustryFilter
+                    industries={industries}
+                    selectedIndustry={industry}
+                    onIndustryChange={(v) => { setIndustry(v); setPage(1); }}
+                    industryCounts={industryCounts}
+                  />
                 </div>
               </div>
             </div>
