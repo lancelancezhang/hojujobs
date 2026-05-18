@@ -6,7 +6,7 @@
 export interface RegionGroup {
   region: string;
   suburbs: string[];
-  state: "NSW" | "VIC" | "QLD" | "SA" | "ACT" | "TAS";
+  state: "NSW" | "VIC" | "QLD" | "SA" | "ACT";
 }
 
 export const REGION_GROUPS: RegionGroup[] = [
@@ -89,9 +89,6 @@ export const REGION_GROUPS: RegionGroup[] = [
   // QLD - Brisbane
   { state: "QLD", region: "골드코스트", suburbs: ["골드코스트"] },
   { state: "QLD", region: "기타 퀸즐랜드", suburbs: ["타운스빌", "케언즈", "선샤인 코스트"] },
-
-  // TAS - Tasmania
-  { state: "TAS", region: "태즈메이니아", suburbs: ["론서스턴"] },
 
 ];
 
