@@ -200,12 +200,6 @@ function flightPrice(price: number, source: FlightSource) {
   return source === "naver" ? `${formatKrw(price)}~` : `A$${price.toLocaleString()}~`;
 }
 
-function isUnder24Hours(duration: string) {
-  const hours = duration.match(/\d+/g)?.map(Number);
-  if (!hours?.length) return false;
-  return Math.max(...hours) < 24;
-}
-
 function formatAud(amount: number) {
   return `A$${amount.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
@@ -484,7 +478,7 @@ export default function Dashboard() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-bold text-foreground">🇰🇷 최저가 항공편</h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">인천 출발 편도 · 24시간 미만 기준</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">인천 출발 편도 기준</p>
                 </div>
                 <div className="flex shrink-0 gap-1 rounded-md border border-border bg-muted/40 p-1" aria-label="항공권 검색 소스 선택">
                   {FLIGHT_SOURCE_OPTIONS.map((source) => (
@@ -529,10 +523,9 @@ export default function Dashboard() {
             <div className="divide-y">
               {activeFlightRoutes.map((route) => {
                 const bestDeals = route.deals
-                  .filter((deal) => isUnder24Hours(deal.duration))
                   .map((deal) => ({ ...deal, price: deal.priceByMonth[selectedFlightMonthIndex] }))
                   .sort((a, b) => a.price - b.price)
-                  .slice(0, 1);
+                  .slice(0, 2);
 
                 return (
                   <div key={route.codes} className="px-4 py-3.5">
