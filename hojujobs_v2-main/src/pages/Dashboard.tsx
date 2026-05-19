@@ -55,15 +55,37 @@ const NEWS_ARTICLES = [
     domain: "abc.net.au",
   },
   {
-    title: "예산안, 워킹홀리데이 비자 추첨제 확대 예고",
+    title: "예산안 이민 전망 5만5천 명 상향",
+    date: "2026년 5월 13일",
+    publishedAt: "2026-05-13T17:18:00+10:00",
+    year: 2026,
+    tag: "이민",
+    summary: "ABC는 2026년 연방예산에서 올해와 내년 순해외이민 전망이 기존보다 5만5천 명 늘었다고 보도했습니다. 정부는 이미 호주에 있는 임시비자 소지자를 영주권 프로그램에서 우선하겠다는 방향을 내놨고, 유학생·워홀러는 주거비와 비자 경쟁 논의가 계속될 수 있음을 염두에 둬야 합니다.",
+    link: "https://www.abc.net.au/news/2026-05-13/one-million-more-migrants-expected-before-2030/106674228",
+    source: "ABC News",
+    domain: "abc.net.au",
+  },
+  {
+    title: "2026-27 이민제도, 호주 내 체류자·고숙련 우선",
+    date: "2026년 5월 13일",
+    publishedAt: "2026-05-13T11:58:00+10:00",
+    year: 2026,
+    tag: "비자",
+    summary: "SBS 한국어는 연방예산의 이민정책 변화를 한국어로 정리하며, 영주권 프로그램은 기술이민 중심을 유지하고 호주 내 체류자와 고숙련 인력을 우선하는 흐름이라고 설명했습니다. 향후 학생비자, 졸업비자, 기술심사 준비자는 점수제·자격인정 변화도 함께 확인해야 합니다.",
+    link: "https://www.sbs.com.au/language/korean/ko/podcast-episode/2026-27-federal-budget-migration-numbers-whats-changing-and-whos-affected/bmxyp13k3/",
+    source: "SBS Korean",
+    domain: "sbs.com.au",
+  },
+  {
+    title: "워킹홀리데이, 인기 국가 비자 배정 관리 강화",
     date: "2026년 5월 12일",
     publishedAt: "2026-05-12T19:44:00+10:00",
     year: 2026,
-    tag: "비자",
-    summary: "SBS는 2026년 예산에서 워킹홀리데이 메이커 프로그램을 더 엄격히 관리하고, 비자 배정을 더 공정하게 하기 위한 추첨제 확대가 포함됐다고 정리했습니다. 한국 워홀러는 현재 신청 조건과 지정근무 요건을 Home Affairs에서 다시 확인하는 것이 좋습니다.",
-    link: "https://www.sbs.com.au/news/article/federal-budget-migration-program-changes/mg2awxk1k/",
-    source: "SBS News",
-    domain: "sbs.com.au",
+    tag: "워홀",
+    summary: "2026년 예산안에는 워킹홀리데이 메이커 프로그램을 노동시장 수요에 맞게 관리하고, 일부 국가의 비자 배정 방식을 더 엄격히 운영하는 내용이 포함됐습니다. 한국 여권 소지자는 417 비자 대상이지만, 신청 전 Home Affairs에서 최신 조건, 6개월 동일 고용주 제한, 2·3차 비자 지정근무 요건을 다시 확인하세요.",
+    link: "https://budget.gov.au/content/bp2/download/bp2_2026-27.pdf",
+    source: "Australian Government Budget",
+    domain: "budget.gov.au",
   },
   {
     title: "렌트난 계속, 저소득층 임대 선택지 거의 없어",
@@ -87,17 +109,6 @@ const NEWS_ARTICLES = [
     source: "ABC News",
     domain: "abc.net.au",
   },
-  {
-    title: "18-20세 일부 업종 주니어 임금 단계적 폐지",
-    date: "2026년 3월 31일",
-    publishedAt: "2026-03-31T12:18:00+10:00",
-    year: 2026,
-    tag: "임금",
-    summary: "ABC는 Fair Work Commission 결정으로 소매·패스트푸드·약국 업종의 18-20세 주니어 임금이 단계적으로 성인 임금에 가까워진다고 보도했습니다. 해당 업종에서 일하는 젊은 워홀러와 유학생은 적용 시점과 어워드 임금을 확인해 두면 좋습니다.",
-    link: "https://www.abc.net.au/news/2026-03-31/fair-work-comission-junior-pay-rates-retail-fast-food/106514948",
-    source: "ABC News",
-    domain: "abc.net.au",
-  },
 ];
 
 const TAG_COLORS: Record<string, string> = {
@@ -114,6 +125,8 @@ const TAG_COLORS: Record<string, string> = {
   "기술": "bg-slate-50 text-slate-700",
   "유학": "bg-violet-50 text-violet-700",
   "안전": "bg-rose-50 text-rose-700",
+  "이민": "bg-amber-50 text-amber-700",
+  "워홀": "bg-orange-50 text-orange-700",
 };
 
 const CURRENT_NEWS_YEAR = 2026;
@@ -571,7 +584,7 @@ export default function Dashboard() {
         <div className="rounded-lg border bg-card overflow-hidden">
           <div className="px-4 py-3 border-b">
             <h2 className="text-sm font-bold text-foreground">최근 호주 뉴스</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">비자, 일자리, 생활 정보</p>
+            <p className="text-xs text-muted-foreground mt-0.5">2026년 5월 19일 기준 · 비자, 일자리, 생활 정보</p>
           </div>
           <div className="divide-y divide-border/40">
             {CURRENT_NEWS_ARTICLES.map((article, i) => (
