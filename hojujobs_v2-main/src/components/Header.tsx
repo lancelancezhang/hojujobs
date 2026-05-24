@@ -27,7 +27,13 @@ export function Header() {
   const location = useLocation();
   const isSalesActive = location.pathname === "/sales";
   const isInfoActive = location.pathname === "/blog" || location.pathname.startsWith("/blog/") || location.pathname === "/news" || location.pathname === "/dashboard" || isSalesActive;
-  const infoLabel = isSalesActive ? "온세일" : (location.pathname === "/blog" || location.pathname.startsWith("/blog/")) ? "블로그" : "워홀정보";
+  const infoLabel = isSalesActive
+    ? "온세일"
+    : (location.pathname === "/blog" || location.pathname.startsWith("/blog/"))
+      ? "블로그"
+      : (location.pathname === "/news" || location.pathname === "/dashboard")
+        ? "워홀정보"
+        : "온세일";
   const visibleInfoTabs = isAdmin ? [...ADMIN_INFO_TABS, ...INFO_TABS] : INFO_TABS;
 
   return (
