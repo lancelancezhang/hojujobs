@@ -43,6 +43,37 @@ function parsePromoCodes(value: Json): string[] {
     .filter((code): code is string => Boolean(code?.trim()));
 }
 
+function cleanTeaserText(value: string) {
+  return value
+    .replace(/\*\*|__|\*|_|#{1,6}\s|`|\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/^[*-]\s/gm, "• ");
+}
+
+function highlightPrices(value: string) {
+  const pricePattern = /(?:A\$|\$)\d[\d,]*(?:\.\d{1,2})?/g;
+  const parts: Array<string | JSX.Element> = [];
+  let lastIndex = 0;
+
+  for (const match of value.matchAll(pricePattern)) {
+    const matchIndex = match.index ?? 0;
+    if (matchIndex > lastIndex) {
+      parts.push(value.slice(lastIndex, matchIndex));
+    }
+    parts.push(
+      <span key={`${match[0]}-${matchIndex}`} className="font-bold text-emerald-700">
+        {match[0]}
+      </span>
+    );
+    lastIndex = matchIndex + match[0].length;
+  }
+
+  if (lastIndex < value.length) {
+    parts.push(value.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : value;
+}
+
 export default function Sales() {
   useSEO({ title: "세일중 | Hoju Jobs", description: "호주 생활에 유용한 최신 세일과 할인 코드", noindex: true });
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -173,11 +204,11 @@ export default function Sales() {
                       <span className="text-xs text-muted-foreground">{formatUploadedAt(deal.uploadedAt)}</span>
                     </div>
 
-                    <h2 className="text-sm font-bold leading-snug text-foreground sm:text-base line-clamp-2">{deal.title}</h2>
+                    <h2 className="text-sm font-bold leading-snug text-foreground sm:text-base line-clamp-2">{highlightPrices(deal.title)}</h2>
 
                     {deal.teaserDescription && (
                       <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                        {deal.teaserDescription.replace(/\*\*|__|\*|_|#{1,6}\s|`|\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/^[*-]\s/gm, "• ")}
+                        {highlightPrices(cleanTeaserText(deal.teaserDescription))}
                       </p>
                     )}
 
