@@ -21,6 +21,7 @@ import Terms from "./pages/Terms";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Sales from "./pages/Sales";
+import SaleDetail from "./pages/SaleDetail";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/news" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/sales" element={<Sales />} />
+              <Route path="/sales/:rank" element={<SaleDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/faq" element={<Faq />} />
               <Route path="/blog" element={<Blog />} />

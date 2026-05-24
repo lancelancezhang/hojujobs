@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, RotateCcw, Tags, Ticket } from "lucide-react";
+import { Link } from "react-router-dom";
+import { RotateCcw, Tags, Ticket } from "lucide-react";
 import { Header } from "@/components/Header";
-import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
@@ -11,7 +11,8 @@ interface Deal {
   rank: number;
   title: string;
   category: string;
-  description?: string;
+  teaserDescription?: string;
+  imageUrl?: string;
   externalUrl?: string;
   uploadedAt: string;
   promoCodes: string[];
@@ -56,7 +57,7 @@ export default function Sales() {
 
       const { data, error } = await supabase
         .from("ozbargain_deals")
-        .select("rank, title, category, description, external_url, uploaded_at, promo_codes")
+        .select("rank, title, category, teaser_description, image_url, external_url, uploaded_at, promo_codes")
         .order("rank", { ascending: true });
 
       if (error) {
@@ -70,7 +71,8 @@ export default function Sales() {
         rank: deal.rank,
         title: deal.title,
         category: deal.category,
-        description: deal.description ?? undefined,
+        teaserDescription: (deal as Record<string, unknown>).teaser_description as string | undefined ?? undefined,
+        imageUrl: deal.image_url ?? undefined,
         externalUrl: deal.external_url ?? undefined,
         uploadedAt: deal.uploaded_at,
         promoCodes: parsePromoCodes(deal.promo_codes),
@@ -153,43 +155,44 @@ export default function Sales() {
                 선택한 상품 종류에 해당하는 딜이 없습니다.
               </div>
             ) : filteredDeals.map((deal) => (
-              <article key={deal.rank} className="overflow-hidden rounded-md border bg-card">
-                <div className="flex gap-3 p-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary">
-                    #{deal.rank}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+              <article key={deal.rank} className="overflow-hidden rounded-md border bg-card transition-shadow hover:shadow-sm">
+                <Link to={`/sales/${deal.rank}`} className="flex gap-0">
+                  {deal.imageUrl && (
+                    <div className="shrink-0 w-28 sm:w-36 bg-muted">
+                      <img
+                        src={deal.imageUrl}
+                        alt={deal.title}
+                        className="h-full w-full object-cover"
+                        onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
+                      />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1 p-3">
+                    <div className="mb-1 flex flex-wrap items-center gap-1.5">
                       <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[11px] font-semibold text-primary">{deal.category}</span>
-                      <span className="text-xs text-muted-foreground">{formatUploadedAt(deal.uploadedAt)} 업로드</span>
+                      <span className="text-xs text-muted-foreground">{formatUploadedAt(deal.uploadedAt)}</span>
                     </div>
 
-                    <h2 className="text-base font-bold leading-snug text-foreground sm:text-lg">{deal.title}</h2>
+                    <h2 className="text-sm font-bold leading-snug text-foreground sm:text-base line-clamp-2">{deal.title}</h2>
 
-                    {deal.description && (
-                      <p className="mt-1.5 whitespace-pre-line text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                        {deal.description}
+                    {deal.teaserDescription && (
+                      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                        {deal.teaserDescription.replace(/\*\*|__|\*|_|#{1,6}\s|`|\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/^[*-]\s/gm, "• ")}
                       </p>
                     )}
 
-                    <div className="mt-3 flex flex-wrap items-center gap-2">
-                      {deal.promoCodes.map((promoCode) => (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-dashed border-primary/40 bg-primary/5 px-2 py-1 text-xs font-bold text-primary">
-                          <Ticket className="h-3 w-3" />
-                          코드 {promoCode}
-                        </span>
-                      ))}
-                      {deal.externalUrl && (
-                        <Button asChild size="sm" className="h-8 gap-1.5 text-xs">
-                          <a href={deal.externalUrl} target="_blank" rel="noopener noreferrer">
-                            딜 보러가기
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        </Button>
-                      )}
-                    </div>
+                    {deal.promoCodes.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {deal.promoCodes.map((promoCode) => (
+                          <span key={promoCode} className="inline-flex items-center gap-1 rounded-md border border-dashed border-primary/40 bg-primary/5 px-2 py-0.5 text-xs font-bold text-primary">
+                            <Ticket className="h-3 w-3" />
+                            {promoCode}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
+                </Link>
               </article>
             ))}
           </section>
