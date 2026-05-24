@@ -154,7 +154,7 @@ export default function Sales() {
                 <Tags className="h-4 w-4 text-accent" />
                 상품 종류
               </h3>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:hidden">
+              <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 sm:grid-cols-3 lg:hidden">
                 <SalesFilterItem
                   label="전체 상품"
                   count={deals.length}
@@ -266,10 +266,10 @@ function SalesFilterItem({ label, count, active, onClick }: {
     <button
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 w-full min-w-0 items-center justify-between gap-1.5 rounded-md border px-3 text-xs font-semibold transition-colors lg:h-9 lg:text-sm",
+        "inline-flex h-8 w-full min-w-0 items-center justify-between gap-1.5 rounded-lg px-3 text-xs transition-colors lg:h-9 lg:text-sm",
         active
-          ? "border-primary/30 bg-primary/10 text-primary"
-          : "border-border bg-white text-muted-foreground hover:border-primary/30 hover:bg-muted/50 hover:text-foreground"
+          ? "bg-primary/10 font-semibold text-primary"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
       <span className="truncate">{label}</span>
