@@ -729,7 +729,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                         <p className="text-xs text-emerald-900/75 leading-relaxed">호주 생활에 필요한 할인 정보와 프로모션을 모아봤습니다.</p>
                       </div>
                       <Link to="/sales" className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-emerald-200 bg-white/85 px-3 text-xs font-semibold text-emerald-800 hover:bg-emerald-100">
-                        더 많은 온세일
+                        세일 상품 더 보기
                       </Link>
                     </div>
                     <div className="grid gap-2 sm:grid-cols-2">
