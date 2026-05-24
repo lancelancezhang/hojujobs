@@ -21,10 +21,9 @@ interface Deal {
 function formatUploadedAt(value: string) {
   return new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Australia/Sydney",
-    month: "short",
+    year: "numeric",
+    month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   }).format(new Date(value));
 }
 
@@ -130,12 +129,12 @@ export default function Sales() {
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
       <main className="mx-auto w-full max-w-6xl px-4 pb-8 pt-4">
-        <div className="grid gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
-          <aside className="space-y-4">
+        <div className="grid gap-3 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-5">
+          <aside className="space-y-2 lg:space-y-4">
             <button
               onClick={() => setSelectedProductType("all")}
               className={cn(
-                "flex h-5 items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground",
+                "hidden h-5 items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground lg:flex",
                 selectedProductType === "all" && "invisible pointer-events-none"
               )}
             >
@@ -144,11 +143,11 @@ export default function Sales() {
             </button>
 
             <div>
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
+              <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground lg:mb-3">
                 <Tags className="h-4 w-4 text-accent" />
                 상품 종류
               </h3>
-              <ul className="space-y-0.5">
+              <div className="flex flex-wrap gap-2 lg:hidden">
                 <SalesFilterItem
                   label="전체 상품"
                   count={deals.length}
@@ -164,7 +163,24 @@ export default function Sales() {
                     onClick={() => setSelectedProductType(productType)}
                   />
                 ))}
-              </ul>
+              </div>
+              <div className="hidden space-y-0.5 lg:block">
+                <SalesFilterItem
+                  label="전체 상품"
+                  count={deals.length}
+                  active={selectedProductType === "all"}
+                  onClick={() => setSelectedProductType("all")}
+                />
+                {productTypes.map((productType) => (
+                  <SalesFilterItem
+                    key={productType}
+                    label={productType}
+                    count={productTypeCounts[productType] || 0}
+                    active={selectedProductType === productType}
+                    onClick={() => setSelectedProductType(productType)}
+                  />
+                ))}
+              </div>
             </div>
           </aside>
 
@@ -189,11 +205,11 @@ export default function Sales() {
               <article key={deal.rank} className="overflow-hidden rounded-md border bg-card transition-shadow hover:shadow-sm">
                 <Link to={`/sales/${deal.rank}`} className="flex gap-0">
                   {deal.imageUrl && (
-                    <div className="shrink-0 w-24 sm:w-32 bg-muted">
+                    <div className="flex shrink-0 w-24 items-center justify-center bg-muted p-2 sm:w-32">
                       <img
                         src={deal.imageUrl}
                         alt={deal.title}
-                        className="h-full w-full object-cover"
+                        className="max-h-24 w-full rounded object-contain sm:max-h-28"
                         onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
                       />
                     </div>
@@ -240,19 +256,17 @@ function SalesFilterItem({ label, count, active, onClick }: {
   onClick: () => void;
 }) {
   return (
-    <li>
-      <button
-        onClick={onClick}
-        className={cn(
-          "flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm transition-colors",
-          active
-            ? "bg-primary/10 font-semibold text-primary"
-            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-        )}
-      >
-        <span className="truncate">{label}</span>
-        <span className={cn("text-xs tabular-nums", active ? "text-primary" : "text-muted-foreground/60")}>{count}</span>
-      </button>
-    </li>
+    <button
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-xs font-semibold transition-colors lg:h-9 lg:w-full lg:justify-between lg:text-sm",
+        active
+          ? "border-primary/30 bg-primary/10 text-primary"
+          : "border-border bg-white text-muted-foreground hover:border-primary/30 hover:bg-muted/50 hover:text-foreground"
+      )}
+    >
+      <span className="truncate">{label}</span>
+      <span className={cn("text-[11px] tabular-nums", active ? "text-primary" : "text-muted-foreground/60")}>{count}</span>
+    </button>
   );
 }
