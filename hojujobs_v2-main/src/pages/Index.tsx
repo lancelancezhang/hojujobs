@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search, ArrowUpDown } from "lucide-react";
+import { Search, ArrowUpDown, ShoppingBag } from "lucide-react";
 import { Header } from "@/components/Header";
 import { MobileLocationFilter } from "@/components/MobileLocationFilter";
 import { MobileIndustryFilter } from "@/components/MobileIndustryFilter";
@@ -36,6 +36,13 @@ interface Job {
 interface JobFilterMeta {
   location: string[];
   industry: string;
+}
+
+interface SalePromoDeal {
+  rank: number;
+  title: string;
+  category: string;
+  imageUrl?: string;
 }
 
 const CITY_META: Record<string, { title: string; description: string; canonical: string; h1: string; tagline: string; keywords: string }> = {
@@ -183,6 +190,31 @@ function removeJobFromListingCaches(jobId: number) {
   } catch {}
 }
 
+function highlightPrices(value: string) {
+  const pricePattern = /(?:A\$|\$)\d[\d,]*(?:\.\d{1,2})?/g;
+  const parts: Array<string | JSX.Element> = [];
+  let lastIndex = 0;
+
+  for (const match of value.matchAll(pricePattern)) {
+    const matchIndex = match.index ?? 0;
+    if (matchIndex > lastIndex) {
+      parts.push(value.slice(lastIndex, matchIndex));
+    }
+    parts.push(
+      <span key={`${match[0]}-${matchIndex}`} className="font-bold text-emerald-700">
+        {match[0]}
+      </span>
+    );
+    lastIndex = matchIndex + match[0].length;
+  }
+
+  if (lastIndex < value.length) {
+    parts.push(value.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : value;
+}
+
 interface IndexProps {
   cityFilter?: string;
 }
@@ -211,6 +243,7 @@ const Index = ({ cityFilter }: IndexProps) => {
   const [loadingJobs, setLoadingJobs] = useState(!cachedListing);
   const [allJobsLoaded, setAllJobsLoaded] = useState(cachedListing?.allJobsLoaded ?? false);
   const [totalJobsCount, setTotalJobsCount] = useState<number | null>(cachedListing?.totalJobsCount ?? null);
+  const [salePromoDeals, setSalePromoDeals] = useState<SalePromoDeal[]>([]);
 
   const { counts, getCount, hydrateCounts } = useViewCounts(cachedListing?.counts ?? {});
   const { isAdmin } = useAuth();
@@ -268,6 +301,38 @@ const Index = ({ cityFilter }: IndexProps) => {
       keyword, locations: selectedLocations, industry, page, sortBy,
     }));
   }, [keyword, selectedLocations, industry, page, sortBy]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchSalePromoDeals() {
+      const { data, error } = await supabase
+        .from("ozbargain_deals")
+        .select("rank, title, category, image_url")
+        .order("rank", { ascending: true })
+        .limit(2);
+
+      if (cancelled) return;
+
+      if (error) {
+        console.error("sale promo deals fetch error:", error);
+        setSalePromoDeals([]);
+        return;
+      }
+
+      setSalePromoDeals((data ?? []).map((deal) => ({
+        rank: deal.rank,
+        title: deal.title,
+        category: deal.category,
+        imageUrl: deal.image_url ?? undefined,
+      })));
+    }
+
+    fetchSalePromoDeals();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -651,6 +716,46 @@ const Index = ({ cityFilter }: IndexProps) => {
                     </div>
                   </div>
                 </div>
+                {salePromoDeals.length > 0 && (
+                  <div className="rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-sky-50 px-4 py-3 shadow-sm">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-900 mb-0.5">
+                          <ShoppingBag className="h-4 w-4 text-emerald-700" />
+                          새로 열린 세일중도 확인해보세요
+                        </p>
+                        <p className="text-xs text-emerald-900/75 leading-relaxed">호주 생활에 필요한 할인 정보와 프로모션을 모아봤습니다.</p>
+                      </div>
+                      <Link to="/sales" className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-emerald-200 bg-white/85 px-3 text-xs font-semibold text-emerald-800 hover:bg-emerald-100">
+                        더 많은 세일
+                      </Link>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {salePromoDeals.map((deal) => (
+                        <Link
+                          key={deal.rank}
+                          to={`/sales/${deal.rank}`}
+                          className="flex min-w-0 gap-2 overflow-hidden rounded-md border border-white/70 bg-white/90 p-2 transition-colors hover:bg-white"
+                        >
+                          {deal.imageUrl && (
+                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-white p-1.5">
+                              <img
+                                src={deal.imageUrl}
+                                alt={deal.title}
+                                className="max-h-full w-full object-contain"
+                                onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
+                              />
+                            </div>
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <p className="mb-1 text-[11px] font-semibold text-emerald-700">{deal.category}</p>
+                            <p className="line-clamp-2 text-xs font-bold leading-snug text-slate-900">{highlightPrices(deal.title)}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
                 {promotedJobs.map((job) => (
                   <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} onDelete={isAdmin ? handleDeleteJob : undefined} />
