@@ -22,7 +22,7 @@ const BACKGROUND_FETCH_PAGE_SIZE = 1000;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
 const LISTING_CACHE_VERSION = 2;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
-const FEATURED_SALE_PROMO_RANKS = [26, 92];
+const FEATURED_SALE_PROMO_RANKS = [2, 20];
 
 type SortOption = "recent" | "views";
 
