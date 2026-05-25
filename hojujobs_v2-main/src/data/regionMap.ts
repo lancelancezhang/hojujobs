@@ -28,7 +28,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "노스쇼어", "뉴포트", "노던 비치스", "콜라로이", "포레스트빌", "헌터스 힐", "크로즈 네스트", "크로우즈 네스트",
     "쿠강갈라", "욀로비", "투라무라", "윌로비", "프레시워터", "노먼허스트", "뉴트럴베이", "뉴트럴 베이", "프렌치스 포레스트",
     "핌블", "핌불", "아스퀴스", "노스브리지", "와롱가",
-    "킬라라", "밀슨스 포인트", "와룡가", "와룽가",
+    "킬라라", "밀슨스 포인트", "와룡가", "와룽가", "로즈빌",
   ]},
   { state: "NSW", region: "라이드 / 이스트우드", suburbs: [
     "라이드", "이스트우드", "에핑", "웨스트 라이드", "탑라이드", "메도우뱅크", "매도뱅크", "맥쿼리", "맥쿼리빌", "어밍톤",
@@ -43,7 +43,7 @@ export const REGION_GROUPS: RegionGroup[] = [
   ]},
   { state: "NSW", region: "힐스 지구", suburbs: [
     "노웨스트", "켈리빌", "라우스 힐", "스탠호프 가든스", "체리브룩", "카슬힐", "듀럴", "노스 록스", "스카트필드", "칼링포드", "페넌트 힐스",
-    "리버스톤", "매스든 파크", "엘라라", "스코필드", "버큼힐", "윈스턴 힐스", "보몬트 힐스", "세븐 힐스", "벨라 비스타", "글렌우드", "버컴 힐스",
+    "리버스톤", "매스든 파크", "마스든 파크", "캐슬 타워즈", "엘라라", "스코필드", "버큼힐", "윈스턴 힐스", "보몬트 힐스", "세븐 힐스", "벨라 비스타", "글렌우드", "버컴 힐스",
   ]},
   { state: "NSW", region: "사우스 시드니", suburbs: [
     "허스트빌", "사우스 허스트빌", "마스콧", "본다이", "본다이 정션",
@@ -91,7 +91,7 @@ export const REGION_GROUPS: RegionGroup[] = [
 
   // QLD - Brisbane
   { state: "QLD", region: "골드코스트", suburbs: ["골드코스트"] },
-  { state: "QLD", region: "기타 퀸즐랜드", suburbs: ["타운스빌", "케언즈", "선샤인 코스트", "캐블처 사우스"] },
+  { state: "QLD", region: "기타 퀸즐랜드", suburbs: ["타운스빌", "케언즈", "선샤인 코스트", "캐블처 사우스", "캐불처 사우스"] },
 
 ];
 
@@ -236,6 +236,7 @@ export const SUBURB_EN: Record<string, string> = {
   "스탠호프 가든스": "Stanhope Gardens NSW",
   "체리브룩": "Cherrybrook NSW",
   "카슬힐": "Castle Hill NSW",
+  "캐슬 타워즈": "Castle Towers NSW",
   "듀럴": "Dural NSW",
   "노스 록스": "North Rocks NSW",
   "스카트필드": "Schofields NSW",
@@ -243,6 +244,7 @@ export const SUBURB_EN: Record<string, string> = {
   "페넌트 힐스": "Pennant Hills NSW",
   "리버스톤": "Riverstone NSW",
   "매스든 파크": "Marsden Park NSW",
+  "마스든 파크": "Marsden Park NSW",
   "엘라라": "Elara NSW",
   "스코필드": "Schofields NSW",
   "버큼힐": "Baulkham Hills NSW",
@@ -439,8 +441,10 @@ export const SUBURB_EN: Record<string, string> = {
   "오피서": "Officer VIC",
   "캔터베리": "Canterbury VIC",
   "킬라라": "Killara NSW",
+  "로즈빌": "Roseville NSW",
   "브론테": "Bronte NSW",
   "캐블처 사우스": "Caboolture South QLD",
+  "캐불처 사우스": "Caboolture South QLD",
   "글렌우드": "Glenwood NSW",
   "밀슨스 포인트": "Milsons Point NSW",
   "어스킨 파크": "Erskine Park NSW",
