@@ -712,9 +712,6 @@ const Index = ({ cityFilter }: IndexProps) => {
                       <Link to="/news" className="inline-flex h-9 items-center justify-center rounded-md border border-blue-200 bg-white/80 px-3 text-xs font-semibold text-blue-800 hover:bg-blue-100">
                         워홀정보
                       </Link>
-                      <Link to="/blog" className="inline-flex h-9 items-center justify-center rounded-md border border-cyan-200 bg-cyan-100 px-3 text-xs font-semibold text-cyan-900 hover:bg-cyan-200">
-                        블로그
-                      </Link>
                     </div>
                   </div>
                 </div>

@@ -15,7 +15,6 @@ const CITY_TABS = [
 const INFO_TABS = [
   { label: "온세일", path: "/sales" },
   { label: "워홀정보", path: "/news" },
-  { label: "블로그", path: "/blog" },
 ];
 
 export function Header() {
@@ -23,14 +22,12 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isSalesActive = location.pathname === "/sales";
-  const isInfoActive = location.pathname === "/blog" || location.pathname.startsWith("/blog/") || location.pathname === "/news" || location.pathname === "/dashboard" || isSalesActive;
+  const isInfoActive = location.pathname === "/news" || location.pathname === "/dashboard" || isSalesActive;
   const infoLabel = isSalesActive
     ? "온세일"
-    : (location.pathname === "/blog" || location.pathname.startsWith("/blog/"))
-      ? "블로그"
-      : (location.pathname === "/news" || location.pathname === "/dashboard")
-        ? "워홀정보"
-        : "온세일";
+    : (location.pathname === "/news" || location.pathname === "/dashboard")
+      ? "워홀정보"
+      : "온세일";
 
   return (
     <header className="bg-white border-b border-border">
@@ -165,7 +162,6 @@ export function Header() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => navigate("/sales")}>온세일</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/news")}>워홀정보</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/blog")}>블로그</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
