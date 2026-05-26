@@ -570,8 +570,13 @@ const Index = ({ cityFilter }: IndexProps) => {
       (cityFilter ? j.location.filter((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`)) : j.location)
         .forEach((loc) => { c[loc] = (c[loc] || 0) + 1; });
     });
+    // When exactly one location is selected, use the authoritative DB count
+    // (filterJobs is a capped sample and may undercount for less-common suburbs)
+    if (selectedLocations.length === 1 && totalJobsCount !== null) {
+      c[selectedLocations[0]] = totalJobsCount;
+    }
     return c;
-  }, [filterSourceJobs, cityFilter]);
+  }, [filterSourceJobs, cityFilter, selectedLocations, totalJobsCount]);
 
   const industryCounts = useMemo(() => {
     const c: Record<string, number> = {};
