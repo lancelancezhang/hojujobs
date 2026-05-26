@@ -351,7 +351,7 @@ const Index = ({ cityFilter }: IndexProps) => {
         .gte("uploaded_at", cutoff.toISOString())
         .lte("uploaded_at", new Date().toISOString());
 
-      if (cityLocations.length > 0 && !PROMO_CITY_FILTERS.has(cityFilter ?? "")) {
+      if (cityLocations.length > 0) {
         query = query.overlaps("location", cityLocations);
       }
 
@@ -366,7 +366,7 @@ const Index = ({ cityFilter }: IndexProps) => {
         .gte("uploaded_at", cutoff.toISOString())
         .lte("uploaded_at", new Date().toISOString());
 
-      if (cityLocations.length > 0) {
+      if (cityLocations.length > 0 && !PROMO_CITY_FILTERS.has(cityFilter ?? "")) {
         query = query.overlaps("location", cityLocations);
       }
 
