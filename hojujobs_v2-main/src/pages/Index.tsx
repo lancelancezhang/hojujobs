@@ -185,9 +185,45 @@ function listingCacheKey({
   return `hoju_listing_cache_${encodeURIComponent(JSON.stringify(payload))}`;
 }
 
+function filterCacheKey(cityFilter?: string) {
+  return `hoju_filter_jobs_${cityFilter ?? "all"}`;
+}
+
+function readFilterJobsCache(key: string): JobFilterMeta[] | null {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as { version: number; cachedAt: number; filterJobs: JobFilterMeta[] };
+    if (parsed.version !== LISTING_CACHE_VERSION || !parsed.cachedAt || Date.now() - parsed.cachedAt > LISTING_CACHE_TTL_MS) {
+      sessionStorage.removeItem(key);
+      return null;
+    }
+
+    return parsed.filterJobs;
+  } catch {
+    return null;
+  }
+}
+
+function writeFilterJobsCache(key: string, filterJobs: JobFilterMeta[]) {
+  try {
+    sessionStorage.setItem(key, JSON.stringify({
+      version: LISTING_CACHE_VERSION,
+      cachedAt: Date.now(),
+      filterJobs,
+    }));
+  } catch {}
+}
+
 function removeJobFromListingCaches(jobId: number) {
   try {
     Object.keys(sessionStorage).forEach((key) => {
+      if (key.startsWith("hoju_filter_jobs_")) {
+        sessionStorage.removeItem(key);
+        return;
+      }
+
       if (!key.startsWith("hoju_listing_cache_")) return;
 
       const cached = readListingCache(key);
@@ -419,6 +455,10 @@ const Index = ({ cityFilter }: IndexProps) => {
     }
 
     async function fetchFilterJobs() {
+      const filtersCacheKey = filterCacheKey(cityFilter);
+      const cachedFilters = readFilterJobsCache(filtersCacheKey);
+      if (cachedFilters) return cachedFilters;
+
       const PAGE = 1000;
       let from = 0;
       let all: JobFilterMeta[] = [];
@@ -436,16 +476,23 @@ const Index = ({ cityFilter }: IndexProps) => {
         from += PAGE;
       }
 
+      writeFilterJobsCache(filtersCacheKey, all);
       return all;
     }
 
     async function fetchJobs() {
       const cacheKey = listingCacheKey({ cityFilter, page, keyword, selectedLocations, industry, sortBy });
+      const filtersCacheKey = filterCacheKey(cityFilter);
+      const cachedFilters = readFilterJobsCache(filtersCacheKey);
+      if (cachedFilters) {
+        setFilterJobs(cachedFilters);
+      }
+
       const cached = readListingCache(cacheKey);
       if (cached) {
         hydrateCounts(cached.counts);
         setJobsData(cached.jobsData);
-        setFilterJobs(cached.filterJobs);
+        setFilterJobs(cachedFilters ?? cached.filterJobs);
         setTotalJobsCount(cached.totalJobsCount);
         setLoadingJobs(false);
         return;
@@ -457,10 +504,9 @@ const Index = ({ cityFilter }: IndexProps) => {
 
       const from = (page - 1) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
-      const [currentPageJobs, promoted, nextFilterJobs] = await Promise.all([
+      const [currentPageJobs, promoted] = await Promise.all([
         buildJobsQuery(from, to, true),
         buildPromotedJobsQuery(),
-        fetchFilterJobs(),
       ]);
 
       if (cancelled) return;
@@ -491,20 +537,25 @@ const Index = ({ cityFilter }: IndexProps) => {
       const resolvedPageJobs = page === 1 && !fetchHasActiveFilters
         ? mergeJobsById(promotedJobs, pageJobs)
         : pageJobs;
-      const resolvedFilterJobs = nextFilterJobs.length > 0
-        ? nextFilterJobs
-        : resolvedPageJobs.map(({ location, industry }) => ({ location, industry }));
       const countSnapshot = await fetchViewCountsByJobIds(resolvedPageJobs.map((job) => job.id));
       if (cancelled) return;
 
       hydrateCounts(countSnapshot);
       setJobsData(resolvedPageJobs);
-      setFilterJobs(resolvedFilterJobs);
+      setFilterJobs((current) => current.length > 0 ? current : resolvedPageJobs.map(({ location, industry }) => ({ location, industry })));
       setTotalJobsCount(totalCount);
       setLoadingJobs(false);
+
+      const nextFilterJobs = await fetchFilterJobs();
+      if (cancelled) return;
+
+      if (nextFilterJobs.length > 0) {
+        setFilterJobs(nextFilterJobs);
+      }
+
       writeListingCache(cacheKey, {
         jobsData: resolvedPageJobs,
-        filterJobs: resolvedFilterJobs,
+        filterJobs: nextFilterJobs.length > 0 ? nextFilterJobs : resolvedPageJobs.map(({ location, industry }) => ({ location, industry })),
         totalJobsCount: totalCount,
         counts: countSnapshot,
       });
