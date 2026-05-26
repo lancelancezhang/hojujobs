@@ -18,7 +18,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 50;
-const BACKGROUND_FETCH_PAGE_SIZE = 1000;
+const JOB_FETCH_PAGE_SIZE = 1000;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
 const LISTING_CACHE_VERSION = 2;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
@@ -240,14 +240,14 @@ const Index = ({ cityFilter }: IndexProps) => {
   const [industry, setIndustry] = useState(saved?.industry ?? "all");
   const [page, setPage] = useState(saved?.page ?? 1);
   const [sortBy, setSortBy] = useState<SortOption>(saved?.sortBy ?? "recent");
-  const [jobsData, setJobsData] = useState<Job[]>(cachedListing?.jobsData ?? []);
-  const [filterJobs, setFilterJobs] = useState<JobFilterMeta[]>(cachedListing?.filterJobs ?? []);
-  const [loadingJobs, setLoadingJobs] = useState(!cachedListing);
+  const [jobsData, setJobsData] = useState<Job[]>(cachedListing?.allJobsLoaded ? cachedListing.jobsData : []);
+  const [filterJobs, setFilterJobs] = useState<JobFilterMeta[]>(cachedListing?.allJobsLoaded ? cachedListing.filterJobs : []);
+  const [loadingJobs, setLoadingJobs] = useState(!cachedListing?.allJobsLoaded);
   const [allJobsLoaded, setAllJobsLoaded] = useState(cachedListing?.allJobsLoaded ?? false);
-  const [totalJobsCount, setTotalJobsCount] = useState<number | null>(cachedListing?.totalJobsCount ?? null);
+  const [totalJobsCount, setTotalJobsCount] = useState<number | null>(cachedListing?.allJobsLoaded ? cachedListing.totalJobsCount : null);
   const [salePromoDeals, setSalePromoDeals] = useState<SalePromoDeal[]>([]);
 
-  const { counts, getCount, hydrateCounts } = useViewCounts(cachedListing?.counts ?? {});
+  const { counts, getCount, hydrateCounts } = useViewCounts(cachedListing?.allJobsLoaded ? cachedListing.counts : {});
   const { isAdmin } = useAuth();
 
   const meta = cityFilter ? (CITY_META[cityFilter] ?? DEFAULT_META) : DEFAULT_META;
@@ -409,25 +409,31 @@ const Index = ({ cityFilter }: IndexProps) => {
     }
 
     async function fetchJobs() {
-      const initialTo = Math.max(page * ITEMS_PER_PAGE - 1, ITEMS_PER_PAGE - 1);
-      const cacheCoversPage = !!cachedListing && (cachedListing.allJobsLoaded || cachedListing.jobsData.length > initialTo);
-
-      setLoadingJobs(!cacheCoversPage);
-      setAllJobsLoaded(cacheCoversPage ? cachedListing.allJobsLoaded : false);
-      if (!cacheCoversPage) {
-        setTotalJobsCount(null);
+      if (cachedListing?.allJobsLoaded) {
+        setLoadingJobs(false);
+        setAllJobsLoaded(true);
+        setJobsData(cachedListing.jobsData);
+        setFilterJobs(cachedListing.filterJobs);
+        setTotalJobsCount(cachedListing.totalJobsCount);
+        hydrateCounts(cachedListing.counts);
+        return;
       }
 
-      const [initial, promoted, nextFilterJobs] = await Promise.all([
-        buildJobsQuery(0, initialTo, true),
+      setLoadingJobs(true);
+      setAllJobsLoaded(false);
+      setJobsData([]);
+      setTotalJobsCount(null);
+
+      const [firstPage, promoted, nextFilterJobs] = await Promise.all([
+        buildJobsQuery(0, JOB_FETCH_PAGE_SIZE - 1, true),
         buildPromotedJobsQuery(),
         fetchFilterJobs(),
       ]);
 
       if (cancelled) return;
 
-      if (initial.error) {
-        console.error("jobs fetch error:", initial.error);
+      if (firstPage.error) {
+        console.error("jobs fetch error:", firstPage.error);
         setJobsData([]);
         setTotalJobsCount(0);
         setAllJobsLoaded(true);
@@ -435,68 +441,41 @@ const Index = ({ cityFilter }: IndexProps) => {
         return;
       }
 
-      const initialJobs = (initial.data as unknown as Job[]) || [];
+      const firstPageJobs = (firstPage.data as unknown as Job[]) || [];
       const promotedJobs = promoted.error ? [] : ((promoted.data as unknown as Job[]) || []);
-      let all = mergeJobsById(promotedJobs, initialJobs);
-      const resolvedFilterJobs = nextFilterJobs.length > 0 ? nextFilterJobs : all;
-      const totalCount = initial.count ?? initialJobs.length;
+      let fetchedJobs = firstPageJobs;
+      const totalCount = firstPage.count ?? firstPageJobs.length;
 
       if (promoted.error) {
         console.error("promoted jobs fetch error:", promoted.error);
       }
 
-      const initialCounts = await fetchViewCountsByJobIds(all.map((job) => job.id));
-      if (cancelled) return;
-
-      let countSnapshot = initialCounts;
-      hydrateCounts(countSnapshot);
-      writeListingCache(listingCacheKey, {
-        jobsData: all,
-        filterJobs: resolvedFilterJobs,
-        totalJobsCount: totalCount,
-        allJobsLoaded: initialJobs.length >= totalCount,
-        counts: countSnapshot,
-      });
-      setJobsData(all);
-      setFilterJobs(resolvedFilterJobs);
-      setTotalJobsCount(totalCount);
-      setLoadingJobs(false);
-
-      if (initialJobs.length >= totalCount) {
-        setAllJobsLoaded(true);
-        setJobsData(all);
-        return;
-      }
-
-      let from = initialJobs.length;
-      while (true) {
-        const { data, error } = await buildJobsQuery(from, from + BACKGROUND_FETCH_PAGE_SIZE - 1);
+      let from = firstPageJobs.length;
+      while (from < totalCount) {
+        const { data, error } = await buildJobsQuery(from, from + JOB_FETCH_PAGE_SIZE - 1);
         if (cancelled) return;
 
         if (error) { console.error("jobs fetch error:", error); break; }
         if (!data || data.length === 0) break;
 
         const batchJobs = data as unknown as Job[];
-        const batchCounts = await fetchViewCountsByJobIds(batchJobs.map((job) => job.id));
-        if (cancelled) return;
+        fetchedJobs = fetchedJobs.concat(batchJobs);
 
-        countSnapshot = { ...countSnapshot, ...batchCounts };
-        hydrateCounts(batchCounts);
-        all = mergeJobsById(all, batchJobs);
-        writeListingCache(listingCacheKey, {
-          jobsData: all,
-          filterJobs: resolvedFilterJobs,
-          totalJobsCount: totalCount,
-          allJobsLoaded: false,
-          counts: countSnapshot,
-        });
-
-        if (data.length < BACKGROUND_FETCH_PAGE_SIZE) break;
-        from += BACKGROUND_FETCH_PAGE_SIZE;
+        if (data.length < JOB_FETCH_PAGE_SIZE) break;
+        from += JOB_FETCH_PAGE_SIZE;
       }
 
+      const all = mergeJobsById(promotedJobs, fetchedJobs);
+      const resolvedFilterJobs = nextFilterJobs.length > 0 ? nextFilterJobs : all;
+      const countSnapshot = await fetchViewCountsByJobIds(all.map((job) => job.id));
+      if (cancelled) return;
+
+      hydrateCounts(countSnapshot);
       setJobsData(all);
+      setFilterJobs(resolvedFilterJobs);
+      setTotalJobsCount(totalCount);
       setAllJobsLoaded(true);
+      setLoadingJobs(false);
       writeListingCache(listingCacheKey, {
         jobsData: all,
         filterJobs: resolvedFilterJobs,
