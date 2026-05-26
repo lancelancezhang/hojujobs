@@ -419,24 +419,12 @@ const Index = ({ cityFilter }: IndexProps) => {
     }
 
     async function fetchFilterJobs() {
-      const PAGE = 1000;
-      let from = 0;
-      let all: JobFilterMeta[] = [];
-
-      while (true) {
-        const { data, error } = await buildFilterJobsQuery(from, from + PAGE - 1);
-        if (error) {
-          console.error("filter jobs fetch error:", error);
-          return all;
-        }
-        if (!data || data.length === 0) break;
-
-        all = all.concat(data as unknown as JobFilterMeta[]);
-        if (data.length < PAGE) break;
-        from += PAGE;
+      const { data, error } = await buildFilterJobsQuery(0, 499);
+      if (error) {
+        console.error("filter jobs fetch error:", error);
+        return [];
       }
-
-      return all;
+      return (data as unknown as JobFilterMeta[]) ?? [];
     }
 
     async function fetchJobs() {
