@@ -428,12 +428,18 @@ const Index = ({ cityFilter }: IndexProps) => {
     }
 
     async function fetchFilterJobs() {
-      const { data, error } = await buildFilterJobsQuery(0, 499);
-      if (error) {
-        console.error("filter jobs fetch error:", error);
-        return [];
+      const PAGE = 1000;
+      let from = 0;
+      let all: JobFilterMeta[] = [];
+      while (true) {
+        const { data, error } = await buildFilterJobsQuery(from, from + PAGE - 1);
+        if (error) { console.error("filter jobs fetch error:", error); return all; }
+        if (!data || data.length === 0) break;
+        all = all.concat(data as unknown as JobFilterMeta[]);
+        if (data.length < PAGE) break;
+        from += PAGE;
       }
-      return (data as unknown as JobFilterMeta[]) ?? [];
+      return all;
     }
 
     async function fetchJobs() {
@@ -490,13 +496,9 @@ const Index = ({ cityFilter }: IndexProps) => {
       const resolvedPageJobs = page === 1 && !fetchHasActiveFilters
         ? mergeJobsById(promotedJobs, pageJobs)
         : pageJobs;
-      const promotedMeta = promotedJobs.map(({ location, industry }) => ({ location, industry }));
-      const filterBase = nextFilterJobs.length > 0
+      const resolvedFilterJobs = nextFilterJobs.length > 0
         ? nextFilterJobs
         : resolvedPageJobs.map(({ location, industry }) => ({ location, industry }));
-      // Promoted jobs fetched without a row-count cap may be missing from filterBase;
-      // append their metadata so sidebar counts always reflect what's visible.
-      const resolvedFilterJobs = [...filterBase, ...promotedMeta];
       const countSnapshot = await fetchViewCountsByJobIds(resolvedPageJobs.map((job) => job.id));
       if (cancelled) return;
 
@@ -570,13 +572,8 @@ const Index = ({ cityFilter }: IndexProps) => {
       (cityFilter ? j.location.filter((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`)) : j.location)
         .forEach((loc) => { c[loc] = (c[loc] || 0) + 1; });
     });
-    // When exactly one location is selected, use the authoritative DB count
-    // (filterJobs is a capped sample and may undercount for less-common suburbs)
-    if (selectedLocations.length === 1 && totalJobsCount !== null) {
-      c[selectedLocations[0]] = totalJobsCount;
-    }
     return c;
-  }, [filterSourceJobs, cityFilter, selectedLocations, totalJobsCount]);
+  }, [filterSourceJobs, cityFilter]);
 
   const industryCounts = useMemo(() => {
     const c: Record<string, number> = {};
