@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 50;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
-const LISTING_CACHE_VERSION = 4;
+const LISTING_CACHE_VERSION = 5;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
 const FEATURED_SALE_PROMO_RANKS = [2, 20];
 
@@ -407,7 +407,7 @@ const Index = ({ cityFilter }: IndexProps) => {
     function buildFilterJobsQuery(from: number, to: number) {
       let query = supabase
         .from("jobs")
-        .select("location, industry")
+        .select("title, location, industry")
         .gte("uploaded_at", cutoff.toISOString())
         .lte("uploaded_at", new Date().toISOString());
 
@@ -415,16 +415,37 @@ const Index = ({ cityFilter }: IndexProps) => {
         query = query.overlaps("location", cityLocations);
       }
 
+      if (industry !== "all") {
+        query = query.eq("industry", industry);
+      }
+
+      const trimmedKeyword = keyword.trim();
+      if (trimmedKeyword) {
+        query = query.ilike("title", `%${trimmedKeyword.replace(/[%_]/g, "\\$&")}%`);
+      }
+
       return query.order("uploaded_at", { ascending: false }).range(from, to);
     }
 
     async function fetchFilterJobs() {
-      const { data, error } = await buildFilterJobsQuery(0, 499);
-      if (error) {
-        console.error("filter jobs fetch error:", error);
-        return [];
+      const PAGE = 1000;
+      let from = 0;
+      let all: JobFilterMeta[] = [];
+
+      while (true) {
+        const { data, error } = await buildFilterJobsQuery(from, from + PAGE - 1);
+        if (error) {
+          console.error("filter jobs fetch error:", error);
+          return all;
+        }
+        if (!data || data.length === 0) break;
+
+        all = all.concat(data as unknown as JobFilterMeta[]);
+        if (data.length < PAGE) break;
+        from += PAGE;
       }
-      return (data as unknown as JobFilterMeta[]) ?? [];
+
+      return all;
     }
 
     async function fetchJobs() {
