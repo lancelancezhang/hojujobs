@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 50;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
-const LISTING_CACHE_VERSION = 5;
+const LISTING_CACHE_VERSION = 6;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
 const FEATURED_SALE_PROMO_RANKS = [2, 20];
 
@@ -427,6 +427,61 @@ const Index = ({ cityFilter }: IndexProps) => {
       return query.order("uploaded_at", { ascending: false }).range(from, to);
     }
 
+    function buildRecentJobsQuery(from: number, to: number) {
+      return supabase
+        .from("jobs")
+        .select("id, title, location, industry, uploaded_at, Promoted")
+        .gte("uploaded_at", cutoff.toISOString())
+        .lte("uploaded_at", new Date().toISOString())
+        .order("uploaded_at", { ascending: false })
+        .range(from, to);
+    }
+
+    function jobBelongsToCity(job: Pick<Job, "location">) {
+      if (!cityFilter) return true;
+      return job.location.some((loc) => (SUBURB_EN[loc] ?? "").endsWith(` ${cityFilter}`));
+    }
+
+    function applyClientFilters(jobs: Job[]) {
+      const trimmedKeyword = keyword.trim().toLowerCase();
+
+      const result = jobs.filter((job) => {
+        const matchKeyword = !trimmedKeyword || job.title.toLowerCase().includes(trimmedKeyword);
+        const matchLocation = selectedLocations.length === 0 || job.location.some((loc) => selectedLocations.includes(loc));
+        const matchIndustry = industry === "all" || job.industry === industry;
+        return matchKeyword && matchLocation && matchIndustry;
+      });
+
+      if (sortBy === "views") {
+        result.sort((a, b) => (counts[b.id] || 0) - (counts[a.id] || 0));
+      } else {
+        result.sort((a, b) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime());
+      }
+
+      return result;
+    }
+
+    async function fetchRecentJobs() {
+      const PAGE = 1000;
+      let from = 0;
+      let all: Job[] = [];
+
+      while (true) {
+        const { data, error } = await buildRecentJobsQuery(from, from + PAGE - 1);
+        if (error) {
+          console.error("recent jobs fetch error:", error);
+          return all;
+        }
+        if (!data || data.length === 0) break;
+
+        all = all.concat(data as unknown as Job[]);
+        if (data.length < PAGE) break;
+        from += PAGE;
+      }
+
+      return all;
+    }
+
     async function fetchFilterJobs() {
       const PAGE = 1000;
       let from = 0;
@@ -466,6 +521,52 @@ const Index = ({ cityFilter }: IndexProps) => {
 
       const from = (page - 1) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
+
+      if (cityFilter === "NSW") {
+        const recentJobs = await fetchRecentJobs();
+        if (cancelled) return;
+
+        const cityRecentJobs = recentJobs.filter(jobBelongsToCity);
+        const nextFilterJobs = applyClientFilters(cityRecentJobs)
+          .map(({ location, industry }) => ({ location, industry }));
+        const clientFilteredJobs = applyClientFilters(cityRecentJobs);
+        const totalCount = clientFilteredJobs.length;
+        const maxPage = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
+
+        if (page > maxPage) {
+          setPage(maxPage);
+          return;
+        }
+
+        const pageJobs = clientFilteredJobs.slice(from, to + 1);
+        const fetchHasActiveFilters = !!keyword || selectedLocations.length > 0 || industry !== "all";
+        const promotedJobs = !fetchHasActiveFilters && page === 1
+          ? cityRecentJobs.filter((job) => job.Promoted === true)
+          : [];
+        const resolvedPageJobs = page === 1 && !fetchHasActiveFilters
+          ? mergeJobsById(promotedJobs, pageJobs)
+          : pageJobs;
+        const countSnapshot = await fetchViewCountsByJobIds(resolvedPageJobs.map((job) => job.id));
+        if (cancelled) return;
+
+        hydrateCounts(countSnapshot);
+        setJobsData(resolvedPageJobs);
+        setFilterJobs(nextFilterJobs.length > 0
+          ? nextFilterJobs
+          : resolvedPageJobs.map(({ location, industry }) => ({ location, industry })));
+        setTotalJobsCount(totalCount);
+        setLoadingJobs(false);
+        writeListingCache(cacheKey, {
+          jobsData: resolvedPageJobs,
+          filterJobs: nextFilterJobs.length > 0
+            ? nextFilterJobs
+            : resolvedPageJobs.map(({ location, industry }) => ({ location, industry })),
+          totalJobsCount: totalCount,
+          counts: countSnapshot,
+        });
+        return;
+      }
+
       const [currentPageJobs, promoted, nextFilterJobs] = await Promise.all([
         buildJobsQuery(from, to, true),
         buildPromotedJobsQuery(),
