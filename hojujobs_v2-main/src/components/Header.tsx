@@ -13,9 +13,11 @@ const CITY_TABS = [
 
 const INFO_TABS = [
   { label: "온세일", path: "/sales" },
-  { label: "워홀정보", path: "/dashboard" },
   { label: "뉴스", path: "/news" },
+  { label: "워홀정보", path: "/dashboard" },
 ];
+
+const NAV_TABS = [...CITY_TABS, ...INFO_TABS];
 
 export function Header() {
   const { user, isAdmin } = useAuth();
@@ -101,35 +103,16 @@ export function Header() {
         </div>
 
         {/* City tabs */}
-        <div className="-mx-1 flex flex-wrap items-center gap-x-0 gap-y-1 sm:flex-nowrap sm:justify-normal">
-          <nav className="flex min-w-0 flex-1 flex-wrap items-center gap-0" aria-label="지역별 공고">
-            {CITY_TABS.map(({ label, path }) => (
+        <div className="-mx-1">
+          <nav className="grid grid-cols-7 items-end" aria-label="주요 페이지">
+            {NAV_TABS.map(({ label, path }) => (
               <NavLink
                 key={path}
                 to={path}
-                end={path === "/"}
+                end={path === "/" || path === "/dashboard" || path === "/news"}
                 className={({ isActive }) =>
                   cn(
-                    "flex-none px-1.5 py-2 text-center text-[11px] font-medium border-b-2 transition-colors whitespace-nowrap sm:px-2.5 sm:text-xs",
-                    isActive
-                      ? "border-primary text-primary"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-                  )
-                }
-              >
-                {label}
-              </NavLink>
-            ))}
-          </nav>
-          <nav className="flex flex-none flex-wrap items-center gap-0" aria-label="정보">
-            {INFO_TABS.map(({ label, path }) => (
-              <NavLink
-                key={path}
-                to={path}
-                end={path === "/dashboard"}
-                className={({ isActive }) =>
-                  cn(
-                    "px-1.5 py-2 text-center text-[11px] font-medium border-b-2 transition-colors whitespace-nowrap sm:px-2.5 sm:text-xs",
+                    "min-w-0 px-0.5 py-2 text-center text-[10px] font-medium border-b-2 transition-colors whitespace-nowrap sm:px-2.5 sm:text-xs",
                     isActive
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
