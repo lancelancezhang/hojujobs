@@ -1,4 +1,4 @@
-import { ExternalLink, Languages, Newspaper, Radio } from "lucide-react";
+import { ExternalLink, Languages } from "lucide-react";
 import { Header } from "@/components/Header";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -31,34 +31,42 @@ function domainFromUrl(url: string) {
 
 const NEWS_TOPICS: NewsTopic[] = [
   {
-    key: "visa",
-    labelKo: "비자·이민",
-    summary: "비자, 이민 정책, 해외 인력 활용처럼 호주 체류 계획에 영향을 줄 수 있는 뉴스를 모았습니다.",
+    key: "stay",
+    labelKo: "체류·안전",
+    summary: "입국, 체류, 보건, 커뮤니티 안전처럼 호주 생활에 바로 연결되는 뉴스를 모았습니다.",
     tone: "from-blue-50 to-white border-blue-100",
     stories: [
       {
-        title: "이민자 숙련 인력이 호주에서 충분히 활용되지 못한다는 지적",
+        title: "입국 금지된 여성이 호주행 비행기 탑승 시도",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-04-02/permanent-migrants-skills-wasted-in-australia-martin-parkinson/106519816",
-        summaryKo: "전 재무부 차관은 호주가 이미 들어와 있는 이민자의 자격과 경력을 제대로 인정하지 못해 노동력 손실이 크다고 지적했습니다.",
-        meta: "이민 · 취업",
-        publishedAt: "2026년 4월 2일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/isis-linked-woman-barred-from-australia-flight/106728994",
+        summaryKo: "임시 입국 제외 명령을 받은 여성이 호주행 항공편에 타려 했지만, 항공사와 국경 당국 시스템으로 탑승이 차단됐습니다.",
+        meta: "입국 · 국경",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "주택 공급과 이민자 수를 연결하는 정책 논쟁",
+        title: "IS 연계 여성과 아이들이 호주에서 첫 밤을 보내",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-25/housing-crisis-migration-cap-kohler/106716056",
-        summaryKo: "이민자 수를 새로 지어진 주택 수에 맞추겠다는 정치권 제안이 실제로 얼마나 효과가 있을지, 주거와 인구 흐름을 함께 설명합니다.",
-        meta: "이민 · 주거",
-        publishedAt: "2026년 5월 25일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/isis-linked-women-and-children-sydney-melbourne-airports/106724938",
+        summaryKo: "시드니와 멜버른 공항으로 들어온 여성과 아이들에 대해 경찰과 ASIO 조사가 이어지고 있다는 내용입니다.",
+        meta: "입국 · 보안",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "해외여행 규정 변화와 2026년 출입국 체크포인트",
-        source: "SBS News",
-        sourceUrl: "https://www.sbs.com.au/news/article/international-travel-changes-new-rules-2026/0c2fl4ylm",
-        summaryKo: "SBS는 2026년 해외여행 때 알아두면 좋은 출입국, 항공, 비자 관련 변화들을 정리했습니다.",
-        meta: "비자 · 여행",
-        publishedAt: "2026년 1월 1일",
+        title: "호주 홍역 사례 증가, 해외여행 후 감염 주의",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/measles-cases-rise-in-australia-as-authorities-monitor-outbreaks/106722836",
+        summaryKo: "호주 내 홍역 사례가 늘고 있으며, 남아시아와 동남아시아 여행 후 귀국한 감염 사례가 많아 예방접종 확인이 권고됩니다.",
+        meta: "보건 · 여행",
+        publishedAt: "2026년 5월 27일",
+      },
+      {
+        title: "화해 주간 맞아 '진실을 위한 걷기' 국회 도착",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/national-walk-for-truth-ends-at-parliament-calls-for-albanese-/106726304",
+        summaryKo: "5주 넘게 이어진 전국 걷기 행사가 국회에 도착하며, 호주 원주민 역사와 진실화해 논의가 다시 주목받았습니다.",
+        meta: "커뮤니티 · 역사",
+        publishedAt: "2026년 5월 27일",
       },
     ],
   },
@@ -69,27 +77,35 @@ const NEWS_TOPICS: NewsTopic[] = [
     tone: "from-emerald-50 to-white border-emerald-100",
     stories: [
       {
-        title: "호주인들이 이직과 주 이동을 덜 하고 있다는 경제 데이터",
+        title: "정부, 수십 년 만의 실업 지원 제도 개편 제안",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-25/not-moving-jobs-not-starting-businesses-not-moving-states-data/106599004",
-        summaryKo: "높은 주거비와 이사 비용 때문에 사람들이 직장을 바꾸거나 다른 주로 이동하는 데 더 신중해지고 있다는 분석입니다.",
-        meta: "취업 · 이직",
-        publishedAt: "2026년 5월 25일",
-      },
-      {
-        title: "호주 실업 지원 제도에 큰 변화 예고",
-        source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-27/federal-politics-live-blog-jobseekers-estimates-isis-brides-cgt/106724430",
-        summaryKo: "고용부 장관이 구직자 지원 제도 개편을 설명하며, 일자리 찾기와 정부 지원 방식에 변화가 있을 수 있음을 예고했습니다.",
-        meta: "구직 · 복지",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/jobseeker-unemployment-overhaul/106725618",
+        summaryKo: "백만 명이 넘는 구직자를 대상으로 지원 단계를 나누고, 취업 서비스와 상호 의무 제도를 바꾸는 큰 개편안이 발표됐습니다.",
+        meta: "구직 · 제도",
         publishedAt: "2026년 5월 27일",
       },
       {
-        title: "와이알라 제철소 매각 경쟁과 지역 일자리 영향",
-        source: "Yahoo Finance / AAP",
-        sourceUrl: "https://au.finance.yahoo.com/news/no-whyalla-wipeout-final-race-020517458.html/",
-        summaryKo: "제철소와 제련소 매각 절차가 지역 노동자, 공급망, 산업 일자리에 어떤 의미를 갖는지 다룬 보도입니다.",
-        meta: "지역 · 고용",
+        title: "새 실업 지원 제도 변화 한눈에 보기",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/unemployment-system-mutual-obligation-changes-centrelink/106726178",
+        summaryKo: "센터링크, 상호 의무, 취업 서비스 제공 방식이 어떻게 달라질 수 있는지 구직자 입장에서 설명한 기사입니다.",
+        meta: "센터링크 · 구직",
+        publishedAt: "2026년 5월 27일",
+      },
+      {
+        title: "실업 지원 개편 발표를 실시간으로 정리한 정치 라이브",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/federal-politics-live-blog-jobseekers-estimates-isis-brides-cgt/106724430",
+        summaryKo: "고용부 장관 발표와 의회 반응을 따라가며, 취업 지원 제도 변화가 왜 나왔는지 배경을 볼 수 있습니다.",
+        meta: "정부 · 취업",
+        publishedAt: "2026년 5월 27일",
+      },
+      {
+        title: "쿠버페디 경찰 인력 유치안 거절, 지역 인력난 계속",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/sa-police-commissioner-rejects-coober-pedy-staffing-plan/106722262",
+        summaryKo: "외곽 지역에서 필수 인력을 구하고 유지하는 일이 얼마나 어려운지 보여주는 사례로, 지역 취업을 고려하는 사람에게 참고가 됩니다.",
+        meta: "지역 · 인력난",
         publishedAt: "2026년 5월 27일",
       },
     ],
@@ -97,64 +113,80 @@ const NEWS_TOPICS: NewsTopic[] = [
   {
     key: "housing",
     labelKo: "주거·생활비",
-    summary: "렌트, 주택 공급, 생활비, 교통비처럼 매달 지출에 직접 연결되는 기사를 골랐습니다.",
+    summary: "렌트, 주택 안전, 보험, 물가처럼 매달 지출에 직접 연결되는 기사를 골랐습니다.",
     tone: "from-violet-50 to-white border-violet-100",
     stories: [
       {
-        title: "주택 승인을 빠르게 하기 위해 AI 도입",
+        title: "시드니 주택 곰팡이 문제와 보험 분쟁 장기화",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-11/housing-artificial-intelligence-epbc-assessments-federal-budget/106663464",
-        summaryKo: "연방정부가 주택과 에너지 프로젝트의 환경평가를 빠르게 처리하기 위해 AI 도구 예산을 배정한다는 내용입니다.",
-        meta: "주거 · 정책",
-        publishedAt: "2026년 5월 11일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/home-insurance-nine-year-battle-mould-roof-repairs/106400538",
+        summaryKo: "집 수리와 보험 처리 지연으로 주택이 살기 어려운 상태가 된 사례를 통해 보험 청구와 주거 안전 문제를 다룹니다.",
+        meta: "주거 · 보험",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "연료비 상승과 생활비 부담을 말하는 호주 사람들",
+        title: "렌트난이 가정폭력 피해자의 안전한 주거를 막아",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-04-01/australians-reveal-toll-of-fuel-costs-and-cost-of-living-rise/106512194",
-        summaryKo: "출퇴근, 장보기, 소규모 사업 운영에 연료비와 생활비 상승이 어떤 부담을 주는지 실제 사례로 보여줍니다.",
-        meta: "생활비 · 연료",
-        publishedAt: "2026년 4월 1일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/qld-domestic-violence-housing-rental-affordability/106591974",
+        summaryKo: "높은 렌트와 낮은 공실률 때문에 안전한 집을 찾기 어려운 사람들이 늘고 있다는 주거 위기 보도입니다.",
+        meta: "렌트 · 안전",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "생활비 상승이 일부 가구에 더 크게 작용한다는 ABS 데이터",
+        title: "4월 물가상승률 4.2%, 연료비 하락이 영향",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-02-04/living-costs-hit-some-harder-new-abs-data/106303060",
-        summaryKo: "의료비, 필수 지출, 가구별 체감 물가 차이를 설명해 호주 생활비 흐름을 이해하는 데 도움이 됩니다.",
-        meta: "생활비 · 통계",
-        publishedAt: "2026년 2월 4일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/headline-inflation-at-4-2-per-cent-in-april-2026/106726182",
+        summaryKo: "연료비 하락으로 헤드라인 물가가 완화됐지만, 주거와 기타 생활비 압박은 계속될 수 있다는 경제 기사입니다.",
+        meta: "생활비 · 물가",
+        publishedAt: "2026년 5월 27일",
+      },
+      {
+        title: "제럴턴 시의회, 핵심 노동자 주택 개발 부지 확보",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/geraldton-council-buys-crown-land-for-one-dollar/106723070",
+        summaryKo: "서호주 제럴턴에서 핵심 노동자 숙소를 만들기 위해 지방정부가 주택 개발에 나서는 사례를 다룹니다.",
+        meta: "지역 · 주택",
+        publishedAt: "2026년 5월 27일",
       },
     ],
   },
   {
     key: "travel",
     labelKo: "여행·교통",
-    summary: "공항, 항공권, 이동, 여행자 권리처럼 호주 안팎을 오갈 때 필요한 뉴스를 모았습니다.",
+    summary: "공항, 도로, 이동, 여행 안전처럼 호주 안팎을 오갈 때 필요한 뉴스를 모았습니다.",
     tone: "from-amber-50 to-white border-amber-100",
     stories: [
       {
-        title: "항공 승객 권리 개편에 4천만 달러 배정",
-        source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-16/federal-budget-aviation-consumer-protections/106665266",
-        summaryKo: "항공편 취소와 지연에 대한 불만 처리와 보상 가능성을 높이는 새 감시기구와 제도 개편이 추진됩니다.",
-        meta: "항공 · 소비자",
-        publishedAt: "2026년 5월 16일",
+        title: "국립공원 실종 모자 구조 사례가 알려준 여행 안전 수칙",
+        source: "SBS Korean",
+        sourceUrl: "https://www.sbs.com.au/language/korean/ko/podcast-episode/lost-for-10-days-in-mount-royal-national-park/47xr3l4gt/",
+        summaryKo: "호주 국립공원에서 길을 잃었던 모자가 구조된 사례를 통해 산행 전 동선 공유와 비상 준비의 중요성을 설명합니다.",
+        meta: "여행 · 안전",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "아발론 공항 오경보 이후 호주 공항 보안 점검",
+        title: "케언즈 출근 시간대 도난 차량 추격으로 교통 혼잡",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-25/australia-airport-security-aviation-flights/106711712",
-        summaryKo: "멜버른 인근 아발론 공항 보안 오경보 이후, 국내 공항 보안 절차와 승객 경험이 다시 주목받고 있습니다.",
-        meta: "공항 · 보안",
-        publishedAt: "2026년 5월 25일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/allegedly-stolen-cars-cause-peak-hour-traffic-chaos-in-cairns/106728196",
+        summaryKo: "여러 대의 도난 의심 차량이 케언즈 도로를 위험하게 달리며 출근 시간 교통에 큰 영향을 줬습니다.",
+        meta: "도로 · 교통",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "멜버른-브리즈번 내륙철도 계획 변경과 지역 반응",
+        title: "브리즈번 남부 타이어 매장 화재로 도로 통제",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/2026-05-20/inside-the-fight-for-an-inland-rail/106703490",
-        summaryKo: "멜버른과 브리즈번을 잇는 내륙철도 계획 변경이 지역 이동, 물류, 교통 인프라에 어떤 논쟁을 만들었는지 설명합니다.",
-        meta: "철도 · 지역",
-        publishedAt: "2026년 5월 20일",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/authorities-fighting-tyre-fire-kingston-logan/106728244",
+        summaryKo: "로건 킹스턴의 화재로 인근 도로가 통제되고 주민에게 실내 대피와 창문 닫기가 권고됐습니다.",
+        meta: "도로 · 안전",
+        publishedAt: "2026년 5월 27일",
+      },
+      {
+        title: "휘트선데이 앞바다에서 어선 침몰 후 구조",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/fishermen-and-dog-rescued-off-whitsundays-queensland-coast/106726522",
+        summaryKo: "퀸즐랜드 해상에서 어선이 침몰한 뒤 구조 작업이 이뤄졌으며, 비상 신호기 등록의 중요성이 강조됐습니다.",
+        meta: "해양 · 여행안전",
+        publishedAt: "2026년 5월 27일",
       },
     ],
   },
@@ -163,7 +195,7 @@ const NEWS_TOPICS: NewsTopic[] = [
 export default function News() {
   useSEO({
     title: "뉴스 | Hoju Jobs",
-    description: "호주에 사는 한국인이 알아두면 좋은 비자, 일자리, 주거, 생활비, 여행 뉴스를 한국어로 확인하세요.",
+    description: "호주에 사는 한국인이 알아두면 좋은 체류, 일자리, 주거, 생활비, 여행 뉴스를 한국어로 확인하세요.",
     canonical: "https://hojujobs.com/news",
     htmlLang: "ko",
     ogLocale: "ko_KR",
@@ -208,20 +240,13 @@ export default function News() {
               className={`overflow-hidden rounded-lg border bg-gradient-to-br ${topic.tone}`}
             >
               <div className="grid gap-0 lg:grid-cols-[17rem_1fr]">
-                <div className="border-b border-inherit bg-white/55 p-5 lg:border-b-0 lg:border-r">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-white shadow-sm">
-                    <Newspaper className="h-5 w-5 text-slate-800" />
-                  </div>
-                  <p className="text-xs font-bold tracking-normal text-slate-500">추천 주제</p>
-                  <h2 className="mt-1 text-2xl font-black tracking-normal text-slate-950">{topic.labelKo}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-600">{topic.summary}</p>
-                  <p className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-700">
-                    <Radio className="h-3 w-3" />
-                    실제 기사 {topic.stories.length}개
-                  </p>
+                <div className="border-b border-inherit bg-white/55 p-3 sm:p-5 lg:border-b-0 lg:border-r">
+                  <p className="text-[11px] font-bold tracking-normal text-slate-500 sm:text-xs">추천 주제</p>
+                  <h2 className="mt-0.5 text-xl font-black tracking-normal text-slate-950 sm:mt-1 sm:text-2xl">{topic.labelKo}</h2>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600 sm:mt-3 sm:text-sm">{topic.summary}</p>
                 </div>
 
-                <div className="grid gap-3 p-4 sm:grid-cols-3">
+                <div className="grid gap-3 p-3 sm:grid-cols-2 sm:p-4 xl:grid-cols-4">
                   {topic.stories.map((story) => (
                     <article key={story.sourceUrl} className="flex min-h-[13rem] flex-col rounded-lg border border-white/70 bg-white p-4 shadow-sm">
                       <div className="mb-3 flex items-center justify-between gap-3">
@@ -240,7 +265,6 @@ export default function News() {
                         <ExternalLink className="h-3 w-3" />
                       </a>
                       <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-                        <Radio className="h-3 w-3" />
                         {story.source} · {domainFromUrl(story.sourceUrl)}
                       </p>
                     </article>
