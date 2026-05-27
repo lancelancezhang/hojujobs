@@ -631,6 +631,7 @@ const Index = ({ cityFilter }: IndexProps) => {
   const showReadyPromoSection = showPromoSection && !loadingSalePromoDeals;
   const showPromotedJobsInPromoSection = showReadyPromoSection && !loadingJobs;
   const loadingCards = loadingJobs;
+  const pageVisualReady = !loadingJobs && (!showPromoSection || !loadingSalePromoDeals);
   const regularPaginatedJobs = showPromoSection
     ? paginatedJobs.filter((job) => job.Promoted !== true)
     : paginatedJobs;
@@ -662,6 +663,14 @@ const Index = ({ cityFilter }: IndexProps) => {
       <Header />
 
       <div className="w-full max-w-6xl mx-auto px-4 py-8">
+        {!pageVisualReady ? (
+          <div className="flex min-h-[60vh] items-center justify-center rounded-lg border border-border bg-white">
+            <div className="text-center">
+              <p className="text-sm font-semibold text-foreground">공고를 불러오는 중...</p>
+              <p className="mt-1 text-xs text-muted-foreground">공고, 조회수, 필터와 추천 정보를 함께 준비하고 있습니다.</p>
+            </div>
+          </div>
+        ) : (
         <div className="lg:grid lg:grid-cols-[14rem_1fr] lg:gap-8">
           <div className="hidden lg:block">
             <div className="sticky top-4">
@@ -812,6 +821,7 @@ const Index = ({ cityFilter }: IndexProps) => {
             <Pagination currentPage={currentPage} totalPages={displayTotalPages} onPageChange={(p) => { setPage(p); sessionStorage.removeItem("hoju_scroll_y"); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
           </div>
         </div>
+        )}
       </div>
     </div>
   );
