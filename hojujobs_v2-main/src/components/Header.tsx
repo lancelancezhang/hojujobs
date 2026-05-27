@@ -101,8 +101,8 @@ export function Header() {
         </div>
 
         <div className="-mx-1">
-          <nav className="flex items-end gap-1 sm:gap-2" aria-label="주요 페이지">
-            <div className="grid flex-[4] grid-cols-4 items-end">
+          <nav className="flex items-end gap-1 sm:gap-2 lg:justify-between" aria-label="주요 페이지">
+            <div className="grid flex-[4] grid-cols-4 items-end lg:flex-none lg:min-w-[31rem]">
               {CITY_TABS.map(({ label, path }) => (
                 <NavLink
                   key={path}
@@ -122,9 +122,9 @@ export function Header() {
               ))}
             </div>
 
-            <div className="mb-2 h-5 w-px shrink-0 bg-border" aria-hidden="true" />
+            <div className="mb-2 h-5 w-px shrink-0 bg-border lg:hidden" aria-hidden="true" />
 
-            <div className="grid flex-[3] grid-cols-3 items-end rounded-t-md bg-slate-50/90 ring-1 ring-inset ring-slate-200/70">
+            <div className="grid flex-[3] grid-cols-3 items-end rounded-t-md bg-slate-50/90 ring-1 ring-inset ring-slate-200/70 lg:flex-none lg:min-w-[20rem]">
               {INFO_TABS.map(({ label, path }) => (
                 <NavLink
                   key={path}
