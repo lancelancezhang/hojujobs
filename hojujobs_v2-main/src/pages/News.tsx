@@ -13,10 +13,7 @@ type NewsTopic = {
     sourceUrl: string;
     summaryKo: string;
     meta: string;
-  }>;
-  sources: Array<{
-    name: string;
-    url: string;
+    publishedAt: string;
   }>;
 };
 
@@ -40,31 +37,29 @@ const NEWS_TOPICS: NewsTopic[] = [
     tone: "from-blue-50 to-white border-blue-100",
     stories: [
       {
-        title: "AUKUS와 국방 예산 논의",
-        source: "ABC Politics",
-        sourceUrl: "https://www.abc.net.au/news/politics",
-        summaryKo: "국방 장관 발언과 의회 질의 등 AUKUS, 잠수함 계획, 예산 집행 흐름을 계속 업데이트합니다.",
+        title: "AUKUS 실패 시 잠수함 '플랜 B'는 없다고 말한 국방장관",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/no-plan-b-for-submarines-if-aukus-fails-says-defence-minister/106728832",
+        summaryKo: "리처드 말스 국방장관은 AUKUS 잠수함 계획이 어렵지만 방향을 바꾸면 장거리 잠수함 확보 자체를 포기하는 결과가 될 수 있다고 말했습니다.",
         meta: "정책 · 국방",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "호주 정치 라이브 업데이트",
+        title: "ABC 뉴스 책임자 저스틴 스티븐스 사임",
         source: "Guardian Australia",
-        sourceUrl: "https://www.theguardian.com/australia-news/australian-politics",
-        summaryKo: "상·하원 질의, 정당 발언, 예산 후속 조치 등 하루 단위 정치 흐름을 빠르게 확인하기 좋습니다.",
-        meta: "라이브 · 의회",
+        sourceUrl: "https://www.theguardian.com/australia-news/live/2026/may/27/australia-politics-live-quad-wong-jobseeker-capital-gains-tax-budget-anthony-albanese-angus-taylor-labor-coalition-one-nation-question-time-senate-estimates-ntwnfb?filterKeyEvents=false&page=with%3Ablock-6a165a4b8f0803c3c6f95a8e",
+        summaryKo: "가디언 정치 라이브는 ABC 뉴스 책임자 사임, 의회 질의, 세제 개편 논란 등 하루 주요 정치 흐름을 정리했습니다.",
+        meta: "정치 · 미디어",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "다문화 사회와 정부 정책",
-        source: "SBS News",
-        sourceUrl: "https://www.sbs.com.au/news/topic/politics",
-        summaryKo: "이민자 커뮤니티 관점에서 선거, 복지, 교육, 비자 관련 정책 뉴스를 폭넓게 다룹니다.",
-        meta: "정책 · 커뮤니티",
+        title: "입국 금지된 ISIS 연계 여성이 호주행 비행기 탑승 시도",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/isis-linked-woman-barred-from-australia-flight/106728994",
+        summaryKo: "임시 입국 제외 명령을 받은 호주 여성이 시리아에서 호주행 비행기에 오르려 했으나 탑승이 차단됐다고 보도했습니다.",
+        meta: "안보 · 이민",
+        publishedAt: "2026년 5월 27일",
       },
-    ],
-    sources: [
-      { name: "ABC Politics", url: "https://www.abc.net.au/news/politics" },
-      { name: "Guardian Australian politics", url: "https://www.theguardian.com/australia-news/australian-politics" },
-      { name: "SBS Politics", url: "https://www.sbs.com.au/news/topic/politics" },
     ],
   },
   {
@@ -74,31 +69,29 @@ const NEWS_TOPICS: NewsTopic[] = [
     tone: "from-sky-50 to-white border-sky-100",
     stories: [
       {
-        title: "SBS World News 최신 국제 뉴스",
-        source: "SBS World News",
-        sourceUrl: "https://www.sbs.com.au/news/",
-        summaryKo: "호주 공영 다문화 방송의 국제 뉴스 허브입니다. 글로벌 이슈를 호주 시청자 관점으로 정리합니다.",
-        meta: "국제 · 외교",
+        title: "IS 연계 여성과 아이들 2차 그룹 호주 도착",
+        source: "SBS News",
+        sourceUrl: "https://www.sbs.com.au/news/video/second-group-of-is-linked-women-and-children-arrive-in-australia/rtkmxrc3k",
+        summaryKo: "SBS는 시리아 수용소에서 온 여성과 아이들이 시드니와 멜버른에 도착했으며, 관련 수사가 계속되고 있다고 전했습니다.",
+        meta: "국제 · 호주",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "ABC World 최신 보도",
+        title: "시리아 수용소의 호주 가족들은 누구인가",
         source: "ABC News",
-        sourceUrl: "https://www.abc.net.au/news/world",
-        summaryKo: "전쟁, 기후, 미국·아시아·유럽 주요 이슈 등 호주 공영방송의 국제 보도 흐름을 확인할 수 있습니다.",
-        meta: "국제 · 공영방송",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-02/who-are-the-australians-from-al-roj-isis-camp-in-syria/106629466",
+        summaryKo: "ABC는 시리아 알 로즈 수용소에 있던 호주 여성과 아이들의 배경, 귀국 과정, 법적 쟁점을 설명했습니다.",
+        meta: "배경 · 시리아",
+        publishedAt: "2026년 5월 2일",
       },
       {
-        title: "Guardian World",
+        title: "시리아 수용소 호주 여성들, 아이들만이라도 귀국하길 원한다고 밝혀",
         source: "The Guardian",
-        sourceUrl: "https://www.theguardian.com/world",
-        summaryKo: "국제 정치와 사회 이슈를 빠르게 다루며, 호주에 영향을 줄 수 있는 글로벌 맥락을 보기에 좋습니다.",
-        meta: "세계 · 분석",
+        sourceUrl: "https://www.theguardian.com/australia-news/2026/feb/24/australian-women-syria-camps-children-ntwnfb",
+        summaryKo: "가디언은 시리아 수용소에 있던 일부 호주 여성들이 자녀들이 안전하게 호주로 갈 수 있다면 분리도 받아들이겠다고 말했다고 보도했습니다.",
+        meta: "인권 · 국제",
+        publishedAt: "2026년 2월 24일",
       },
-    ],
-    sources: [
-      { name: "SBS News", url: "https://www.sbs.com.au/news/" },
-      { name: "ABC World", url: "https://www.abc.net.au/news/world" },
-      { name: "Guardian World", url: "https://www.theguardian.com/world" },
     ],
   },
   {
@@ -108,31 +101,29 @@ const NEWS_TOPICS: NewsTopic[] = [
     tone: "from-emerald-50 to-white border-emerald-100",
     stories: [
       {
-        title: "호주 비즈니스·경제 최신 흐름",
-        source: "ABC Business",
-        sourceUrl: "https://www.abc.net.au/news/business",
-        summaryKo: "세금, 은행, 기업 구조조정, 원자재, 주택시장 등 생활비와 고용에 연결되는 경제 뉴스를 다룹니다.",
-        meta: "경제 · 생활비",
+        title: "리버티 벨 베이 노동자 지원금 500만 달러 추가 발표",
+        source: "Department of Industry",
+        sourceUrl: "https://www.minister.industry.gov.au/ministers/timayres/media-releases/5-million-support-liberty-bell-bay-workers-preferred-bidder-named",
+        summaryKo: "연방·태즈메이니아 정부는 매각 절차가 진행되는 동안 리버티 벨 베이 제련소 직원 고용 유지를 위해 추가 지원을 발표했습니다.",
+        meta: "산업 · 고용",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "기업·금융 전문 뉴스",
-        source: "Australian Financial Review",
-        sourceUrl: "https://www.afr.com/",
-        summaryKo: "기업, 금융시장, 부동산, 세금 이슈를 깊게 다루는 호주 주요 경제 매체입니다.",
-        meta: "금융 · 기업",
+        title: "주택 승인 속도를 높이기 위해 AI 도입",
+        source: "ABC News",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-11/housing-artificial-intelligence-epbc-assessments-federal-budget/106663464",
+        summaryKo: "ABC는 연방정부가 주택·에너지 프로젝트 환경평가를 빠르게 하기 위한 AI 도구에 예산을 투입한다고 보도했습니다.",
+        meta: "주택 · 예산",
+        publishedAt: "2026년 5월 11일",
       },
       {
-        title: "비즈니스와 소비자 이슈",
-        source: "Sydney Morning Herald",
-        sourceUrl: "https://www.smh.com.au/business",
-        summaryKo: "소비자, 직장, 부동산, 기업 뉴스를 일반 독자가 읽기 쉽게 정리합니다.",
-        meta: "소비자 · 직장",
+        title: "와이알라 제철소와 섬 제련소 매각 움직임",
+        source: "Yahoo Finance / AAP",
+        sourceUrl: "https://au.finance.yahoo.com/news/no-whyalla-wipeout-final-race-020517458.html/",
+        summaryKo: "AAP 보도는 와이알라 제철소와 벨 베이 제련소 매각 절차가 노동자와 지역 산업에 어떤 의미를 갖는지 설명했습니다.",
+        meta: "기업 · 지역경제",
+        publishedAt: "2026년 5월 27일",
       },
-    ],
-    sources: [
-      { name: "ABC Business", url: "https://www.abc.net.au/news/business" },
-      { name: "AFR", url: "https://www.afr.com/" },
-      { name: "SMH Business", url: "https://www.smh.com.au/business" },
     ],
   },
   {
@@ -142,31 +133,29 @@ const NEWS_TOPICS: NewsTopic[] = [
     tone: "from-violet-50 to-white border-violet-100",
     stories: [
       {
-        title: "주택·이민·경제 해설",
+        title: "AUKUS '플랜 B' 논의가 커지는 이유",
         source: "ABC Analysis",
-        sourceUrl: "https://www.abc.net.au/news/analysis",
-        summaryKo: "단순 속보보다 배경 설명과 데이터 해설이 필요한 주제를 이해하기 좋습니다.",
-        meta: "해설 · 데이터",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-23/why-theres-more-talk-of-an-aukus-plan-b/106705426",
+        summaryKo: "ABC 분석은 잠수함 건조 지연과 노후 함대 문제 때문에 AUKUS 대안 논의가 왜 다시 커졌는지 짚었습니다.",
+        meta: "분석 · 국방",
+        publishedAt: "2026년 5월 23일",
       },
       {
-        title: "전문가 기고와 연구 기반 분석",
-        source: "The Conversation",
-        sourceUrl: "https://theconversation.com/au",
-        summaryKo: "대학 연구자와 전문가가 정치, 경제, 사회, 과학 이슈를 긴 호흡으로 설명합니다.",
-        meta: "전문가 · 연구",
+        title: "주택 위기와 이민 계산법은 정치권 주장보다 복잡하다",
+        source: "ABC Analysis",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-25/housing-crisis-migration-cap-kohler/106716056",
+        summaryKo: "앨런 콜러의 분석은 이민 숫자와 주택 공급을 단순히 연결하는 정치적 주장 뒤의 경제적 복잡성을 설명합니다.",
+        meta: "분석 · 주택",
+        publishedAt: "2026년 5월 25일",
       },
       {
-        title: "Opinion & explainers",
-        source: "Guardian Australia",
-        sourceUrl: "https://www.theguardian.com/au/commentisfree",
-        summaryKo: "호주 사회 이슈를 다양한 관점의 칼럼과 해설로 읽을 수 있습니다.",
-        meta: "칼럼 · 관점",
+        title: "BHP 파일이 드러낸 광산 대기업의 큰 문제",
+        source: "ABC Analysis",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-25/bhp-leaked-documents-climate-emissions-cuts-delay-electric-truck/106706762",
+        summaryKo: "ABC와 포 코너스 보도는 BHP 내부 문건을 통해 청정에너지 전환 약속과 실제 투자 결정 사이의 간극을 짚었습니다.",
+        meta: "분석 · 자원",
+        publishedAt: "2026년 5월 25일",
       },
-    ],
-    sources: [
-      { name: "ABC Analysis", url: "https://www.abc.net.au/news/analysis" },
-      { name: "The Conversation AU", url: "https://theconversation.com/au" },
-      { name: "Guardian Opinion", url: "https://www.theguardian.com/au/commentisfree" },
     ],
   },
   {
@@ -176,31 +165,29 @@ const NEWS_TOPICS: NewsTopic[] = [
     tone: "from-amber-50 to-white border-amber-100",
     stories: [
       {
-        title: "호주 스포츠 최신 뉴스",
+        title: "스테이트 오브 오리진 1차전 퇴장 판정에 레전드들도 충격",
         source: "ABC Sport",
-        sourceUrl: "https://www.abc.net.au/news/sport",
-        summaryKo: "State of Origin, 크리켓, 테니스, 올림픽 종목 등 호주 공영방송의 스포츠 허브입니다.",
-        meta: "종합 · 경기",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-27/kalyn-ponga-send-off-state-of-origin-i-reaction/106730106",
+        summaryKo: "ABC는 칼린 퐁아 퇴장 판정이 경기 흐름을 바꾸며 NSW의 대역전극에 길을 열었다는 반응을 전했습니다.",
+        meta: "NRL · 오리진",
+        publishedAt: "2026년 5월 27일",
       },
       {
-        title: "스포츠 뉴스와 경기 해설",
-        source: "Guardian Sport",
-        sourceUrl: "https://www.theguardian.com/au/sport",
-        summaryKo: "경기 결과뿐 아니라 리그 운영, 선수 이슈, 스포츠 문화까지 함께 다룹니다.",
-        meta: "해설 · 문화",
+        title: "호주인 두 명의 MLB 맞대결, 호주 유니폼 팬이 홈런볼 캐치",
+        source: "ABC Sport",
+        sourceUrl: "https://www.abc.net.au/news/2026-05-26/curtis-mead-travis-bazzana-fan-in-aussie-shirt-catch/106722402",
+        summaryKo: "커티스 미드와 트래비스 바자나가 MLB에서 맞붙은 경기에서 호주 대표팀 유니폼을 입은 팬이 홈런볼을 잡아 화제가 됐습니다.",
+        meta: "야구 · 호주 선수",
+        publishedAt: "2026년 5월 26일",
       },
       {
-        title: "스코어와 리그 업데이트",
-        source: "ESPN Australia",
-        sourceUrl: "https://www.espn.com.au/",
-        summaryKo: "국내외 리그 스코어, 선수 뉴스, 경기 일정을 빠르게 확인할 수 있습니다.",
-        meta: "스코어 · 일정",
+        title: "스테이트 오브 오리진 2026 1차전 일정과 관전 정보",
+        source: "Fox Sports",
+        sourceUrl: "https://www.foxsports.com.au/nrl/state-of-origin/state-of-origin-2026-start-time-what-time-does-game-1-between-nsw-blues-and-queensland-maroons-start-kickoff-time-full-schedule/news-story/1a9d59ddfbc3a2c096351cff7d5d503f",
+        summaryKo: "폭스스포츠는 시드니 아코르 스타디움에서 열린 오리진 1차전의 킥오프 시간, 일정, 관전 정보를 정리했습니다.",
+        meta: "NRL · 일정",
+        publishedAt: "2026년 5월 27일",
       },
-    ],
-    sources: [
-      { name: "ABC Sport", url: "https://www.abc.net.au/news/sport" },
-      { name: "Guardian Sport", url: "https://www.theguardian.com/au/sport" },
-      { name: "ESPN Australia", url: "https://www.espn.com.au/" },
     ],
   },
 ];
@@ -260,19 +247,10 @@ export default function News() {
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">{topic.labelKo}</p>
                   <h2 className="mt-1 text-2xl font-black tracking-normal text-slate-950">{topic.key}</h2>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600">{topic.summary}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {topic.sources.map((source) => (
-                      <a
-                        key={source.url}
-                        href={source.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-primary/40 hover:text-primary"
-                      >
-                        {source.name}
-                      </a>
-                    ))}
-                  </div>
+                  <p className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-slate-700">
+                    <Radio className="h-3 w-3" />
+                    실제 기사 {topic.stories.length}개
+                  </p>
                 </div>
 
                 <div className="grid gap-3 p-4 sm:grid-cols-3">
@@ -280,33 +258,22 @@ export default function News() {
                     <article key={story.sourceUrl} className="flex min-h-[13rem] flex-col rounded-lg border border-white/70 bg-white p-4 shadow-sm">
                       <div className="mb-3 flex items-center justify-between gap-3">
                         <span className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-600">{story.meta}</span>
-                        <span className="text-[11px] font-medium text-slate-400">{domainFromUrl(story.sourceUrl)}</span>
+                        <span className="text-right text-[11px] font-medium text-slate-400">{story.publishedAt}</span>
                       </div>
                       <h3 className="text-base font-black leading-snug text-slate-950">{story.title}</h3>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{story.summaryKo}</p>
-                      <div className="mt-4 grid grid-cols-2 gap-2">
-                        <a
-                          href={story.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-slate-200 text-xs font-bold text-slate-700 hover:border-primary/40 hover:text-primary"
-                        >
-                          원문
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                        <a
-                          href={translatedUrl(story.sourceUrl)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-slate-950 text-xs font-bold text-white hover:bg-primary"
-                        >
-                          번역
-                          <Languages className="h-3 w-3" />
-                        </a>
-                      </div>
+                      <a
+                        href={translatedUrl(story.sourceUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-slate-950 px-3 text-xs font-bold text-white transition-colors hover:bg-primary"
+                      >
+                        번역 기사 보기
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
                       <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
                         <Radio className="h-3 w-3" />
-                        {story.source}
+                        {story.source} · {domainFromUrl(story.sourceUrl)}
                       </p>
                     </article>
                   ))}
