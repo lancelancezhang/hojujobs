@@ -692,7 +692,6 @@ const Index = ({ cityFilter }: IndexProps) => {
           <div className="min-w-0">
             <div className="mb-5">
               <h1 className="text-lg font-bold text-foreground">{meta.h1}</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">{meta.tagline}</p>
             </div>
 
             <div className="space-y-3 mb-6">
@@ -806,7 +805,7 @@ const Index = ({ cityFilter }: IndexProps) => {
 
             <div className="space-y-3">
               {loadingCards ? (
-                <div className="text-center py-16 text-muted-foreground">불러오는 중...</div>
+                <div className="text-center py-16 text-muted-foreground">불러오는중</div>
               ) : regularPaginatedJobs.length > 0 ? (
                 regularPaginatedJobs.map((job) => (
                   <JobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} onDelete={isAdmin ? handleDeleteJob : undefined} />
