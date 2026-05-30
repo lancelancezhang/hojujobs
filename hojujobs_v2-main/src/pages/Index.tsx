@@ -21,7 +21,7 @@ const ITEMS_PER_PAGE = 50;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
 const LISTING_CACHE_VERSION = 6;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
-const FEATURED_SALE_PROMO_RANKS = [30, 37];
+const FEATURED_SALE_PROMO_RANKS = [1, 74];
 
 type SortOption = "recent" | "views";
 
