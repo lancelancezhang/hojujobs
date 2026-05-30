@@ -625,9 +625,10 @@ const Index = ({ cityFilter }: IndexProps) => {
   const currentPage = Math.min(page, displayTotalPages || 1);
   const paginatedJobs = filtered;
   const showPromoSection = currentPage === 1 && !hasActiveFilters && (!cityFilter || PROMO_CITY_FILTERS.has(cityFilter));
-  const showReadyPromoSection = showPromoSection && !loadingSalePromoDeals;
-  const showPromotedJobsInPromoSection = showReadyPromoSection && !loadingJobs;
-  const loadingCards = loadingJobs;
+  const allLoaded = !loadingJobs && !loadingSalePromoDeals;
+  const showReadyPromoSection = showPromoSection && allLoaded;
+  const showPromotedJobsInPromoSection = showReadyPromoSection;
+  const loadingCards = !allLoaded;
   const regularPaginatedJobs = showPromoSection
     ? paginatedJobs.filter((job) => job.Promoted !== true)
     : paginatedJobs;
