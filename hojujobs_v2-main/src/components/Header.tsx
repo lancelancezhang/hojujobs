@@ -104,16 +104,16 @@ export function Header() {
         </div>
 
         <div className="-mx-1">
-          <nav className="flex items-end gap-2" aria-label="주요 페이지">
-            <div className="grid min-w-0 flex-[1.25] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-1 rounded-md border border-slate-300 bg-white p-1 shadow-sm sm:flex-none sm:min-w-[17rem] sm:gap-1.5">
+          <nav className="flex items-end gap-1 rounded-md border border-slate-300 bg-white p-1 shadow-sm sm:gap-2 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none" aria-label="주요 페이지">
+            <div className="grid min-w-0 flex-[1.25] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-1 rounded-md sm:flex-none sm:min-w-[17rem] sm:border sm:border-slate-300 sm:bg-white sm:p-1 sm:shadow-sm sm:gap-1.5">
               <NavLink
                 to="/"
                 end
                 className={({ isActive }) =>
                   cn(
-                    "inline-flex h-9 min-w-0 items-center justify-center rounded px-1.5 text-center text-xs font-black text-slate-800 transition-colors whitespace-nowrap sm:px-3 sm:text-base",
+                    "inline-flex h-9 min-w-0 items-center justify-center rounded px-1.5 text-center text-[13px] font-black text-slate-800 transition-colors whitespace-nowrap sm:px-3 sm:text-base",
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-sm"
+                      ? "bg-primary/10 text-primary"
                       : "hover:bg-slate-100 hover:text-slate-950"
                   )
                 }
@@ -123,8 +123,8 @@ export function Header() {
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger
                   className={cn(
-                    "inline-flex h-9 min-w-0 items-center justify-center gap-1 rounded px-1.5 text-xs font-black text-slate-800 outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:px-3 sm:text-base",
-                    cityDropdownActive && "bg-primary text-primary-foreground shadow-sm hover:bg-primary hover:text-primary-foreground"
+                    "inline-flex h-9 min-w-0 items-center justify-center gap-1 rounded px-1.5 text-[13px] font-black text-slate-800 outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:px-3 sm:text-base",
+                    cityDropdownActive && "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
                   )}
                 >
                   <MapPin className="hidden h-3.5 w-3.5 sm:block" />
@@ -146,7 +146,7 @@ export function Header() {
               </DropdownMenu>
             </div>
 
-            <div className="grid min-w-0 flex-1 grid-cols-3 items-end gap-1 rounded-md border border-slate-300 bg-slate-50 p-1 shadow-sm sm:gap-1.5 lg:flex-none lg:min-w-[23rem]">
+            <div className="grid min-w-0 flex-1 grid-cols-3 items-end gap-1 rounded-md sm:border sm:border-slate-300 sm:bg-slate-50 sm:p-1 sm:shadow-sm sm:gap-1.5 lg:flex-none lg:min-w-[23rem]">
               {INFO_TABS.map(({ label, path }) => (
                 <NavLink
                   key={path}
@@ -154,9 +154,9 @@ export function Header() {
                   end={path === "/" || path === "/dashboard" || path === "/news"}
                   className={({ isActive }) =>
                     cn(
-                      "inline-flex h-9 min-w-0 items-center justify-center rounded px-1 text-center text-xs font-black text-slate-800 transition-colors whitespace-nowrap sm:px-3 sm:text-base",
+                      "inline-flex h-9 min-w-0 items-center justify-center rounded px-1 text-center text-[13px] font-black text-slate-800 transition-colors whitespace-nowrap sm:px-3 sm:text-base",
                       isActive
-                        ? "bg-primary text-primary-foreground shadow-sm"
+                        ? "bg-primary/10 text-primary"
                         : "hover:bg-white hover:text-slate-950"
                     )
                   }
