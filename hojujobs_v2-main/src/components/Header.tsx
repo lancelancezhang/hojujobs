@@ -117,69 +117,69 @@ export function Header() {
             )}
           </div>
         </div>
+      </div>
 
-        <div>
-          <nav className="grid w-full grid-cols-[minmax(0,1.15fr)_minmax(0,1.85fr)] items-center gap-0.5 rounded-md border border-slate-300 bg-white px-0.5 py-1 shadow-sm sm:gap-1" aria-label="주요 페이지">
-            <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-center gap-0.5 rounded-md sm:gap-1">
+      <div className="w-full border-t border-slate-200 bg-white">
+        <nav className="mx-auto grid w-full max-w-6xl grid-cols-[minmax(0,1.15fr)_minmax(0,1.85fr)] items-center gap-0.5 px-2 py-1 sm:gap-1 sm:px-4" aria-label="주요 페이지">
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-center gap-0.5 rounded-md sm:gap-1">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                cn(
+                  "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[13px] font-black text-slate-800 [text-shadow:0.45px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "hover:bg-slate-100 hover:text-slate-950"
+                )
+              }
+            >
+              호주 전체
+            </NavLink>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger
+                className={cn(
+                  "inline-flex h-10 min-w-0 items-center justify-center gap-0.5 rounded px-0.5 text-[13px] font-black text-slate-800 [text-shadow:0.45px_0_0_currentColor] outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:gap-1 sm:px-2 sm:text-base",
+                  cityDropdownActive && "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
+                )}
+              >
+                <MapPin className="hidden h-3.5 w-3.5 sm:block" />
+                <span className="truncate">{activeCity?.label ?? "지역"}</span>
+                <ChevronDown className="h-3.5 w-3.5 shrink-0" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[10rem]">
+                {CITY_DROPDOWN_TABS.map(({ label, path }) => (
+                  <DropdownMenuItem
+                    key={path}
+                    onSelect={() => navigate(path)}
+                    className={cn("justify-between text-sm font-black [text-shadow:0.4px_0_0_currentColor]", location.pathname === path && "bg-primary/10 text-primary")}
+                  >
+                    {label}
+                    {location.pathname === path && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="grid min-w-0 grid-cols-3 items-center gap-0.5 rounded-md sm:gap-1">
+            {INFO_TABS.map(({ label, path, idleClassName, activeClassName }) => (
               <NavLink
-                to="/"
-                end
+                key={path}
+                to={path}
+                end={path === "/" || path === "/dashboard" || path === "/news"}
                 className={({ isActive }) =>
                   cn(
-                    "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[13px] font-black text-slate-800 transition-colors whitespace-nowrap sm:px-2 sm:text-base",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "hover:bg-slate-100 hover:text-slate-950"
+                    "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[13px] font-black [text-shadow:0.45px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
+                    isActive ? activeClassName : idleClassName
                   )
                 }
               >
-                호주 전체
+                {label}
               </NavLink>
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger
-                  className={cn(
-                    "inline-flex h-10 min-w-0 items-center justify-center gap-0.5 rounded px-0.5 text-[13px] font-black text-slate-800 outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:gap-1 sm:px-2 sm:text-base",
-                    cityDropdownActive && "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
-                  )}
-                >
-                  <MapPin className="hidden h-3.5 w-3.5 sm:block" />
-                  <span className="truncate">{activeCity?.label ?? "지역"}</span>
-                  <ChevronDown className="h-3.5 w-3.5 shrink-0" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[10rem]">
-                  {CITY_DROPDOWN_TABS.map(({ label, path }) => (
-                    <DropdownMenuItem
-                      key={path}
-                      onSelect={() => navigate(path)}
-                      className={cn("justify-between text-sm font-bold", location.pathname === path && "bg-primary/10 text-primary")}
-                    >
-                      {label}
-                      {location.pathname === path && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            <div className="grid min-w-0 grid-cols-3 items-center gap-0.5 rounded-md sm:gap-1">
-              {INFO_TABS.map(({ label, path, idleClassName, activeClassName }) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  end={path === "/" || path === "/dashboard" || path === "/news"}
-                  className={({ isActive }) =>
-                    cn(
-                      "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[13px] font-black transition-colors whitespace-nowrap sm:px-2 sm:text-base",
-                      isActive ? activeClassName : idleClassName
-                    )
-                  }
-                >
-                  {label}
-                </NavLink>
-              ))}
-            </div>
-          </nav>
-        </div>
+            ))}
+          </div>
+        </nav>
       </div>
     </header>
   );
