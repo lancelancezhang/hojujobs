@@ -127,7 +127,7 @@ export function Header() {
               end
               className={({ isActive }) =>
                 cn(
-                  "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[13px] font-black text-slate-800 [text-shadow:0.25px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
+                  "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[14px] font-black text-slate-800 [text-shadow:0.25px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
                   isActive
                     ? "bg-primary/10 text-primary"
                     : "hover:bg-slate-100 hover:text-slate-950"
@@ -139,7 +139,7 @@ export function Header() {
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger
                 className={cn(
-                  "inline-flex h-10 min-w-0 items-center justify-center gap-0.5 rounded px-0.5 text-[13px] font-black text-slate-800 [text-shadow:0.25px_0_0_currentColor] outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:gap-1 sm:px-2 sm:text-base",
+                  "inline-flex h-10 min-w-0 items-center justify-center gap-0.5 rounded px-0.5 text-[14px] font-black text-slate-800 [text-shadow:0.25px_0_0_currentColor] outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:gap-1 sm:px-2 sm:text-base",
                   cityDropdownActive && "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
                 )}
               >
@@ -170,7 +170,7 @@ export function Header() {
                 end={path === "/" || path === "/dashboard" || path === "/news"}
                 className={({ isActive }) =>
                   cn(
-                    "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[13px] font-black [text-shadow:0.25px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
+                    "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[14px] font-black [text-shadow:0.25px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
                     isActive ? activeClassName : idleClassName
                   )
                 }
