@@ -734,7 +734,7 @@ const Index = ({ cityFilter }: IndexProps) => {
             {/* Promoted jobs - only on page 1 with no active filters */}
             {showReadyPromoSection && (
               <div className="space-y-2 mb-2">
-                <div className="rounded-md border-2 border-blue-300 bg-white px-4 py-3 shadow-sm ring-1 ring-blue-100">
+                <div className="rounded-md border-2 border-blue-300 bg-blue-50/70 px-4 py-3 shadow-sm ring-1 ring-blue-100">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-950 mb-0.5">
@@ -751,7 +751,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                   </div>
                 </div>
                 {salePromoDeals.length > 0 && (
-                  <div className="rounded-md border-2 border-emerald-300 bg-white px-4 py-3 shadow-sm ring-1 ring-emerald-100">
+                  <div className="rounded-md border-2 border-emerald-300 bg-emerald-50/70 px-4 py-3 shadow-sm ring-1 ring-emerald-100">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-950 mb-0.5">

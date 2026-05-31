@@ -15,20 +15,20 @@ const INFO_TABS = [
   {
     label: "온세일",
     path: "/sales",
-    idleClassName: "text-emerald-800 hover:bg-emerald-50 hover:text-emerald-900",
-    activeClassName: "bg-emerald-100 text-emerald-800",
+    idleClassName: "text-slate-950 hover:bg-emerald-50",
+    activeClassName: "bg-emerald-100 text-slate-950",
   },
   {
     label: "뉴스",
     path: "/news",
-    idleClassName: "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
-    activeClassName: "bg-blue-100 text-blue-800",
+    idleClassName: "text-slate-950 hover:bg-blue-50",
+    activeClassName: "bg-blue-100 text-slate-950",
   },
   {
     label: "워홀정보",
     path: "/dashboard",
-    idleClassName: "text-slate-800 hover:bg-white hover:text-slate-950",
-    activeClassName: "bg-primary/10 text-primary",
+    idleClassName: "text-slate-950 hover:bg-white",
+    activeClassName: "bg-primary/10 text-slate-950",
   },
 ];
 
@@ -127,10 +127,10 @@ export function Header() {
               end
               className={({ isActive }) =>
                 cn(
-                  "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[14px] font-black text-slate-800 [text-shadow:0.12px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
+                  "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[14px] font-black text-slate-950 [text-shadow:0.12px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
                   isActive
-                    ? "bg-primary/10 text-primary"
-                    : "hover:bg-slate-100 hover:text-slate-950"
+                    ? "bg-primary/10 text-slate-950"
+                    : "hover:bg-slate-100"
                 )
               }
             >
@@ -139,8 +139,8 @@ export function Header() {
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger
                 className={cn(
-                  "inline-flex h-10 min-w-0 items-center justify-center gap-0.5 rounded px-0.5 text-[14px] font-black text-slate-800 [text-shadow:0.12px_0_0_currentColor] outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:gap-1 sm:px-2 sm:text-base",
-                  cityDropdownActive && "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
+                  "inline-flex h-10 min-w-0 items-center justify-center gap-0.5 rounded px-0.5 text-[14px] font-black text-slate-950 [text-shadow:0.12px_0_0_currentColor] outline-none transition-colors whitespace-nowrap hover:bg-slate-100 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:gap-1 sm:px-2 sm:text-base",
+                  cityDropdownActive && "bg-primary/10 text-slate-950 hover:bg-primary/10"
                 )}
               >
                 <MapPin className="hidden h-3.5 w-3.5 sm:block" />
@@ -152,7 +152,7 @@ export function Header() {
                   <DropdownMenuItem
                     key={path}
                     onSelect={() => navigate(path)}
-                    className={cn("justify-between text-sm font-black [text-shadow:0.1px_0_0_currentColor]", location.pathname === path && "bg-primary/10 text-primary")}
+                    className={cn("justify-between text-sm font-black text-slate-950 [text-shadow:0.1px_0_0_currentColor]", location.pathname === path && "bg-primary/10")}
                   >
                     {label}
                     {location.pathname === path && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
