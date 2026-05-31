@@ -792,7 +792,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                 )}
                 {showPromotedJobsInPromoSection && promotedJobs.length > 0 && (
                   <>
-                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 공고</p>
+                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">추천 일자리</p>
                     {promotedJobs.map((job) => (
                       <PromotedJobCard key={job.id} job={job} viewCount={getCount(job.id)} showEditButton={isAdmin} onDelete={isAdmin ? handleDeleteJob : undefined} />
                     ))}
