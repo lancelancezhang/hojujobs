@@ -1,11 +1,11 @@
-import { useNavigate, NavLink } from "react-router-dom";
-import { Plus, LogIn, FileText, Shield } from "lucide-react";
+import { useLocation, useNavigate, NavLink } from "react-router-dom";
+import { ChevronDown, FileText, LogIn, MapPin, Plus, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-const CITY_TABS = [
-  { label: "호주 전체", path: "/" },
+const CITY_DROPDOWN_TABS = [
   { label: "시드니", path: "/sydney" },
   { label: "멜버른", path: "/melbourne" },
   { label: "브리즈번", path: "/brisbane" },
@@ -20,6 +20,9 @@ const INFO_TABS = [
 export function Header() {
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const activeCity = CITY_DROPDOWN_TABS.find((tab) => location.pathname === tab.path);
+  const cityDropdownActive = Boolean(activeCity);
 
   return (
     <header className="bg-white border-b border-border">
@@ -101,30 +104,49 @@ export function Header() {
         </div>
 
         <div className="-mx-1">
-          <nav className="flex items-end gap-1 sm:gap-2 lg:justify-between" aria-label="주요 페이지">
-            <div className="grid flex-[4] grid-cols-4 items-end lg:flex-none lg:min-w-[31rem]">
-              {CITY_TABS.map(({ label, path }) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  end={path === "/"}
-                  className={({ isActive }) =>
-                    cn(
-                      "min-w-0 px-0.5 py-2 text-center text-[11px] font-extrabold border-b-2 transition-colors whitespace-nowrap sm:px-2.5 sm:text-sm",
-                      isActive
-                        ? "border-primary text-primary"
-                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-                    )
-                  }
+          <nav className="flex items-end gap-2" aria-label="주요 페이지">
+            <div className="grid min-w-0 flex-[1.25] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-1 rounded-md border border-slate-300 bg-white p-1 shadow-sm sm:flex-none sm:min-w-[17rem] sm:gap-1.5">
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  cn(
+                    "inline-flex h-9 min-w-0 items-center justify-center rounded px-1.5 text-center text-xs font-black text-slate-800 transition-colors whitespace-nowrap sm:px-3 sm:text-base",
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "hover:bg-slate-100 hover:text-slate-950"
+                  )
+                }
+              >
+                호주 전체
+              </NavLink>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger
+                  className={cn(
+                    "inline-flex h-9 min-w-0 items-center justify-center gap-1 rounded px-1.5 text-xs font-black text-slate-800 outline-none transition-colors whitespace-nowrap hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-ring focus:ring-offset-1 sm:px-3 sm:text-base",
+                    cityDropdownActive && "bg-primary text-primary-foreground shadow-sm hover:bg-primary hover:text-primary-foreground"
+                  )}
                 >
-                  {label}
-                </NavLink>
-              ))}
+                  <MapPin className="hidden h-3.5 w-3.5 sm:block" />
+                  <span className="truncate">{activeCity?.label ?? "지역 선택"}</span>
+                  <ChevronDown className="h-3.5 w-3.5 shrink-0" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[10rem]">
+                  {CITY_DROPDOWN_TABS.map(({ label, path }) => (
+                    <DropdownMenuItem
+                      key={path}
+                      onSelect={() => navigate(path)}
+                      className={cn("justify-between text-sm font-bold", location.pathname === path && "bg-primary/10 text-primary")}
+                    >
+                      {label}
+                      {location.pathname === path && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
-            <div className="mb-2 h-5 w-px shrink-0 bg-border lg:hidden" aria-hidden="true" />
-
-            <div className="grid flex-[3] grid-cols-3 items-end rounded-t-md bg-slate-50/90 ring-1 ring-inset ring-slate-200/70 lg:flex-none lg:min-w-[20rem]">
+            <div className="grid min-w-0 flex-1 grid-cols-3 items-end gap-1 rounded-md border border-slate-300 bg-slate-50 p-1 shadow-sm sm:gap-1.5 lg:flex-none lg:min-w-[23rem]">
               {INFO_TABS.map(({ label, path }) => (
                 <NavLink
                   key={path}
@@ -132,10 +154,10 @@ export function Header() {
                   end={path === "/" || path === "/dashboard" || path === "/news"}
                   className={({ isActive }) =>
                     cn(
-                      "min-w-0 px-0.5 py-2 text-center text-[11px] font-extrabold border-b-2 transition-colors whitespace-nowrap sm:px-2.5 sm:text-sm",
+                      "inline-flex h-9 min-w-0 items-center justify-center rounded px-1 text-center text-xs font-black text-slate-800 transition-colors whitespace-nowrap sm:px-3 sm:text-base",
                       isActive
-                        ? "border-primary text-primary"
-                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "hover:bg-white hover:text-slate-950"
                     )
                   }
                 >

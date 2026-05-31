@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search, ArrowUpDown, ShoppingBag } from "lucide-react";
+import { Newspaper, Search, ArrowUpDown, ShoppingBag } from "lucide-react";
 import { Header } from "@/components/Header";
 import { MobileLocationFilter } from "@/components/MobileLocationFilter";
 import { MobileIndustryFilter } from "@/components/MobileIndustryFilter";
@@ -734,30 +734,33 @@ const Index = ({ cityFilter }: IndexProps) => {
             {/* Promoted jobs - only on page 1 with no active filters */}
             {showReadyPromoSection && (
               <div className="space-y-2 mb-2">
-                <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-3 shadow-sm">
+                <div className="rounded-md border-2 border-blue-300 bg-white px-4 py-3 shadow-sm ring-1 ring-blue-100">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-extrabold text-slate-900 mb-0.5">호주 생활 정보도 확인해보세요</p>
+                      <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-950 mb-0.5">
+                        <Newspaper className="h-4 w-4 text-blue-700" />
+                        호주 생활 정보도 확인해보세요
+                      </p>
                       <p className="text-xs text-blue-900/75 leading-relaxed">환율, 최신 호주 뉴스, 구직 팁을 한곳에서 볼 수 있습니다.</p>
                     </div>
                     <div className="flex shrink-0 items-center gap-1.5">
-                      <Link to="/news" className="inline-flex h-9 items-center justify-center rounded-md border border-blue-200 bg-white/80 px-3 text-xs font-semibold text-blue-800 hover:bg-blue-100">
+                      <Link to="/news" className="inline-flex h-9 items-center justify-center rounded-md bg-blue-700 px-3 text-xs font-bold text-white shadow-sm hover:bg-blue-800">
                         뉴스
                       </Link>
                     </div>
                   </div>
                 </div>
                 {salePromoDeals.length > 0 && (
-                  <div className="rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-sky-50 px-4 py-3 shadow-sm">
+                  <div className="rounded-md border-2 border-emerald-300 bg-white px-4 py-3 shadow-sm ring-1 ring-emerald-100">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="min-w-0 flex-1">
-                        <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-900 mb-0.5">
+                        <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-950 mb-0.5">
                           <ShoppingBag className="h-4 w-4 text-emerald-700" />
                           새로 열린 온세일도 확인해보세요
                         </p>
                         <p className="text-xs text-emerald-900/75 leading-relaxed">호주 생활에 필요한 할인 정보와 프로모션을 한곳에서 확인하세요.</p>
                       </div>
-                      <Link to="/sales" className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-emerald-200 bg-white/85 px-3 text-xs font-semibold text-emerald-800 hover:bg-emerald-100">
+                      <Link to="/sales" className="inline-flex h-9 shrink-0 items-center justify-center rounded-md bg-emerald-700 px-3 text-xs font-bold text-white shadow-sm hover:bg-emerald-800">
                         세일 상품 더 보기
                       </Link>
                     </div>
