@@ -266,26 +266,26 @@ export default function Admin() {
                 현재 보이는 공고가 없습니다.
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {jobs.map((job) => (
-                  <div key={job.id} className="w-full min-w-0 space-y-2 rounded-lg border bg-card p-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div key={job.id} className="w-full min-w-0 space-y-1.5 rounded-lg border bg-card p-2.5">
+                    <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between">
                       <div className="min-w-0 flex-1">
-                        <div className="flex min-w-0 items-center gap-2">
-                          <Link to={`/job/${job.id}`} className="truncate font-semibold text-foreground hover:text-primary">
+                        <div className="flex min-w-0 items-center gap-1.5">
+                          <Link to={`/job/${job.id}`} className="truncate text-sm font-semibold text-foreground hover:text-primary">
                             {job.title}
                           </Link>
-                          <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                          <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
                         </div>
-                        <p className="truncate text-sm text-muted-foreground">
+                        <p className="truncate text-xs text-muted-foreground">
                           {(job.location || []).join(", ")}
                           {job.industry ? `  ${job.industry}` : ""}
                           {job.uploaded_at ? `  ${new Date(job.uploaded_at).toLocaleDateString("ko-KR")}` : ""}
                         </p>
                       </div>
-                      <div className="flex min-w-0 flex-wrap items-center gap-2 sm:justify-end">
-                        <div className="flex h-9 items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-2.5">
-                          <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                      <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:justify-end">
+                        <div className="flex h-7 items-center gap-1.5 rounded-md border border-amber-200 bg-amber-50 px-2">
+                          <Sparkles className="h-3 w-3 text-amber-600" />
                           <span className="text-xs font-semibold text-amber-800">추천</span>
                           <Switch
                             checked={job.Promoted === true}
@@ -294,16 +294,16 @@ export default function Admin() {
                             aria-label={`${job.title ?? "공고"} 추천 공고 설정`}
                           />
                         </div>
-                        <Button variant="outline" size="sm" className="h-9 gap-1.5" onClick={() => startEditingLocation(job)}>
-                          <MapPin className="h-3.5 w-3.5" /> 지역
+                        <Button variant="outline" size="sm" className="h-7 gap-1 px-2 text-xs" onClick={() => startEditingLocation(job)}>
+                          <MapPin className="h-3 w-3" /> 지역
                         </Button>
-                        <Button variant="outline" size="sm" className="h-9 gap-1.5" onClick={() => navigate(`/edit-job/${job.id}?from=admin`)}>
-                          <Pencil className="h-3.5 w-3.5" /> 수정
+                        <Button variant="outline" size="sm" className="h-7 gap-1 px-2 text-xs" onClick={() => navigate(`/edit-job/${job.id}?from=admin`)}>
+                          <Pencil className="h-3 w-3" /> 수정
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="destructive" size="sm" className="h-9 gap-1.5">
-                              <Trash2 className="h-3.5 w-3.5" /> 삭제
+                            <Button variant="destructive" size="sm" className="h-7 gap-1 px-2 text-xs">
+                              <Trash2 className="h-3 w-3" /> 삭제
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -374,33 +374,30 @@ export default function Admin() {
             ) : (
               <div className="space-y-2">
                 {deals.map((deal) => (
-                  <div key={deal.rank} className="flex w-full min-w-0 flex-col gap-3 rounded-lg border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex min-w-0 flex-1 items-center gap-3">
-                      {deal.image_url && (
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-white p-1.5">
-                          <img
-                            src={deal.image_url}
-                            alt={deal.title}
-                            className="max-h-full w-full object-contain"
-                            onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
-                          />
-                        </div>
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex min-w-0 items-center gap-2">
-                          <Link to={`/sales/${deal.rank}`} className="truncate font-semibold text-foreground hover:text-primary">
-                            {deal.title}
-                          </Link>
-                          <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                        </div>
-                        <p className="truncate text-sm text-muted-foreground">
-                          #{deal.rank}  {deal.category}  {new Date(deal.uploaded_at).toLocaleDateString("ko-KR")}
-                        </p>
+                  <div key={deal.rank} className="relative flex w-full min-w-0 items-center gap-3 rounded-lg border bg-card p-2.5 pr-16">
+                    {deal.image_url && (
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-white p-1">
+                        <img
+                          src={deal.image_url}
+                          alt={deal.title}
+                          className="max-h-full w-full object-contain"
+                          onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
+                        />
                       </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex min-w-0 items-center gap-1.5">
+                        <Link to={`/sales/${deal.rank}`} className="truncate text-sm font-semibold text-foreground hover:text-primary">
+                          {deal.title}
+                        </Link>
+                        <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
+                      </div>
+                      <p className="truncate text-xs text-muted-foreground">
+                        #{deal.rank}  {deal.category}  {new Date(deal.uploaded_at).toLocaleDateString("ko-KR")}
+                      </p>
                     </div>
-                    <div className="flex h-9 shrink-0 items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-2.5">
-                      <ShoppingBag className="h-3.5 w-3.5 text-emerald-700" />
-                      <span className="text-xs font-semibold text-emerald-800">메인 카드</span>
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 p-1.5">
+                      <ShoppingBag className="h-3 w-3 text-emerald-700" />
                       <Switch
                         checked={deal.promoted}
                         disabled={savingPromotionKey === `deal-${deal.rank}`}

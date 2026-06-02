@@ -31,7 +31,7 @@ export const REGION_GROUPS: RegionGroup[] = [
     "킬라라", "킬라니 하이츠", "밀슨스 포인트", "와룡가", "와룽가", "로즈빌",
   ]},
   { state: "NSW", region: "라이드 / 이스트우드", suburbs: [
-    "라이드", "이스트우드", "에핑", "웨스트 라이드", "탑라이드", "메도우뱅크", "매도뱅크", "맥쿼리", "맥쿼리빌", "어밍톤",
+    "라이드", "이스트우드", "에핑", "웨스트 라이드", "탑라이드", "메도우뱅크", "매도뱅크", "메도뱅크", "맥쿼리", "맥쿼리빌", "어밍톤",
     "리달미어", "라이달미어", "맥쿼리 파크", "글레이즈빌", "멜로즈 파크", "노스 라이드", "이스트 라이드", "퍼트니",
   ]},
   { state: "NSW", region: "파라마타 / 웨스트", suburbs: [
@@ -64,14 +64,14 @@ export const REGION_GROUPS: RegionGroup[] = [
     "뉴카슬", "카툼바", "헌터 밸리", "콥스 하버", "울골", "봄발라",
     "캡스 하버", "그래프턴", "싱글턴", "부카",
     "엔스워", "웨어하우스", "래빙턴", "윈저", "오렌지", "덥보",
-    "와가 와가", "와가와가", "미트라고웅", "미타공", "그리피스", "레일러", "스탠웰 파크",
+    "와가 와가", "와가와가", "미트라고웅", "미타공", "그리피스", "레일러", "스탠웰 파크", "코린디",
   ]},
 
   // VIC - Melbourne
   { state: "VIC", region: "멜버른 CBD / 이너", suburbs: [
     "멜버른 CBD", "도클랜드", "사우스 야라", "프라란", "세인트 킬다", "엘스터윅", "엘스터닉", "콜링우드", "피츠로이", "칼튼",
     "앨버트 파크", "사우스뱅크", "사우스 워프", "세든", "풋스크레이", "매리비농", "칼턴", "브런즈윅",
-    "리치몬드", "토트넘",
+    "리치몬드", "토트넘", "포트 멜버른",
   ]},
   { state: "VIC", region: "이너 이스트 멜버른", suburbs: [
     "큐", "캠버웰", "헤이쏜", "버우드 이스트", "블랙번", "글렌 웨이버리", "글렌 웨이벌리", "Mt 웨이버리", "마운트 웨이버리", "마운트 웨이벌리",
@@ -189,6 +189,7 @@ export const SUBURB_EN: Record<string, string> = {
   "탑라이드": "Top Ryde NSW",
   "메도우뱅크": "Meadowbank NSW",
   "매도뱅크": "Meadowbank NSW",
+  "메도뱅크": "Meadowbank NSW",
   "맥쿼리": "Macquarie Park NSW",
   "맥쿼리빌": "Macquarie Fields NSW",
   "어밍톤": "Ermington NSW",
@@ -431,6 +432,7 @@ export const SUBURB_EN: Record<string, string> = {
   "론서스턴": "Launceston TAS",
   // Additional suburbs
   "토트넘": "Tottenham VIC",
+  "포트 멜버른": "Port Melbourne VIC",
   "무어뱅크": "Moorebank NSW",
   "드라모인": "Drummoyne NSW",
   "레이컴바": "Lakemba NSW",
@@ -461,6 +463,7 @@ export const SUBURB_EN: Record<string, string> = {
   "브라이턴": "Brighton VIC",
   "레일러": "Raleigh NSW",
   "스탠웰 파크": "Stanwell Park NSW",
+  "코린디": "Corindi NSW",
   "더 록스": "The Rocks NSW",
   "모스만": "Mosman NSW",
   "노던 비치즈": "Northern Beaches NSW",
