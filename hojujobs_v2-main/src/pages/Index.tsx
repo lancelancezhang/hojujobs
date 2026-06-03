@@ -25,6 +25,8 @@ const LISTING_CACHE_VERSION = 7;
 const LISTING_REQUEST_TIMEOUT_MS = 15_000;
 const FILTER_METADATA_TIMEOUT_MS = 5_000;
 const FILTER_METADATA_LIMIT = 1000;
+const VIEWS_SORT_PAGE_SIZE = 1000;
+const VIEWS_SORT_MAX_JOBS = 5000;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
 const FEATURED_SALE_PROMO_LIMIT = 2;
 const SALE_PROMO_CACHE_KEY = "hoju_sale_promo_cache";
@@ -521,10 +523,6 @@ const Index = ({ cityFilter }: IndexProps) => {
 
       if (cityLocations.length > 0) {
         query = query.overlaps("location", cityLocations);
-      }
-
-      if (industry !== "all") {
-        query = query.eq("industry", industry);
       }
 
       const trimmedKeyword = keyword.trim();
