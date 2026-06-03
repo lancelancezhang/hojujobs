@@ -86,11 +86,11 @@ export const REGION_GROUPS: RegionGroup[] = [
   ]},
   { state: "VIC", region: "기타 빅토리아", suburbs: ["질롱", "밸러렛", "벤디고", "드라르고", "메리스빌"] },
 
-  // WA - Perth
-  { state: "WA", region: "퍼스 / WA", suburbs: ["벤틀리"] },
-
   // SA - Adelaide
   { state: "SA", region: "애들레이드", suburbs: ["글렌리그", "마리온"] },
+
+  // WA - Perth
+  { state: "WA", region: "퍼스 (WA)", suburbs: ["벤틀리"] },
 
   // QLD - Brisbane
   { state: "QLD", region: "골드코스트", suburbs: ["골드코스트"] },
