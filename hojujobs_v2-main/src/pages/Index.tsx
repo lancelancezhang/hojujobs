@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Newspaper, Search, ArrowUpDown, ShoppingBag } from "lucide-react";
+import { Newspaper, Search, ChevronDown, ShoppingBag } from "lucide-react";
 import { Header } from "@/components/Header";
 import { MobileLocationFilter } from "@/components/MobileLocationFilter";
 import { MobileIndustryFilter } from "@/components/MobileIndustryFilter";
@@ -547,6 +547,44 @@ const Index = ({ cityFilter }: IndexProps) => {
       return (data as unknown as JobFilterMeta[]) || [];
     }
 
+    async function fetchJobsByViews(from: number, to: number) {
+      let allJobs: Job[] = [];
+      let totalCount = 0;
+      let nextFrom = 0;
+
+      while (nextFrom < VIEWS_SORT_MAX_JOBS) {
+        const nextTo = Math.min(nextFrom + VIEWS_SORT_PAGE_SIZE - 1, VIEWS_SORT_MAX_JOBS - 1);
+        const result = await withTimeout(buildJobsQuery(nextFrom, nextTo, nextFrom === 0));
+
+        if (result.error) {
+          return { error: result.error, jobs: [] as Job[], totalCount: 0, counts: {} as Record<number, number> };
+        }
+
+        const batch = (result.data as unknown as Job[]) || [];
+        if (nextFrom === 0) {
+          totalCount = result.count ?? batch.length;
+        }
+
+        allJobs = allJobs.concat(batch);
+        if (batch.length < VIEWS_SORT_PAGE_SIZE || allJobs.length >= totalCount) break;
+        nextFrom += VIEWS_SORT_PAGE_SIZE;
+      }
+
+      const countSnapshot = await withTimeout(fetchViewCountsByJobIds(allJobs.map((job) => job.id)));
+      const sortedJobs = allJobs.sort((a, b) => {
+        const viewDelta = (countSnapshot[b.id] || 0) - (countSnapshot[a.id] || 0);
+        if (viewDelta !== 0) return viewDelta;
+        return new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime();
+      });
+
+      return {
+        error: null,
+        jobs: sortedJobs.slice(from, to + 1),
+        totalCount,
+        counts: countSnapshot,
+      };
+    }
+
     async function fetchJobs() {
       const cacheKey = listingCacheKey({ cityFilter, page, keyword, selectedLocations, industry, sortBy });
       const cached = readListingCache(cacheKey);
@@ -574,10 +612,15 @@ const Index = ({ cityFilter }: IndexProps) => {
           return [] as JobFilterMeta[];
         });
 
-        const [currentPageJobs, promoted] = await Promise.all([
-          withTimeout(buildJobsQuery(from, to, true)),
-          withTimeout(buildPromotedJobsQuery()),
-        ]);
+        const [currentPageJobs, promoted] = sortBy === "views"
+          ? [
+              await fetchJobsByViews(from, to),
+              { data: [], error: null },
+            ]
+          : await Promise.all([
+              withTimeout(buildJobsQuery(from, to, true)),
+              withTimeout(buildPromotedJobsQuery()),
+            ]);
 
         if (cancelled) return;
 
@@ -590,9 +633,13 @@ const Index = ({ cityFilter }: IndexProps) => {
           return;
         }
 
-        const pageJobs = (currentPageJobs.data as unknown as Job[]) || [];
+        const pageJobs = sortBy === "views"
+          ? currentPageJobs.jobs
+          : ((currentPageJobs.data as unknown as Job[]) || []);
         const promotedJobs = promoted.error ? [] : ((promoted.data as unknown as Job[]) || []);
-        const totalCount = currentPageJobs.count ?? pageJobs.length;
+        const totalCount = sortBy === "views"
+          ? currentPageJobs.totalCount
+          : (currentPageJobs.count ?? pageJobs.length);
         const maxPage = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
 
         if (page > maxPage) {
@@ -606,11 +653,13 @@ const Index = ({ cityFilter }: IndexProps) => {
         }
 
         const fetchHasActiveFilters = !!keyword || selectedLocations.length > 0 || industry !== "all";
-        const resolvedPageJobs = page === 1 && !fetchHasActiveFilters
+        const resolvedPageJobs = page === 1 && !fetchHasActiveFilters && sortBy !== "views"
           ? mergeJobsById(promotedJobs, pageJobs)
           : pageJobs;
         const fallbackFilterJobs = resolvedPageJobs.map(({ location, industry }) => ({ location, industry }));
-        const countSnapshot = await withTimeout(fetchViewCountsByJobIds(resolvedPageJobs.map((job) => job.id)));
+        const countSnapshot = sortBy === "views"
+          ? currentPageJobs.counts
+          : await withTimeout(fetchViewCountsByJobIds(resolvedPageJobs.map((job) => job.id)));
         if (cancelled) return;
 
         hydrateCounts(countSnapshot);
@@ -722,7 +771,7 @@ const Index = ({ cityFilter }: IndexProps) => {
   const displayTotalPages = Math.ceil((displayTotalCount ?? filtered.length) / ITEMS_PER_PAGE);
   const currentPage = Math.min(page, displayTotalPages || 1);
   const paginatedJobs = filtered;
-  const showPromoSection = currentPage === 1 && !hasActiveFilters && (!cityFilter || PROMO_CITY_FILTERS.has(cityFilter));
+  const showPromoSection = sortBy === "recent" && currentPage === 1 && !hasActiveFilters && (!cityFilter || PROMO_CITY_FILTERS.has(cityFilter));
   const allLoaded = !loadingJobs && !loadingSalePromoDeals;
   const showReadyPromoSection = showPromoSection && allLoaded;
   const showPromotedJobsInPromoSection = showReadyPromoSection;
@@ -815,11 +864,10 @@ const Index = ({ cityFilter }: IndexProps) => {
                 총 <span className="font-semibold text-foreground">{displayTotalCount ?? "계산 중"}</span>개의 공고
               </p>
               <div className="flex items-center gap-1.5">
-                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
                 <DropdownMenu modal={false}>
                   <DropdownMenuTrigger className="flex items-center justify-between gap-2 w-[130px] h-8 px-3 rounded-md border border-input bg-background text-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                     <span>{sortBy === "recent" ? "최신순" : "조회순"}</span>
-                    <ArrowUpDown className="h-3 w-3 opacity-50" />
+                    <ChevronDown className="h-3 w-3 opacity-50" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => { setSortBy("recent"); setPage(1); }} className={sortBy === "recent" ? "font-semibold" : ""}>최신순</DropdownMenuItem>
