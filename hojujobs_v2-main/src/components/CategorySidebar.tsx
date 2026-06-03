@@ -10,6 +10,7 @@ const STATE_LABELS: Record<string, string> = {
   VIC: "멜버른 (VIC)",
   QLD: "브리즈번 (QLD)",
   SA: "애들레이드 (SA)",
+  WA: "퍼스 (WA)",
   ACT: "캔버라 (ACT)",
 };
 
@@ -131,7 +132,7 @@ export function CategorySidebar({
         <ul className="space-y-1">
           {(() => {
             // States that get inline fallback items (generic city names appended to their section)
-            const INLINE_STATES = ["NSW", "VIC", "QLD", "SA"];
+            const INLINE_STATES = ["NSW", "VIC", "QLD", "SA", "WA"];
 
             // Bucket unmapped suburbs: state-specific (inline) vs bottom
             const unmappedByState: Record<string, string[]> = {};

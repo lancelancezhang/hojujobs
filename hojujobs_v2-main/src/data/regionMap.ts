@@ -89,9 +89,6 @@ export const REGION_GROUPS: RegionGroup[] = [
   // SA - Adelaide
   { state: "SA", region: "애들레이드", suburbs: ["글렌리그", "마리온"] },
 
-  // WA - Perth
-  { state: "WA", region: "퍼스 (WA)", suburbs: ["벤틀리"] },
-
   // QLD - Brisbane
   { state: "QLD", region: "골드코스트", suburbs: ["골드코스트"] },
   { state: "QLD", region: "기타 퀸즐랜드", suburbs: ["타운스빌", "케언즈", "선샤인 코스트", "캐블처 사우스", "캐불처 사우스", "해밀턴"] },

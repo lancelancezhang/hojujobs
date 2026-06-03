@@ -12,10 +12,11 @@ const STATE_LABELS: Record<string, string> = {
   VIC: "멜버른 (VIC)",
   QLD: "브리즈번 (QLD)",
   SA: "애들레이드 (SA)",
+  WA: "퍼스 (WA)",
   ACT: "캔버라 (ACT)",
 };
 
-const INLINE_STATES = ["NSW", "VIC", "QLD", "SA"];
+const INLINE_STATES = ["NSW", "VIC", "QLD", "SA", "WA"];
 
 interface MobileLocationFilterProps {
   locations: string[];
