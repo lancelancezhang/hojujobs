@@ -22,6 +22,8 @@ const ITEMS_PER_PAGE = 50;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
 const LISTING_CACHE_VERSION = 7;
 const LISTING_REQUEST_TIMEOUT_MS = 15_000;
+const FILTER_METADATA_TIMEOUT_MS = 5_000;
+const FILTER_METADATA_LIMIT = 1000;
 const PROMO_CITY_FILTERS = new Set(["NSW", "VIC", "QLD"]);
 const FEATURED_SALE_PROMO_LIMIT = 2;
 const SALE_PROMO_CACHE_KEY = "hoju_sale_promo_cache";
@@ -512,7 +514,7 @@ const Index = ({ cityFilter }: IndexProps) => {
     function buildFilterJobsQuery(from: number, to: number) {
       let query = supabase
         .from("jobs")
-        .select("title, location, industry")
+        .select("location, industry")
         .gte("uploaded_at", cutoff.toISOString())
         .lte("uploaded_at", new Date().toISOString());
 
@@ -533,18 +535,17 @@ const Index = ({ cityFilter }: IndexProps) => {
     }
 
     async function fetchFilterJobs() {
-      const PAGE = 1000;
-      let from = 0;
-      let all: JobFilterMeta[] = [];
-      while (true) {
-        const { data, error } = await withTimeout(buildFilterJobsQuery(from, from + PAGE - 1));
-        if (error) { console.error("filter jobs fetch error:", error); return all; }
-        if (!data || data.length === 0) break;
-        all = all.concat(data as unknown as JobFilterMeta[]);
-        if (data.length < PAGE) break;
-        from += PAGE;
+      const { data, error } = await withTimeout(
+        buildFilterJobsQuery(0, FILTER_METADATA_LIMIT - 1),
+        FILTER_METADATA_TIMEOUT_MS
+      );
+
+      if (error) {
+        console.error("filter jobs fetch error:", error);
+        return [];
       }
-      return all;
+
+      return (data as unknown as JobFilterMeta[]) || [];
     }
 
     async function fetchJobs() {
@@ -569,10 +570,14 @@ const Index = ({ cityFilter }: IndexProps) => {
       const to = from + ITEMS_PER_PAGE - 1;
 
       try {
-        const [currentPageJobs, promoted, nextFilterJobs] = await Promise.all([
+        const filterJobsPromise = fetchFilterJobs().catch((error) => {
+          console.error("filter metadata fetch error:", error);
+          return [] as JobFilterMeta[];
+        });
+
+        const [currentPageJobs, promoted] = await Promise.all([
           withTimeout(buildJobsQuery(from, to, true)),
           withTimeout(buildPromotedJobsQuery()),
-          fetchFilterJobs(),
         ]);
 
         if (cancelled) return;
@@ -605,17 +610,21 @@ const Index = ({ cityFilter }: IndexProps) => {
         const resolvedPageJobs = page === 1 && !fetchHasActiveFilters
           ? mergeJobsById(promotedJobs, pageJobs)
           : pageJobs;
-        const resolvedFilterJobs = nextFilterJobs.length > 0
-          ? nextFilterJobs
-          : resolvedPageJobs.map(({ location, industry }) => ({ location, industry }));
+        const fallbackFilterJobs = resolvedPageJobs.map(({ location, industry }) => ({ location, industry }));
         const countSnapshot = await withTimeout(fetchViewCountsByJobIds(resolvedPageJobs.map((job) => job.id)));
         if (cancelled) return;
 
         hydrateCounts(countSnapshot);
         setJobsData(resolvedPageJobs);
-        setFilterJobs(resolvedFilterJobs);
+        setFilterJobs(fallbackFilterJobs);
         setTotalJobsCount(totalCount);
         setLoadingJobs(false);
+
+        const nextFilterJobs = await filterJobsPromise;
+        if (cancelled) return;
+
+        const resolvedFilterJobs = nextFilterJobs.length > 0 ? nextFilterJobs : fallbackFilterJobs;
+        setFilterJobs(resolvedFilterJobs);
         writeListingCache(cacheKey, {
           jobsData: resolvedPageJobs,
           filterJobs: resolvedFilterJobs,
