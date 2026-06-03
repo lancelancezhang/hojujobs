@@ -12,6 +12,7 @@ import { LocationPicker } from "@/components/LocationPicker";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { clearListingCaches } from "@/lib/listingCache";
 
 export default function PostJob() {
   useSEO({ title: "공고 등록 | Hoju Jobs", description: "Hoju Jobs 공고 등록", noindex: true });
@@ -79,6 +80,7 @@ export default function PostJob() {
       toast.error("공고 등록 실패: " + error.message);
     } else {
       toast.success("공고가 등록되었습니다!");
+      clearListingCaches();
       navigate("/my-posts");
     }
     setLoading(false);

@@ -3,6 +3,7 @@ import { ChevronDown, FileText, LogIn, MapPin, Plus, Shield } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
+import { clearListingCaches } from "@/lib/listingCache";
 import { cn } from "@/lib/utils";
 
 const CITY_DROPDOWN_TABS = [
@@ -38,6 +39,10 @@ export function Header() {
   const location = useLocation();
   const activeCity = CITY_DROPDOWN_TABS.find((tab) => location.pathname === tab.path);
   const cityDropdownActive = Boolean(activeCity);
+  const refreshHomeListings = () => {
+    clearListingCaches();
+    sessionStorage.removeItem("hoju_filters");
+  };
 
   return (
     <header className="bg-white border-b border-border">
@@ -47,7 +52,7 @@ export function Header() {
             type="button"
             className="flex items-center gap-2"
             aria-label="Hoju Jobs home"
-            onClick={() => { sessionStorage.removeItem("hoju_filters"); window.location.href = "/"; }}
+            onClick={() => { refreshHomeListings(); window.location.href = "/"; }}
           >
             <img
               src="/favicon-48x48.png"
@@ -125,6 +130,7 @@ export function Header() {
             <NavLink
               to="/"
               end
+              onClick={refreshHomeListings}
               className={({ isActive }) =>
                 cn(
                   "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[14px] font-black text-slate-950 [text-shadow:0.12px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",

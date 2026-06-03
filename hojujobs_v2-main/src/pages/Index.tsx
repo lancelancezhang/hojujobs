@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { REGION_GROUPS, SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
+import { clearListingCaches } from "@/lib/listingCache";
 import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 50;
@@ -156,7 +157,9 @@ function writeListingCache(key: string, cache: Omit<ListingCache, "cachedAt" | "
       version: LISTING_CACHE_VERSION,
       cachedAt: Date.now(),
     }));
-  } catch {}
+  } catch {
+    // Session storage may be unavailable in private or restricted browser contexts.
+  }
 }
 
 function listingCacheKey({
@@ -207,7 +210,14 @@ function removeJobFromListingCaches(jobId: number) {
       }));
     });
     sessionStorage.removeItem(`hoju_job_view_count_${jobId}`);
-  } catch {}
+  } catch {
+    // Session storage may be unavailable in private or restricted browser contexts.
+  }
+}
+
+function isBrowserReload() {
+  const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+  return navigation?.type === "reload";
 }
 
 function withTimeout<T>(promise: PromiseLike<T>, timeoutMs = LISTING_REQUEST_TIMEOUT_MS): Promise<T> {
@@ -258,9 +268,11 @@ const Index = ({ cityFilter }: IndexProps) => {
     try {
       const raw = sessionStorage.getItem(filterKey);
       if (raw) return JSON.parse(raw);
-    } catch {}
+    } catch {
+      // Ignore malformed saved filters and fall back to defaults.
+    }
     return null;
-  }, []);
+  }, [filterKey]);
 
   const [keyword, setKeyword] = useState(saved?.keyword ?? "");
   const [selectedLocations, setSelectedLocations] = useState<string[]>(saved?.locations ?? []);
@@ -328,10 +340,17 @@ const Index = ({ cityFilter }: IndexProps) => {
   });
 
   useEffect(() => {
+    if (isBrowserReload()) {
+      clearListingCaches();
+      sessionStorage.removeItem("hoju_scroll_y");
+    }
+  }, []);
+
+  useEffect(() => {
     sessionStorage.setItem(filterKey, JSON.stringify({
       keyword, locations: selectedLocations, industry, page, sortBy,
     }));
-  }, [keyword, selectedLocations, industry, page, sortBy]);
+  }, [filterKey, keyword, selectedLocations, industry, page, sortBy]);
 
   useEffect(() => {
     let cancelled = false;
