@@ -62,7 +62,7 @@ export function MobileLocationFilter({
       .filter((g) => g.suburbs.length > 0)
       .sort((a, b) => {
         if (!cityFilter) {
-          const stateOrder = ["NSW", "VIC", "QLD", "SA", "ACT"];
+          const stateOrder = ["NSW", "VIC", "QLD", "SA", "WA", "ACT"];
           const stateDiff = stateOrder.indexOf(a.state) - stateOrder.indexOf(b.state);
           if (stateDiff !== 0) return stateDiff;
         }
