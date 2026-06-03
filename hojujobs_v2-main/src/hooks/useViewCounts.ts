@@ -79,6 +79,8 @@ export function useViewCounts(initialCounts: Record<number, number> = {}) {
   const [counts, setCounts] = useState<Record<number, number>>(initialCounts);
 
   useEffect(() => {
+    fetchAllViewCounts().then(setCounts);
+
     const channel = supabase
       .channel("view_counts_realtime")
       .on(
