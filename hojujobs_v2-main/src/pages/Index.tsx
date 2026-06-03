@@ -23,6 +23,7 @@ const VISIBLE_JOB_DAYS = 6;
 const LISTING_CACHE_TTL_MS = 5 * 60 * 1000;
 const LISTING_CACHE_VERSION = 7;
 const LISTING_REQUEST_TIMEOUT_MS = 15_000;
+const SALE_PROMO_TIMEOUT_MS = 5_000;
 const FILTER_METADATA_TIMEOUT_MS = 5_000;
 const FILTER_METADATA_PAGE_SIZE = 1000;
 const VIEWS_SORT_PAGE_SIZE = 1000;
@@ -425,12 +426,15 @@ const Index = ({ cityFilter }: IndexProps) => {
         setLoadingSalePromoDeals(true);
       }
 
-      const { data, error } = await supabase
-        .from("ozbargain_deals")
-        .select("rank, title, category, image_url")
-        .eq("promoted", true)
-        .order("rank", { ascending: true })
-        .limit(FEATURED_SALE_PROMO_LIMIT);
+      const { data, error } = await withTimeout(
+        supabase
+          .from("ozbargain_deals")
+          .select("rank, title, category, image_url")
+          .eq("promoted", true)
+          .order("rank", { ascending: true })
+          .limit(FEATURED_SALE_PROMO_LIMIT),
+        SALE_PROMO_TIMEOUT_MS
+      );
 
       if (cancelled) return;
 
@@ -458,7 +462,14 @@ const Index = ({ cityFilter }: IndexProps) => {
       setSalePromoDeals(cachedDeals);
       setLoadingSalePromoDeals(false);
     }
-    fetchSalePromoDeals();
+    fetchSalePromoDeals().catch((error) => {
+      if (cancelled) return;
+      console.error("sale promo deals fetch failed:", error);
+      if (!cachedDeals) {
+        setSalePromoDeals([]);
+      }
+      setLoadingSalePromoDeals(false);
+    });
     return () => {
       cancelled = true;
     };
@@ -784,10 +795,9 @@ const Index = ({ cityFilter }: IndexProps) => {
   const currentPage = Math.min(page, displayTotalPages || 1);
   const paginatedJobs = filtered;
   const showPromoSection = currentPage === 1 && !hasActiveFilters && (!cityFilter || PROMO_CITY_FILTERS.has(cityFilter));
-  const allLoaded = !loadingJobs && !loadingSalePromoDeals;
-  const showReadyPromoSection = showPromoSection && allLoaded;
+  const showReadyPromoSection = showPromoSection && !loadingJobs && !loadingSalePromoDeals;
   const showPromotedJobsInPromoSection = showReadyPromoSection;
-  const loadingCards = !allLoaded;
+  const loadingCards = loadingJobs;
   const regularPaginatedJobs = showPromotedJobsInPromoSection
     ? paginatedJobs.filter((job) => job.Promoted !== true)
     : paginatedJobs;
