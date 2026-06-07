@@ -117,7 +117,7 @@ export default function MyPosts() {
                   내 구인공고
                 </h3>
                 <Button size="sm" onClick={() => navigate("/post-job")}>
-                  <Plus className="h-3.5 w-3.5 mr-1" /> 새 공고
+                  <Plus className="h-3.5 w-3.5 mr-1" /> 새 일자리
                 </Button>
               </div>
               {jobs.length === 0 ? (
