@@ -26,6 +26,12 @@ const INFO_TABS = [
     activeClassName: "bg-blue-100 text-slate-950",
   },
   {
+    label: "플렛메이트",
+    path: "/flatmates",
+    idleClassName: "text-slate-950 hover:bg-sky-50",
+    activeClassName: "bg-sky-100 text-slate-950",
+  },
+  {
     label: "워홀정보",
     path: "/dashboard",
     idleClassName: "text-slate-950 hover:bg-white",
@@ -168,15 +174,15 @@ export function Header() {
             </DropdownMenu>
           </div>
 
-          <div className="grid min-w-0 grid-cols-3 items-center gap-0.5 rounded-md sm:gap-1">
+          <div className="grid min-w-0 grid-cols-4 items-center gap-0.5 rounded-md sm:gap-1">
             {INFO_TABS.map(({ label, path, idleClassName, activeClassName }) => (
               <NavLink
                 key={path}
                 to={path}
-                end={path === "/" || path === "/dashboard" || path === "/news"}
+                end
                 className={({ isActive }) =>
                   cn(
-                    "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[14px] font-black [text-shadow:0.12px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-2 sm:text-base",
+                    "inline-flex h-10 min-w-0 items-center justify-center rounded px-0.5 text-center text-[12px] font-black [text-shadow:0.12px_0_0_currentColor] transition-colors whitespace-nowrap sm:px-1 sm:text-[15px] lg:px-2 lg:text-base",
                     isActive ? activeClassName : idleClassName
                   )
                 }

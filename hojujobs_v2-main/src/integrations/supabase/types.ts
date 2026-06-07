@@ -137,6 +137,69 @@ export type Database = {
         }
         Relationships: []
       }
+      hojunara_realestate_share: {
+        Row: {
+          category: string | null
+          contact_number: string | null
+          description: string | null
+          enquiry_email: string | null
+          gender_restriction: string | null
+          image_url: string | null
+          notice_id: string
+          post_photo: string[] | null
+          price: number | null
+          private_bathroom: boolean | null
+          private_room: boolean | null
+          state_location: string | null
+          sub_category: string | null
+          suburb: string | null
+          time_posted: string | null
+          title: string | null
+          uploaded_at: string | null
+          url: string | null
+        }
+        Insert: {
+          category?: string | null
+          contact_number?: string | null
+          description?: string | null
+          enquiry_email?: string | null
+          gender_restriction?: string | null
+          image_url?: string | null
+          notice_id: string
+          post_photo?: string[] | null
+          price?: number | null
+          private_bathroom?: boolean | null
+          private_room?: boolean | null
+          state_location?: string | null
+          sub_category?: string | null
+          suburb?: string | null
+          time_posted?: string | null
+          title?: string | null
+          uploaded_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          category?: string | null
+          contact_number?: string | null
+          description?: string | null
+          enquiry_email?: string | null
+          gender_restriction?: string | null
+          image_url?: string | null
+          notice_id?: string
+          post_photo?: string[] | null
+          price?: number | null
+          private_bathroom?: boolean | null
+          private_room?: boolean | null
+          state_location?: string | null
+          sub_category?: string | null
+          suburb?: string | null
+          time_posted?: string | null
+          title?: string | null
+          uploaded_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       ozbargain_deals: {
         Row: {
           category: string
