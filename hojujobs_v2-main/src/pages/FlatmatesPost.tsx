@@ -1,15 +1,16 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ImagePlus, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { LocationPicker } from "@/components/LocationPicker";
+import { REGION_GROUPS } from "@/data/regionMap";
 import { cn } from "@/lib/utils";
 
 const MAX_PHOTOS = 10;
 const STORAGE_BUCKET = "realestate-photos";
-
 const STATE_OPTIONS = ["NSW", "VIC", "QLD", "SA", "WA", "ACT", "TAS"];
 
 type GenderRestriction = "none" | "female_only" | "male_only";
@@ -18,7 +19,6 @@ interface FormState {
   title: string;
   description: string;
   price: string;
-  suburb: string;
   state_location: string;
   private_room: boolean;
   private_bathroom: boolean;
@@ -32,7 +32,6 @@ const INITIAL_FORM: FormState = {
   title: "",
   description: "",
   price: "",
-  suburb: "",
   state_location: "NSW",
   private_room: false,
   private_bathroom: false,
@@ -61,13 +60,22 @@ export default function FlatmatesPost() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [suburbSelection, setSuburbSelection] = useState<string[]>([]);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const allSuburbs = useMemo(() => REGION_GROUPS.flatMap((g) => g.suburbs), []);
+
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
+
+  // Single-select: keep only the most recently added suburb
+  const handleSuburbChange = (locs: string[]) => {
+    const newLoc = locs.find((l) => !suburbSelection.includes(l));
+    setSuburbSelection(newLoc ? [newLoc] : []);
+  };
 
   const handlePhotos = (files: FileList | null) => {
     if (!files) return;
@@ -84,16 +92,18 @@ export default function FlatmatesPost() {
     setPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const hasContact = form.contact_number.trim() || form.enquiry_email.trim() || form.kakaoid.trim();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) { setError("제목을 입력해주세요."); return; }
-    if (!form.suburb.trim()) { setError("지역을 입력해주세요."); return; }
+    if (!suburbSelection[0]) { setError("Suburb을 선택해주세요."); return; }
+    if (!hasContact) { setError("전화번호, 이메일, 카카오톡 ID 중 하나 이상 입력해주세요."); return; }
 
     setSubmitting(true);
     setError(null);
 
     try {
-      // Upload photos to Supabase Storage
       const uploadedUrls: string[] = [];
       for (const file of photoFiles) {
         const ext = file.name.split(".").pop();
@@ -112,7 +122,7 @@ export default function FlatmatesPost() {
           title: form.title.trim(),
           description: form.description.trim() || null,
           price: form.price ? Number(form.price) : null,
-          suburb: form.suburb.trim(),
+          suburb: suburbSelection[0],
           state_location: form.state_location,
           private_room: form.private_room,
           private_bathroom: form.private_bathroom,
@@ -208,16 +218,17 @@ export default function FlatmatesPost() {
             </label>
 
             <div className="grid grid-cols-2 gap-3">
-              <label className="block">
-                <span className="mb-1.5 block text-xs font-bold text-slate-700">지역 (suburb) <span className="text-red-500">*</span></span>
-                <Input
-                  value={form.suburb}
-                  onChange={(e) => set("suburb", e.target.value)}
-                  placeholder="예: 스트라스필드"
+              <div>
+                <span className="mb-1.5 block text-xs font-bold text-slate-700">Suburb <span className="text-red-500">*</span></span>
+                <LocationPicker
+                  availableLocations={allSuburbs}
+                  selectedLocations={suburbSelection}
+                  onLocationsChange={handleSuburbChange}
+                  allowCustom={true}
                 />
-              </label>
+              </div>
               <label className="block">
-                <span className="mb-1.5 block text-xs font-bold text-slate-700">주/도</span>
+                <span className="mb-1.5 block text-xs font-bold text-slate-700">주 (State)</span>
                 <select
                   value={form.state_location}
                   onChange={(e) => set("state_location", e.target.value)}
@@ -263,7 +274,7 @@ export default function FlatmatesPost() {
             <div>
               <span className="mb-2 block text-xs font-bold text-slate-700">성별 조건</span>
               <div className="flex gap-2">
-                <ToggleButton active={form.gender_restriction === "none"} onClick={() => set("gender_restriction", "none")}>무관</ToggleButton>
+                <ToggleButton active={form.gender_restriction === "none"} onClick={() => set("gender_restriction", "none")}>없음</ToggleButton>
                 <ToggleButton active={form.gender_restriction === "female_only"} onClick={() => set("gender_restriction", "female_only")}>여성전용</ToggleButton>
                 <ToggleButton active={form.gender_restriction === "male_only"} onClick={() => set("gender_restriction", "male_only")}>남성전용</ToggleButton>
               </div>
@@ -284,7 +295,10 @@ export default function FlatmatesPost() {
 
           {/* Contact */}
           <section className="rounded-xl border bg-white p-5 shadow-sm space-y-4">
-            <h2 className="text-sm font-bold text-slate-950">연락처</h2>
+            <div>
+              <h2 className="text-sm font-bold text-slate-950">연락처</h2>
+              <p className="mt-0.5 text-xs text-slate-500">전화번호, 이메일, 카카오톡 ID 중 하나 이상 입력해주세요.</p>
+            </div>
 
             <label className="block">
               <span className="mb-1.5 block text-xs font-bold text-slate-700">전화번호</span>
@@ -314,6 +328,12 @@ export default function FlatmatesPost() {
                 placeholder="예: kakao123"
               />
             </label>
+
+            {!hasContact && (
+              <p className="rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-xs font-medium text-amber-700">
+                연락처를 하나 이상 입력해야 매물을 등록할 수 있습니다.
+              </p>
+            )}
           </section>
 
           {error && (
