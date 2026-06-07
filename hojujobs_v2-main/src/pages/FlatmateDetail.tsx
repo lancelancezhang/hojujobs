@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, Mail, MapPin, MessageSquare, Phone, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
@@ -194,31 +194,31 @@ export default function FlatmateDetail() {
         )}
 
         {(listing.contact_number || listing.enquiry_email || listing.kakaoid) && (
-          <section className="mt-5 rounded-xl border bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-4 text-lg font-black text-slate-950">연락처</h2>
+          <div className="bg-card border border-border rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-bold text-foreground mb-4">연락처</h2>
             <div className="space-y-3">
               {listing.contact_number && (
                 <div className="flex items-center gap-2.5 text-sm">
-                  <Phone className="h-4 w-4 shrink-0 text-primary" />
-                  <span className="font-semibold text-slate-800">{listing.contact_number}</span>
+                  <Phone className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-foreground break-words [overflow-wrap:anywhere]">{listing.contact_number}</span>
                 </div>
               )}
               {listing.enquiry_email && (
                 <div className="flex items-center gap-2.5 text-sm">
-                  <Mail className="h-4 w-4 shrink-0 text-primary" />
-                  <a href={`mailto:${listing.enquiry_email}`} className="font-semibold text-primary hover:underline">
+                  <Mail className="h-4 w-4 text-primary shrink-0" />
+                  <a href={`mailto:${listing.enquiry_email}`} className="text-primary hover:underline break-words [overflow-wrap:anywhere]">
                     {listing.enquiry_email}
                   </a>
                 </div>
               )}
               {listing.kakaoid && (
                 <div className="flex items-center gap-2.5 text-sm">
-                  <MessageSquare className="h-4 w-4 shrink-0 text-yellow-500" />
-                  <span className="font-semibold text-slate-800">카카오 {listing.kakaoid}</span>
+                  <MessageCircle className="h-4 w-4 text-yellow-500 shrink-0" />
+                  <span className="text-foreground break-words [overflow-wrap:anywhere]">카카오톡: {listing.kakaoid}</span>
                 </div>
               )}
             </div>
-          </section>
+          </div>
         )}
       </main>
     </div>
