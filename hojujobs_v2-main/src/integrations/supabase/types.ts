@@ -146,6 +146,7 @@ export type Database = {
           gender_restriction: string | null
           id: number
           image_url: string | null
+          kakao_id: string | null
           post_photo: string[] | null
           price: number | null
           private_bathroom: boolean | null
@@ -166,6 +167,7 @@ export type Database = {
           gender_restriction?: string | null
           id?: number
           image_url?: string | null
+          kakao_id?: string | null
           post_photo?: string[] | null
           price?: number | null
           private_bathroom?: boolean | null
@@ -186,6 +188,7 @@ export type Database = {
           gender_restriction?: string | null
           id?: number
           image_url?: string | null
+          kakao_id?: string | null
           post_photo?: string[] | null
           price?: number | null
           private_bathroom?: boolean | null

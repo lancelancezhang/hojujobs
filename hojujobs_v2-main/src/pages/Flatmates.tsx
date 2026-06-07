@@ -56,8 +56,6 @@ function formatDate(value: string | null) {
     timeZone: "Australia/Sydney",
     month: "short",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   }).format(new Date(value));
 }
 
@@ -441,7 +439,6 @@ function FlatmateCard({ listing }: { listing: FlatmateListing }) {
               <MapPin className="h-3.5 w-3.5" />
               {listing.suburb ?? "지역 미기재"}
             </span>
-            <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">{listing.state_location ?? "호주"}</span>
             {listing.private_room === true && (
               <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700">
                 <BedSingle className="h-3.5 w-3.5" />
@@ -451,13 +448,15 @@ function FlatmateCard({ listing }: { listing: FlatmateListing }) {
             {listing.private_bathroom === true && (
               <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700">
                 <Bath className="h-3.5 w-3.5" />
-                개인욕실
+                개인 화장실
               </span>
             )}
-            <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              {genderLabel(listing.gender_restriction)}
-            </span>
+            {(listing.gender_restriction === "female_only" || listing.gender_restriction === "male_only") && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                {genderLabel(listing.gender_restriction)}
+              </span>
+            )}
           </div>
 
           <div className="flex gap-3">
@@ -468,15 +467,16 @@ function FlatmateCard({ listing }: { listing: FlatmateListing }) {
               )}
             </div>
             <div className="shrink-0 text-right">
-              <p className="text-lg font-black text-slate-950">{formatPrice(listing.price)}</p>
-              <p className="text-xs font-semibold text-slate-500">/ 주</p>
+              <p className="flex items-baseline justify-end gap-1">
+                <span className="text-lg font-black text-slate-950">{formatPrice(listing.price)}</span>
+                <span className="text-xs font-semibold text-slate-500">/ 주</span>
+              </p>
             </div>
           </div>
 
           <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
             <div className="text-xs text-slate-500">
               {formatDate(listing.time_posted ?? listing.uploaded_at)}
-              {listing.contact_number ? <span className="ml-2 font-semibold text-slate-700">{listing.contact_number}</span> : null}
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, Mail, MapPin, MessageSquare, Phone, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
@@ -14,6 +14,7 @@ type FlatmateListing = {
   price: number | null;
   contact_number: string | null;
   enquiry_email: string | null;
+  kakao_id: string | null;
   state_location: string | null;
   time_posted: string | null;
   uploaded_at: string | null;
@@ -37,8 +38,6 @@ function formatDate(value: string | null) {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   }).format(new Date(value));
 }
 
@@ -74,7 +73,7 @@ export default function FlatmateDetail() {
 
       const { data, error } = await supabase
         .from("hojunara_realestate_share")
-        .select("id, url, title, description, price, contact_number, enquiry_email, state_location, time_posted, uploaded_at, image_url, post_photo, private_room, gender_restriction, private_bathroom, suburb")
+        .select("id, url, title, description, price, contact_number, enquiry_email, kakao_id, state_location, time_posted, uploaded_at, image_url, post_photo, private_room, gender_restriction, private_bathroom, suburb")
         .eq("id", Number(id))
         .maybeSingle();
 
@@ -147,7 +146,6 @@ export default function FlatmateDetail() {
                 <MapPin className="h-3.5 w-3.5" />
                 {listing.suburb ?? "지역 미기재"}
               </span>
-              <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">{listing.state_location ?? "호주"}</span>
               {listing.private_room === true && (
                 <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700">
                   <BedSingle className="h-3.5 w-3.5" />
@@ -157,13 +155,15 @@ export default function FlatmateDetail() {
               {listing.private_bathroom === true && (
                 <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700">
                   <Bath className="h-3.5 w-3.5" />
-                  개인욕실
+                  개인 화장실
                 </span>
               )}
-              <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                {genderLabel(listing.gender_restriction)}
-              </span>
+              {(listing.gender_restriction === "female_only" || listing.gender_restriction === "male_only") && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  {genderLabel(listing.gender_restriction)}
+                </span>
+              )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_10rem]">
@@ -193,7 +193,7 @@ export default function FlatmateDetail() {
           </section>
         )}
 
-        {(listing.contact_number || listing.enquiry_email) && (
+        {(listing.contact_number || listing.enquiry_email || listing.kakao_id) && (
           <section className="mt-5 rounded-xl border bg-white p-5 shadow-sm sm:p-6">
             <h2 className="mb-4 text-lg font-black text-slate-950">연락처</h2>
             <div className="space-y-3">
@@ -209,6 +209,12 @@ export default function FlatmateDetail() {
                   <a href={`mailto:${listing.enquiry_email}`} className="font-semibold text-primary hover:underline">
                     {listing.enquiry_email}
                   </a>
+                </div>
+              )}
+              {listing.kakao_id && (
+                <div className="flex items-center gap-2.5 text-sm">
+                  <MessageSquare className="h-4 w-4 shrink-0 text-yellow-500" />
+                  <span className="font-semibold text-slate-800">카카오 {listing.kakao_id}</span>
                 </div>
               )}
             </div>
