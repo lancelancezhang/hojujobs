@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bath, BedSingle, Check, ChevronDown, ChevronLeft, ChevronRight, Filter, MapPin, RotateCcw, Search, ShieldCheck } from "lucide-react";
+import { Bath, BedSingle, Check, ChevronDown, ChevronLeft, ChevronRight, MapPin, RotateCcw, Search, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -175,6 +175,8 @@ export default function Flatmates() {
     });
   }, [gender, keyword, listings, maxRent, minRent, privateBathroom, privateRoom, selectedSuburbs]);
 
+  const hasFilters = keyword !== "" || selectedSuburbs.length > 0 || privateRoom !== "all" || gender !== "all" || privateBathroom !== "all" || minRent !== "" || maxRent !== "";
+
   const resetFilters = () => {
     setKeyword("");
     setSelectedSuburbs([]);
@@ -196,12 +198,15 @@ export default function Flatmates() {
 
         <div className="grid gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
           <aside className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                <Filter className="h-3.5 w-3.5 text-primary" />
-                필터
-              </h2>
-              <button type="button" onClick={resetFilters} className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-700">
+            <div className="flex h-5 justify-end">
+              <button
+                type="button"
+                onClick={resetFilters}
+                className={cn(
+                  "flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors",
+                  !hasFilters && "invisible pointer-events-none"
+                )}
+              >
                 <RotateCcw className="h-3 w-3" />
                 초기화
               </button>
