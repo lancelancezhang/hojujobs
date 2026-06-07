@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bath, BedSingle, ChevronLeft, ChevronRight, Filter, MapPin, RotateCcw, Search, ShieldCheck } from "lucide-react";
+import { Bath, BedSingle, Check, ChevronDown, ChevronLeft, ChevronRight, Filter, MapPin, RotateCcw, Search, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -101,7 +101,7 @@ export default function Flatmates() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [keyword, setKeyword] = useState("");
-  const [suburb, setSuburb] = useState("all");
+  const [selectedSuburbs, setSelectedSuburbs] = useState<string[]>([]);
   const [privateRoom, setPrivateRoom] = useState<BooleanFilter>("all");
   const [gender, setGender] = useState<GenderFilter>("all");
   const [privateBathroom, setPrivateBathroom] = useState<BooleanFilter>("all");
@@ -161,7 +161,8 @@ export default function Flatmates() {
     const hasMaxRent = maxRent.trim() !== "" && Number.isFinite(maxRentValue);
 
     return listings.filter((listing) => {
-      if (suburb !== "all" && listing.suburb !== suburb) return false;
+      if (selectedSuburbs.length > 0 && !selectedSuburbs.includes(listing.suburb?.trim() ?? "")) return false;
+
       if (!matchesBooleanFilter(listing.private_room, privateRoom)) return false;
       if (!matchesGenderFilter(listing.gender_restriction, gender)) return false;
       if (!matchesBooleanFilter(listing.private_bathroom, privateBathroom)) return false;
@@ -172,11 +173,11 @@ export default function Flatmates() {
       const haystack = `${listing.title ?? ""} ${listing.description ?? ""} ${listing.suburb ?? ""}`.toLowerCase();
       return haystack.includes(trimmedKeyword);
     });
-  }, [gender, keyword, listings, maxRent, minRent, privateBathroom, privateRoom, suburb]);
+  }, [gender, keyword, listings, maxRent, minRent, privateBathroom, privateRoom, selectedSuburbs]);
 
   const resetFilters = () => {
     setKeyword("");
-    setSuburb("all");
+    setSelectedSuburbs([]);
     setPrivateRoom("all");
     setGender("all");
     setPrivateBathroom("all");
@@ -227,21 +228,15 @@ export default function Flatmates() {
                   </div>
                 </label>
 
-                <label className="block">
+                <div>
                   <span className="mb-1.5 block text-xs font-bold text-slate-700">지역</span>
-                  <select
-                    value={suburb}
-                    onChange={(event) => setSuburb(event.target.value)}
-                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  >
-                    <option value="all">전체 지역</option>
-                    {suburbs.map((nextSuburb) => (
-                      <option key={nextSuburb} value={nextSuburb}>
-                        {nextSuburb} ({suburbCounts[nextSuburb]})
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                  <SuburbDropdown
+                    suburbs={suburbs}
+                    suburbCounts={suburbCounts}
+                    selectedSuburbs={selectedSuburbs}
+                    onChange={setSelectedSuburbs}
+                  />
+                </div>
 
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -409,6 +404,114 @@ function FilterGroup({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function SuburbDropdown({
+  suburbs,
+  suburbCounts,
+  selectedSuburbs,
+  onChange,
+}: {
+  suburbs: string[];
+  suburbCounts: Record<string, number>;
+  selectedSuburbs: string[];
+  onChange: (v: string[]) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
+    }
+    if (isOpen) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [isOpen]);
+
+  const filtered = useMemo(() => {
+    const s = search.trim().toLowerCase();
+    return s ? suburbs.filter((sub) => sub.toLowerCase().includes(s)) : suburbs;
+  }, [suburbs, search]);
+
+  const toggle = (sub: string) => {
+    onChange(selectedSuburbs.includes(sub)
+      ? selectedSuburbs.filter((s) => s !== sub)
+      : [...selectedSuburbs, sub]);
+  };
+
+  const label = selectedSuburbs.length === 0 ? "전체 지역" : `${selectedSuburbs.length}개 선택`;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen((o) => !o)}
+        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      >
+        <span className={cn("truncate", selectedSuburbs.length === 0 ? "text-muted-foreground" : "font-semibold text-slate-950")}>
+          {label}
+        </span>
+        <ChevronDown className={cn("h-4 w-4 shrink-0 text-slate-400 transition-transform", isOpen && "rotate-180")} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-md border bg-white shadow-lg">
+          <div className="border-b p-2">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                autoFocus
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="지역 검색..."
+                className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+          </div>
+          {selectedSuburbs.length > 0 && (
+            <div className="border-b px-3 py-1.5">
+              <button
+                type="button"
+                onClick={() => onChange([])}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                선택 초기화 ({selectedSuburbs.length})
+              </button>
+            </div>
+          )}
+          <ul className="max-h-52 overflow-y-auto py-1">
+            {filtered.length === 0 ? (
+              <li className="px-3 py-2 text-xs text-muted-foreground">검색 결과 없음</li>
+            ) : (
+              filtered.map((sub) => {
+                const checked = selectedSuburbs.includes(sub);
+                return (
+                  <li key={sub}>
+                    <button
+                      type="button"
+                      onClick={() => toggle(sub)}
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-slate-50"
+                    >
+                      <span className={cn(
+                        "flex h-4 w-4 shrink-0 items-center justify-center rounded border",
+                        checked ? "border-primary bg-primary text-white" : "border-slate-300 bg-white"
+                      )}>
+                        {checked && <Check className="h-3 w-3" />}
+                      </span>
+                      <span className="flex-1 truncate text-xs font-medium text-slate-800">{sub}</span>
+                      <span className="text-xs text-slate-400">{suburbCounts[sub]}</span>
+                    </button>
+                  </li>
+                );
+              })
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
