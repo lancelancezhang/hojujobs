@@ -164,7 +164,7 @@ export default function FlatmatesPost() {
           </button>
         </div>
 
-        <h1 className="mb-6 text-2xl font-black text-slate-950">매물 등록</h1>
+        <h1 className="mb-6 text-2xl font-black text-slate-950">렌트 등록</h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -289,7 +289,7 @@ export default function FlatmatesPost() {
             <textarea
               value={form.description}
               onChange={(e) => set("description", e.target.value)}
-              placeholder="매물에 대한 상세 정보를 입력해주세요."
+              placeholder="렌트에 대한 상세 정보를 입력해주세요."
               rows={6}
               className="w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2"
             />
@@ -333,7 +333,7 @@ export default function FlatmatesPost() {
 
             {attempted && !hasContact && (
               <p className="rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-xs font-medium text-amber-700">
-                연락처를 하나 이상 입력해야 매물을 등록할 수 있습니다.
+                연락처를 하나 이상 입력해야 렌트을 등록할 수 있습니다.
               </p>
             )}
           </section>
@@ -343,7 +343,7 @@ export default function FlatmatesPost() {
           )}
 
           <Button type="submit" disabled={submitting} className="w-full" size="lg">
-            {submitting ? "등록 중..." : "매물 등록하기"}
+            {submitting ? "등록 중..." : "렌트 등록하기"}
           </Button>
         </form>
       </main>
