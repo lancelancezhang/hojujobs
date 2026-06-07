@@ -50,8 +50,8 @@ export function Header() {
   const cityDropdownActive = location.pathname === "/" || CITY_DROPDOWN_TABS.some((t) => t.path !== "/" && location.pathname === t.path);
   const onFlatmates = location.pathname.startsWith("/flatmates");
   const postPath = onFlatmates ? "/flatmates/post" : "/post-job";
-  const postLabel = onFlatmates ? "매물 등록" : "공고 등록";
-  const postLabelShort = onFlatmates ? "매물등록" : "공고등록";
+  const postLabel = "업로드";
+  const postLabelShort = "업로드";
   const refreshHomeListings = () => {
     clearListingCaches();
     sessionStorage.removeItem("hoju_filters");
