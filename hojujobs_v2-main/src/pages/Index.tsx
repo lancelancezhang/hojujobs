@@ -1079,7 +1079,7 @@ const Index = ({ cityFilter }: IndexProps) => {
                       <div className="min-w-0 flex-1">
                         <p className="flex items-center gap-1.5 text-sm font-extrabold text-slate-950 mb-0.5">
                           <Home className="h-4 w-4 text-rose-700" />
-                          최신 플렛메이트 렌트도 확인해보세요
+                          최신 플렛 렌트도 확인해보세요
                         </p>
                         <p className="text-xs text-rose-900/75 leading-relaxed">쉐어하우스, 독방, 개인 화장실 조건을 한곳에서 비교하세요.</p>
                       </div>
