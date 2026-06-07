@@ -886,7 +886,7 @@ const Index = ({ cityFilter }: IndexProps) => {
     <div className="flex w-full min-h-0 flex-1 flex-col bg-background">
       <Header />
 
-      <div className="w-full max-w-6xl mx-auto px-4 py-8">
+      <div className="w-full max-w-6xl mx-auto px-4 pt-4 pb-8">
         <div className="lg:grid lg:grid-cols-[200px_1fr] lg:gap-5">
           <div className="hidden lg:block">
             <div className="sticky top-4">

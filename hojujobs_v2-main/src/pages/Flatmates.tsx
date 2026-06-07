@@ -189,7 +189,7 @@ export default function Flatmates() {
     <div className="flex w-full min-h-0 flex-1 flex-col bg-[#f7f8fb]">
       <Header />
 
-      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-8">
+      <main className="mx-auto w-full max-w-6xl px-4 pt-4 pb-8">
         <div className="mb-3 lg:hidden">
           <h1 className="text-xl font-extrabold tracking-normal text-foreground sm:text-2xl">플렛메이트</h1>
         </div>
