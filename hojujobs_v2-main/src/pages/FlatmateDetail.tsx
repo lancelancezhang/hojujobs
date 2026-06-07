@@ -73,7 +73,7 @@ export default function FlatmateDetail() {
 
       const { data, error } = await supabase
         .from("hojunara_realestate_share")
-        .select("id, url, title, description, price, contact_number, enquiry_email, state_location, time_posted, uploaded_at, image_url, post_photo, private_room, gender_restriction, private_bathroom, suburb")
+        .select("id, url, title, description, price, contact_number, enquiry_email, kakao_id, state_location, time_posted, uploaded_at, image_url, post_photo, private_room, gender_restriction, private_bathroom, suburb")
         .eq("id", Number(id))
         .maybeSingle();
 
