@@ -287,7 +287,7 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="activity" className="gap-1.5" onClick={() => { if (userActivity.length === 0) fetchUserActivity(); }}>
               <Users className="h-3.5 w-3.5" />
-              유저 활동
+              Users
             </TabsTrigger>
           </TabsList>
 
@@ -489,12 +489,12 @@ function formatRelative(iso: string | null) {
   if (!iso) return "—";
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}분 전`;
+  if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}시간 전`;
+  if (hrs < 24) return `${hrs}h ago`;
   const days = Math.floor(hrs / 24);
-  if (days < 7) return `${days}일 전`;
-  return new Intl.DateTimeFormat("ko-KR", { month: "short", day: "numeric" }).format(new Date(iso));
+  if (days < 7) return `${days}d ago`;
+  return new Intl.DateTimeFormat("en-AU", { month: "short", day: "numeric" }).format(new Date(iso));
 }
 
 function UserActivityTab({
@@ -525,11 +525,11 @@ function UserActivityTab({
         <div>
           <h3 className="flex items-center gap-2 text-base font-bold text-foreground">
             <Users className="h-4 w-4 text-blue-500" />
-            유저 활동 요약
+            User Activity Summary
           </h3>
           <p className="text-sm text-muted-foreground">
-            총 <span className="font-semibold text-foreground">{totalUsers}</span>명 ·{" "}
-            <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span>개 이벤트
+            <span className="font-semibold text-foreground">{totalUsers}</span> users ·{" "}
+            <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span> events
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -537,53 +537,53 @@ function UserActivityTab({
             type="text"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="이메일 또는 이름 검색"
+            placeholder="Search email or name"
             className="h-8 w-48 rounded-md border border-input bg-background px-3 text-xs outline-none focus:ring-2 focus:ring-ring"
           />
           <Button variant="outline" size="sm" className="h-8 text-xs" onClick={onRefresh} disabled={loading}>
-            새로고침
+            Refresh
           </Button>
         </div>
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-sm text-muted-foreground">불러오는 중...</div>
+        <div className="py-16 text-center text-sm text-muted-foreground">Loading...</div>
       ) : filtered.length === 0 ? (
         <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
-          {search ? "검색 결과가 없습니다." : "아직 활동 데이터가 없습니다."}
+          {search ? "No results found." : "No activity data yet."}
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border">
           <table className="w-full min-w-[900px] text-sm">
             <thead className="bg-muted/50 text-xs text-muted-foreground">
               <tr>
-                <th className="px-4 py-2.5 text-left font-semibold">유저</th>
-                <th className="px-3 py-2.5 text-center font-semibold">전체</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">구인</th>
-                <th className="px-3 py-2.5 text-center font-semibold">렌트</th>
-                <th className="px-3 py-2.5 text-center font-semibold">딜</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">플렛</th>
-                <th className="px-3 py-2.5 text-center font-semibold">온세일</th>
-                <th className="px-3 py-2.5 text-center font-semibold">뉴스</th>
-                <th className="px-3 py-2.5 text-center font-semibold">워홀</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">연락처</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">공고</th>
-                <th className="px-3 py-2.5 text-center font-semibold">렌트</th>
-                <th className="px-3 py-2.5 text-right font-semibold border-l">마지막 활동</th>
+                <th className="px-4 py-2.5 text-left font-semibold">User</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Total</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">Jobs</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Rentals</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Deals</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">Flatmates</th>
+                <th className="px-3 py-2.5 text-center font-semibold">On Sale</th>
+                <th className="px-3 py-2.5 text-center font-semibold">News</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Dashboard</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">Contacts</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">Job Post</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Rental Post</th>
+                <th className="px-3 py-2.5 text-right font-semibold border-l">Last Active</th>
               </tr>
               <tr className="border-t text-[10px]">
                 <th className="px-4 pb-1.5 text-left" />
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">이벤트</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">조회</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">조회</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">조회</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">방문</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">방문</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">방문</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">방문</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">클릭</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">등록</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">등록</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">events</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">views</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">views</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">views</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">visits</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">clicks</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">submitted</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">submitted</th>
                 <th className="px-3 pb-1.5 text-right border-l" />
               </tr>
             </thead>
@@ -592,7 +592,7 @@ function UserActivityTab({
                 <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-4 py-2.5 min-w-[160px]">
                     <p className="font-semibold text-foreground truncate max-w-[200px]">
-                      {row.display_name ?? <span className="text-muted-foreground font-normal italic">이름 없음</span>}
+                      {row.display_name ?? <span className="text-muted-foreground font-normal italic">No name</span>}
                     </p>
                     <p className="text-xs text-muted-foreground truncate max-w-[200px]">{row.email ?? "—"}</p>
                   </td>
