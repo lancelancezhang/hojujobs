@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bath, BedSingle, Check, ChevronDown, ChevronLeft, ChevronRight, MapPin, RotateCcw, Search, ShieldCheck } from "lucide-react";
+import { Bath, BedSingle, Check, ChevronDown, ChevronLeft, ChevronRight, MapPin, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,7 @@ type GenderFilter = "all" | "restricted" | "unrestricted" | "female_only" | "mal
 
 const LISTING_LIMIT = 500;
 const RENT_OPTIONS = Array.from({ length: 21 }, (_, index) => index * 50);
+const FLATMATES_SCROLL_KEY = "hoju_flatmates_scroll_y";
 
 const booleanOptions: Array<{ value: BooleanFilter; label: string }> = [
   { value: "all", label: "전체" },
@@ -140,6 +141,20 @@ export default function Flatmates() {
       cancelled = true;
     };
   }, []);
+
+  const scrollRestored = useRef(false);
+  useEffect(() => {
+    if (loading || scrollRestored.current) return;
+    scrollRestored.current = true;
+
+    const savedY = sessionStorage.getItem(FLATMATES_SCROLL_KEY);
+    if (!savedY) return;
+
+    sessionStorage.removeItem(FLATMATES_SCROLL_KEY);
+    window.setTimeout(() => {
+      window.scrollTo({ top: Number(savedY) });
+    }, 50);
+  }, [loading]);
 
   const suburbCounts = useMemo(() => {
     return listings.reduce<Record<string, number>>((counts, listing) => {
@@ -583,15 +598,20 @@ function FlatmateCard({ listing }: { listing: FlatmateListing }) {
   const detailPath = `/flatmates/${listing.id}`;
   const suburb = listing.suburb?.trim();
 
+  const openDetail = () => {
+    sessionStorage.setItem(FLATMATES_SCROLL_KEY, String(window.scrollY));
+    navigate(detailPath);
+  };
+
   return (
     <article
       role="link"
       tabIndex={0}
-      onClick={() => navigate(detailPath)}
+      onClick={openDetail}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          navigate(detailPath);
+          openDetail();
         }
       }}
       className="w-full max-w-full cursor-pointer overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -667,6 +687,7 @@ function listingPhotos(listing: FlatmateListing) {
 function PhotoCarousel({ listing }: { listing: FlatmateListing }) {
   const photos = listingPhotos(listing);
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const currentPhoto = photos[photoIndex];
   const hasMultiplePhotos = photos.length > 1;
 
@@ -700,13 +721,23 @@ function PhotoCarousel({ listing }: { listing: FlatmateListing }) {
       onTouchEnd={handleTouchEnd}
     >
       {currentPhoto ? (
-        <img
-          src={currentPhoto}
-          alt={listing.title ?? "플렛메이트 렌트"}
-          className="h-full w-full object-cover"
-          loading="lazy"
-          onError={(event) => { event.currentTarget.style.display = "none"; }}
-        />
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            setLightboxIndex(photoIndex);
+          }}
+          className="block h-full w-full"
+          aria-label="사진 크게 보기"
+        >
+          <img
+            src={currentPhoto}
+            alt={listing.title ?? "플렛메이트 렌트"}
+            className="h-full w-full object-cover"
+            loading="lazy"
+            onError={(event) => { event.currentTarget.style.display = "none"; }}
+          />
+        </button>
       ) : (
         <div className="flex h-full w-full items-center justify-center text-xs font-bold text-slate-400">
           사진 없음
@@ -755,6 +786,101 @@ function PhotoCarousel({ listing }: { listing: FlatmateListing }) {
             ))}
           </div>
         </>
+      )}
+
+      {lightboxIndex !== null && (
+        <PhotoLightbox
+          photos={photos}
+          photoIndex={lightboxIndex}
+          title={listing.title ?? "플렛메이트 렌트"}
+          onPhotoIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function PhotoLightbox({
+  photos,
+  photoIndex,
+  title,
+  onPhotoIndexChange,
+  onClose,
+}: {
+  photos: string[];
+  photoIndex: number;
+  title: string;
+  onPhotoIndexChange: (index: number) => void;
+  onClose: () => void;
+}) {
+  const hasMultiplePhotos = photos.length > 1;
+  const currentPhoto = photos[photoIndex];
+
+  const showPrevious = () => {
+    onPhotoIndexChange(photoIndex === 0 ? photos.length - 1 : photoIndex - 1);
+  };
+
+  const showNext = () => {
+    onPhotoIndexChange((photoIndex + 1) % photos.length);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-3 sm:p-6"
+      onClick={(event) => {
+        event.stopPropagation();
+        onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="사진 크게 보기"
+    >
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onClose();
+        }}
+        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+        aria-label="닫기"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {hasMultiplePhotos && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            showPrevious();
+          }}
+          className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+          aria-label="이전 사진"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+      )}
+
+      <img
+        src={currentPhoto}
+        alt={title}
+        className="max-h-[86vh] max-w-full rounded-lg object-contain"
+        onClick={(event) => event.stopPropagation()}
+      />
+
+      {hasMultiplePhotos && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            showNext();
+          }}
+          className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+          aria-label="다음 사진"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
       )}
     </div>
   );

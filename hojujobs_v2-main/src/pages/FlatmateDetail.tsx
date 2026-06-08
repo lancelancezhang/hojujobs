@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, MapPin, ShieldCheck, X } from "lucide-react";
 import { ContactRevealSection } from "@/components/ContactRevealSection";
 import { DescriptionRevealSection } from "@/components/DescriptionRevealSection";
 import { ListingRevealProvider } from "@/hooks/useListingReveal";
@@ -211,6 +211,7 @@ export default function FlatmateDetail() {
 function PhotoGallery({ listing }: { listing: FlatmateListing }) {
   const photos = listingPhotos(listing);
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const currentPhoto = photos[photoIndex];
   const hasMultiplePhotos = photos.length > 1;
 
@@ -226,11 +227,18 @@ function PhotoGallery({ listing }: { listing: FlatmateListing }) {
     <div>
       <div className="relative h-72 overflow-hidden bg-slate-100 sm:h-[30rem]">
         {currentPhoto ? (
-          <img
-            src={currentPhoto}
-            alt={listing.title ?? "플렛메이트 렌트"}
-            className="h-full w-full object-cover"
-          />
+          <button
+            type="button"
+            onClick={() => setLightboxIndex(photoIndex)}
+            className="block h-full w-full"
+            aria-label="사진 크게 보기"
+          >
+            <img
+              src={currentPhoto}
+              alt={listing.title ?? "플렛메이트 렌트"}
+              className="h-full w-full object-cover"
+            />
+          </button>
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm font-bold text-slate-400">
             사진 없음
@@ -276,6 +284,95 @@ function PhotoGallery({ listing }: { listing: FlatmateListing }) {
             </button>
           ))}
         </div>
+      )}
+
+      {lightboxIndex !== null && (
+        <PhotoLightbox
+          photos={photos}
+          photoIndex={lightboxIndex}
+          title={listing.title ?? "플렛메이트 렌트"}
+          onPhotoIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function PhotoLightbox({
+  photos,
+  photoIndex,
+  title,
+  onPhotoIndexChange,
+  onClose,
+}: {
+  photos: string[];
+  photoIndex: number;
+  title: string;
+  onPhotoIndexChange: (index: number) => void;
+  onClose: () => void;
+}) {
+  const hasMultiplePhotos = photos.length > 1;
+  const currentPhoto = photos[photoIndex];
+
+  const showPrevious = () => {
+    onPhotoIndexChange(photoIndex === 0 ? photos.length - 1 : photoIndex - 1);
+  };
+
+  const showNext = () => {
+    onPhotoIndexChange((photoIndex + 1) % photos.length);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-3 sm:p-6"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="사진 크게 보기"
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+        aria-label="닫기"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {hasMultiplePhotos && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            showPrevious();
+          }}
+          className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+          aria-label="이전 사진"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+      )}
+
+      <img
+        src={currentPhoto}
+        alt={title}
+        className="max-h-[86vh] max-w-full rounded-lg object-contain"
+        onClick={(event) => event.stopPropagation()}
+      />
+
+      {hasMultiplePhotos && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            showNext();
+          }}
+          className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+          aria-label="다음 사진"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
       )}
     </div>
   );
