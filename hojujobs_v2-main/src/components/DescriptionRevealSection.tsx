@@ -36,6 +36,10 @@ export function DescriptionRevealSection({
 }: DescriptionRevealSectionProps) {
   const { revealed, interactiveProps } = useListingReveal();
   const { preview, remainder } = splitDescriptionPreview(description);
+  const formattedBodyClassName = cn(
+    "whitespace-pre-line break-words [overflow-wrap:anywhere]",
+    bodyClassName,
+  );
 
   if (!description.trim()) return null;
 
@@ -46,13 +50,13 @@ export function DescriptionRevealSection({
     >
       <h2 className={headingClassName}>상세 내용</h2>
       {revealed ? (
-        <div className={bodyClassName}>{description}</div>
+        <div className={formattedBodyClassName}>{description}</div>
       ) : (
-        <div className={bodyClassName}>
-          <div className="whitespace-pre-line break-words [overflow-wrap:anywhere]">{preview}</div>
+        <div className={formattedBodyClassName}>
+          <div>{preview}</div>
           {remainder && (
             <div className="relative min-h-[5rem]">
-              <div className="blur-md select-none pointer-events-none whitespace-pre-line break-words [overflow-wrap:anywhere]">
+              <div className="blur-md select-none pointer-events-none">
                 {remainder}
               </div>
               <RevealOverlay />
