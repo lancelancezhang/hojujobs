@@ -162,7 +162,7 @@ export default function AdminActivity() {
     setFetching(true);
     const since = sinceFromFilter(tf);
     const [activityRes, rolesRes] = await Promise.all([
-      supabase.rpc("get_user_activity_summary", since ? { since } : {}) as unknown as { data: UserActivityRow[] | null },
+      supabase.rpc("get_user_activity_summary", { since: since ?? null }) as unknown as { data: UserActivityRow[] | null },
       supabase.from("user_roles").select("user_id").eq("role", "admin"),
     ]);
     if (activityRes.data) setRows(activityRes.data);
@@ -233,18 +233,18 @@ export default function AdminActivity() {
                 </button>
               ))}
             </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search email or name"
-              className="h-8 w-52 rounded-md border border-input bg-background px-3 text-xs outline-none focus:ring-2 focus:ring-ring"
-            />
-            <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => fetchData(timeFilter)} disabled={fetching}>
-              Refresh
-            </Button>
-          </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search email or name"
+                className="h-8 w-52 rounded-md border border-input bg-background px-3 text-xs outline-none focus:ring-2 focus:ring-ring"
+              />
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => fetchData(timeFilter)} disabled={fetching}>
+                Refresh
+              </Button>
+            </div>
           </div>
         </div>
 
