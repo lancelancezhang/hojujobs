@@ -97,6 +97,8 @@ export default async function handler(request: Request): Promise<Response> {
     }
   }
 
+  const country = request.headers.get("x-vercel-ip-country") ?? null;
+
   const { error: insertError } = await supabase.from("user_click_events").insert({
     user_id: user.id,
     event_name,
@@ -104,6 +106,7 @@ export default async function handler(request: Request): Promise<Response> {
     listing_id: listing_id != null ? String(listing_id) : null,
     page_url: typeof page_url === "string" ? page_url.slice(0, 500) : null,
     metadata: metadata && typeof metadata === "object" && !Array.isArray(metadata) ? metadata : {},
+    country,
   });
 
   if (insertError) {

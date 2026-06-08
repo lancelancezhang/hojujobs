@@ -11,6 +11,7 @@ interface UserActivityRow {
   user_id: string;
   email: string | null;
   display_name: string | null;
+  country: string | null;
   total_events: number;
   job_views: number;
   rental_views: number;
@@ -32,6 +33,11 @@ interface UserActivityRow {
   filters_changed: number;
   first_activity: string | null;
   last_activity: string | null;
+}
+
+function countryFlag(code: string | null): string {
+  if (!code || code.length !== 2) return "";
+  return [...code.toUpperCase()].map((c) => String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))).join("");
 }
 
 function Stat({ value, color }: { value: number; color: string }) {
@@ -179,7 +185,10 @@ export default function AdminActivity() {
                   return (
                     <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-3 py-2">
-                        <p className="font-semibold text-foreground text-sm">{row.display_name ?? <span className="italic text-muted-foreground font-normal">No name</span>}</p>
+                        <p className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+                          {countryFlag(row.country) && <span className="text-base leading-none">{countryFlag(row.country)}</span>}
+                          {row.display_name ?? <span className="italic text-muted-foreground font-normal">No name</span>}
+                        </p>
                         <p className="text-[11px] text-muted-foreground">{row.email ?? "—"}</p>
                       </td>
                       <td className="px-2 py-2 text-center"><Stat value={rowTotal} color="bg-slate-100 text-slate-700" /></td>

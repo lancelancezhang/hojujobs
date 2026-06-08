@@ -11,7 +11,6 @@ import { ArrowLeft, Trash2, Shield, ExternalLink, Pencil, MapPin, Check, X, Spar
 import { useSEO } from "@/hooks/useSEO";
 import { LocationPicker } from "@/components/LocationPicker";
 import { Pagination } from "@/components/Pagination";
-import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,32 +42,6 @@ interface Deal {
   promoted: boolean;
 }
 
-interface UserActivityRow {
-  user_id: string;
-  email: string | null;
-  display_name: string | null;
-  total_events: number;
-  job_views: number;
-  rental_views: number;
-  sale_views: number;
-  flatmates_page_views: number;
-  sales_page_views: number;
-  news_page_views: number;
-  dashboard_page_views: number;
-  phone_clicks: number;
-  email_clicks: number;
-  kakao_clicks: number;
-  total_contact_clicks: number;
-  contact_text_selections: number;
-  job_posts_started: number;
-  job_posts_submitted: number;
-  rental_posts_started: number;
-  rental_posts_submitted: number;
-  searches_performed: number;
-  filters_changed: number;
-  first_activity: string | null;
-  last_activity: string | null;
-}
 
 const ADMIN_PAGE_SIZE = 25;
 const VISIBLE_JOB_DAYS = 6;
@@ -103,9 +76,6 @@ export default function Admin() {
   const [editingLocations, setEditingLocations] = useState<string[]>([]);
   const [savingLocation, setSavingLocation] = useState(false);
   const [savingPromotionKey, setSavingPromotionKey] = useState<string | null>(null);
-  const [userActivity, setUserActivity] = useState<UserActivityRow[]>([]);
-  const [loadingActivity, setLoadingActivity] = useState(false);
-  const [activitySearch, setActivitySearch] = useState("");
 
   const fetchJobs = useCallback(async (page = jobPage) => {
     setLoadingJobs(true);
@@ -162,16 +132,6 @@ export default function Admin() {
     }
     setLoadingDeals(false);
   }, [dealPage]);
-
-  const fetchUserActivity = useCallback(async () => {
-    setLoadingActivity(true);
-    const { data, error } = await supabase
-      .from("user_activity_summary" as "jobs")
-      .select("*")
-      .order("last_activity", { ascending: false }) as unknown as { data: UserActivityRow[] | null; error: unknown };
-    if (!error && data) setUserActivity(data);
-    setLoadingActivity(false);
-  }, []);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -276,20 +236,22 @@ export default function Admin() {
         </div>
 
         <Tabs defaultValue="jobs" className="w-full min-w-0">
-          <TabsList className="mb-5 grid w-full grid-cols-3 sm:w-[32rem]">
-            <TabsTrigger value="jobs" className="gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" />
-              공고
-            </TabsTrigger>
-            <TabsTrigger value="deals" className="gap-1.5">
-              <ShoppingBag className="h-3.5 w-3.5" />
-              딜
-            </TabsTrigger>
-            <TabsTrigger value="activity" className="gap-1.5" onClick={() => { if (userActivity.length === 0) fetchUserActivity(); }}>
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <TabsList className="grid grid-cols-2 w-[22rem]">
+              <TabsTrigger value="jobs" className="gap-1.5">
+                <Sparkles className="h-3.5 w-3.5" />
+                공고
+              </TabsTrigger>
+              <TabsTrigger value="deals" className="gap-1.5">
+                <ShoppingBag className="h-3.5 w-3.5" />
+                딜
+              </TabsTrigger>
+            </TabsList>
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => navigate("/admin/activity")}>
               <Users className="h-3.5 w-3.5" />
-              Users
-            </TabsTrigger>
-          </TabsList>
+              User Activity ↗
+            </Button>
+          </div>
 
           <TabsContent value="jobs" className="mt-0">
             <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
@@ -461,206 +423,8 @@ export default function Admin() {
               </div>
             )}
           </TabsContent>
-          <TabsContent value="activity" className="mt-0">
-            <UserActivityTab
-              rows={userActivity}
-              loading={loadingActivity}
-              search={activitySearch}
-              onSearchChange={setActivitySearch}
-              onRefresh={fetchUserActivity}
-              onOpenFullPage={() => navigate("/admin/activity")}
-            />
-          </TabsContent>
         </Tabs>
       </div>
-    </div>
-  );
-}
-
-function Stat({ label, value, color }: { label: string; value: number; color: string }) {
-  if (!value) return <span className="text-xs text-muted-foreground">—</span>;
-  return (
-    <span className={cn("inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-semibold", color)}>
-      {value}
-    </span>
-  );
-}
-
-function formatRelative(iso: string | null) {
-  if (!iso) return "—";
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  if (days < 7) return `${days}d ago`;
-  return new Intl.DateTimeFormat("en-AU", { month: "short", day: "numeric" }).format(new Date(iso));
-}
-
-function UserActivityTab({
-  rows,
-  loading,
-  search,
-  onSearchChange,
-  onRefresh,
-  onOpenFullPage,
-}: {
-  rows: UserActivityRow[];
-  loading: boolean;
-  search: string;
-  onSearchChange: (v: string) => void;
-  onRefresh: () => void;
-  onOpenFullPage: () => void;
-}) {
-  const filtered = rows.filter((r) => {
-    if (!search.trim()) return true;
-    const q = search.toLowerCase();
-    return (r.email ?? "").toLowerCase().includes(q) || (r.display_name ?? "").toLowerCase().includes(q);
-  });
-
-  const totalEvents = rows.reduce((s, r) => s + (r.total_events ?? 0), 0);
-  const totalUsers = rows.length;
-
-  return (
-    <div>
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h3 className="flex items-center gap-2 text-base font-bold text-foreground">
-            <Users className="h-4 w-4 text-blue-500" />
-            User Activity Summary
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">{totalUsers}</span> users ·{" "}
-            <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span> events
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search email or name"
-            className="h-8 w-48 rounded-md border border-input bg-background px-3 text-xs outline-none focus:ring-2 focus:ring-ring"
-          />
-          <Button variant="outline" size="sm" className="h-8 text-xs" onClick={onRefresh} disabled={loading}>
-            Refresh
-          </Button>
-          <Button variant="default" size="sm" className="h-8 text-xs" onClick={onOpenFullPage}>
-            Full page ↗
-          </Button>
-        </div>
-      </div>
-
-      {loading ? (
-        <div className="py-16 text-center text-sm text-muted-foreground">Loading...</div>
-      ) : filtered.length === 0 ? (
-        <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
-          {search ? "No results found." : "No activity data yet."}
-        </div>
-      ) : (
-        <div className="rounded-xl border overflow-hidden">
-          <table className="w-full text-[11px]">
-            <thead className="bg-muted/50 text-muted-foreground">
-              {/* Group header row */}
-              <tr className="border-b">
-                <th className="px-3 py-2 text-left" rowSpan={2}>User</th>
-                <th className="px-2 py-2 text-center font-semibold" rowSpan={2}>Total</th>
-                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={3}>Listing Views</th>
-                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={4}>Page Visits</th>
-                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={2}>Contact</th>
-                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={3}>Posts</th>
-                <th className="px-2 py-1.5 text-center font-semibold border-l" rowSpan={2}>Search &amp;<br/>Filter</th>
-                <th className="px-3 py-1.5 text-right font-semibold border-l" rowSpan={2}>Last Active</th>
-              </tr>
-              {/* Sub-header row */}
-              <tr className="border-b text-[10px]">
-                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Jobs</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Rentals</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Deals</th>
-                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Flatmates</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">On Sale</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">News</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Dashboard</th>
-                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Clicks</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Text Sel.</th>
-                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Started</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Job</th>
-                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Rental</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {filtered.map((row) => {
-                const rowTotal =
-                  (row.job_views ?? 0) + (row.rental_views ?? 0) + (row.sale_views ?? 0) +
-                  (row.flatmates_page_views ?? 0) + (row.sales_page_views ?? 0) +
-                  (row.news_page_views ?? 0) + (row.dashboard_page_views ?? 0) +
-                  (row.total_contact_clicks ?? 0) + (row.contact_text_selections ?? 0) +
-                  (row.job_posts_started ?? 0) + (row.job_posts_submitted ?? 0) +
-                  (row.rental_posts_started ?? 0) + (row.rental_posts_submitted ?? 0) +
-                  (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
-                const searchFilter = (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
-                const postStarts = (row.job_posts_started ?? 0) + (row.rental_posts_started ?? 0);
-                return (
-                  <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-3 py-2.5">
-                      <p className="font-semibold text-foreground truncate max-w-[180px] text-sm">
-                        {row.display_name ?? <span className="text-muted-foreground font-normal italic">No name</span>}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground truncate max-w-[180px]">{row.email ?? "—"}</p>
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="total" value={rowTotal} color="bg-slate-100 text-slate-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center border-l">
-                      <Stat label="jobs" value={row.job_views} color="bg-blue-50 text-blue-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="rentals" value={row.rental_views} color="bg-rose-50 text-rose-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="deals" value={row.sale_views} color="bg-emerald-50 text-emerald-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center border-l">
-                      <Stat label="flatmates" value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="onsale" value={row.sales_page_views} color="bg-teal-50 text-teal-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="news" value={row.news_page_views} color="bg-indigo-50 text-indigo-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="dash" value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center border-l">
-                      <Stat label="clicks" value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="textsel" value={row.contact_text_selections} color="bg-orange-50 text-orange-600" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center border-l">
-                      <Stat label="starts" value={postStarts} color="bg-slate-50 text-slate-500" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="jobpost" value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center">
-                      <Stat label="rentpost" value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" />
-                    </td>
-                    <td className="px-2 py-2.5 text-center border-l">
-                      <Stat label="search" value={searchFilter} color="bg-sky-50 text-sky-700" />
-                    </td>
-                    <td className="px-3 py-2.5 text-right border-l whitespace-nowrap text-muted-foreground">
-                      {formatRelative(row.last_activity)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
     </div>
   );
 }
