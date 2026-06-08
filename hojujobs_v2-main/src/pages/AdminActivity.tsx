@@ -144,10 +144,7 @@ export default function AdminActivity() {
   const fetchData = async () => {
     setFetching(true);
     const [activityRes, rolesRes] = await Promise.all([
-      supabase
-        .from("user_activity_summary" as "jobs")
-        .select("*")
-        .order("last_activity", { ascending: false }) as unknown as { data: UserActivityRow[] | null },
+      supabase.rpc("get_user_activity_summary") as unknown as { data: UserActivityRow[] | null },
       supabase.from("user_roles").select("user_id").eq("role", "admin"),
     ]);
     if (activityRes.data) setRows(activityRes.data);
