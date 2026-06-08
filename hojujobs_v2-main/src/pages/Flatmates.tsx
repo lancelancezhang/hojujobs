@@ -221,7 +221,7 @@ export default function Flatmates() {
 	                    value={keyword}
 	                    onChange={(event) => setKeyword(event.target.value)}
 	                    placeholder="지역, 건물, 조건"
-	                    className="h-8 pl-8 text-[12px] font-medium placeholder:text-[11px] placeholder:font-medium placeholder:text-slate-500 sm:h-10 sm:text-sm sm:placeholder:text-xs"
+	                    className="h-8 pl-8 text-[12px] font-medium placeholder:text-slate-500 placeholder:font-medium sm:h-10 sm:text-sm sm:placeholder:text-sm"
 	                  />
                 </div>
               </label>
@@ -248,7 +248,7 @@ export default function Flatmates() {
                         if (nextValue && maxRent && Number(nextValue) > Number(maxRent)) setMaxRent(nextValue);
                         setMinRent(nextValue);
                       }}
-	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !minRent && "text-[11px] text-slate-500 sm:text-xs")}
+	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !minRent && "!text-[10px] text-slate-500 sm:!text-xs")}
                     >
                       <option value="">$0</option>
                       {RENT_OPTIONS.map((rent) => (
@@ -265,7 +265,7 @@ export default function Flatmates() {
                         if (nextValue && minRent && Number(nextValue) < Number(minRent)) setMinRent(nextValue);
                         setMaxRent(nextValue);
                       }}
-	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !maxRent && "text-[11px] text-slate-500 sm:text-xs")}
+	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !maxRent && "!text-[10px] text-slate-500 sm:!text-xs")}
                     >
                       <option value="">전체</option>
                       {RENT_OPTIONS.map((rent) => (
