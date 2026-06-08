@@ -553,44 +553,34 @@ function UserActivityTab({
           {search ? "No results found." : "No activity data yet."}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border">
-          <table className="w-full min-w-[1100px] text-sm">
-            <thead className="bg-muted/50 text-xs text-muted-foreground">
-              <tr>
-                <th className="px-4 py-2.5 text-left font-semibold">User</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Total</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">Jobs</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Rentals</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Deals</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">Flatmates</th>
-                <th className="px-3 py-2.5 text-center font-semibold">On Sale</th>
-                <th className="px-3 py-2.5 text-center font-semibold">News</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Dashboard</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">Contacts</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Text Sel.</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">Post Starts</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Job Post</th>
-                <th className="px-3 py-2.5 text-center font-semibold">Rental Post</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">Search/Filter</th>
-                <th className="px-3 py-2.5 text-right font-semibold border-l">Last Active</th>
+        <div className="rounded-xl border overflow-hidden">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/50 text-muted-foreground">
+              {/* Group header row */}
+              <tr className="border-b">
+                <th className="px-3 py-2 text-left" rowSpan={2}>User</th>
+                <th className="px-2 py-2 text-center font-semibold" rowSpan={2}>Total</th>
+                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={3}>Listing Views</th>
+                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={4}>Page Visits</th>
+                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={2}>Contact</th>
+                <th className="px-2 py-1.5 text-center font-semibold border-l" colSpan={3}>Posts</th>
+                <th className="px-2 py-1.5 text-center font-semibold border-l" rowSpan={2}>Search &amp;<br/>Filter</th>
+                <th className="px-3 py-1.5 text-right font-semibold border-l" rowSpan={2}>Last Active</th>
               </tr>
-              <tr className="border-t text-[10px]">
-                <th className="px-4 pb-1.5 text-left" />
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">sum</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">views</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">views</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">views</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">visits</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">clicks</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">selections</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">started</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">submitted</th>
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">submitted</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">events</th>
-                <th className="px-3 pb-1.5 text-right border-l" />
+              {/* Sub-header row */}
+              <tr className="border-b text-[10px]">
+                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Jobs</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Rentals</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Deals</th>
+                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Flatmates</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">On Sale</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">News</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Dashboard</th>
+                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Clicks</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Text Sel.</th>
+                <th className="px-2 pb-1.5 text-center border-l text-muted-foreground/80">Started</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Job</th>
+                <th className="px-2 pb-1.5 text-center text-muted-foreground/80">Rental</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -607,56 +597,56 @@ function UserActivityTab({
                 const postStarts = (row.job_posts_started ?? 0) + (row.rental_posts_started ?? 0);
                 return (
                   <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-2.5 min-w-[160px]">
-                      <p className="font-semibold text-foreground truncate max-w-[200px]">
+                    <td className="px-3 py-2.5">
+                      <p className="font-semibold text-foreground truncate max-w-[180px] text-sm">
                         {row.display_name ?? <span className="text-muted-foreground font-normal italic">No name</span>}
                       </p>
-                      <p className="text-xs text-muted-foreground truncate max-w-[200px]">{row.email ?? "—"}</p>
+                      <p className="text-[11px] text-muted-foreground truncate max-w-[180px]">{row.email ?? "—"}</p>
                     </td>
-                    <td className="px-3 py-2.5 text-center">
+                    <td className="px-2 py-2.5 text-center">
                       <Stat label="total" value={rowTotal} color="bg-slate-100 text-slate-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center border-l">
-                      <Stat label="job_views" value={row.job_views} color="bg-blue-50 text-blue-700" />
+                    <td className="px-2 py-2.5 text-center border-l">
+                      <Stat label="jobs" value={row.job_views} color="bg-blue-50 text-blue-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="rental_views" value={row.rental_views} color="bg-rose-50 text-rose-700" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="rentals" value={row.rental_views} color="bg-rose-50 text-rose-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="sale_views" value={row.sale_views} color="bg-emerald-50 text-emerald-700" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="deals" value={row.sale_views} color="bg-emerald-50 text-emerald-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center border-l">
+                    <td className="px-2 py-2.5 text-center border-l">
                       <Stat label="flatmates" value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="sales" value={row.sales_page_views} color="bg-teal-50 text-teal-700" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="onsale" value={row.sales_page_views} color="bg-teal-50 text-teal-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
+                    <td className="px-2 py-2.5 text-center">
                       <Stat label="news" value={row.news_page_views} color="bg-indigo-50 text-indigo-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="dashboard" value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="dash" value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center border-l">
-                      <Stat label="contact" value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" />
+                    <td className="px-2 py-2.5 text-center border-l">
+                      <Stat label="clicks" value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="text_sel" value={row.contact_text_selections} color="bg-orange-50 text-orange-600" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="textsel" value={row.contact_text_selections} color="bg-orange-50 text-orange-600" />
                     </td>
-                    <td className="px-3 py-2.5 text-center border-l">
-                      <Stat label="post_starts" value={postStarts} color="bg-slate-50 text-slate-600" />
+                    <td className="px-2 py-2.5 text-center border-l">
+                      <Stat label="starts" value={postStarts} color="bg-slate-50 text-slate-500" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="job_post" value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="jobpost" value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center">
-                      <Stat label="rental_post" value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" />
+                    <td className="px-2 py-2.5 text-center">
+                      <Stat label="rentpost" value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-center border-l">
-                      <Stat label="search_filter" value={searchFilter} color="bg-sky-50 text-sky-700" />
+                    <td className="px-2 py-2.5 text-center border-l">
+                      <Stat label="search" value={searchFilter} color="bg-sky-50 text-sky-700" />
                     </td>
-                    <td className="px-3 py-2.5 text-right border-l">
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">{formatRelative(row.last_activity)}</span>
+                    <td className="px-3 py-2.5 text-right border-l whitespace-nowrap text-muted-foreground">
+                      {formatRelative(row.last_activity)}
                     </td>
                   </tr>
                 );
