@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type KeyboardEvent, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { trackContactRevealClick, type ListingType } from "@/lib/analytics";
@@ -42,7 +42,13 @@ export function ListingRevealProvider({
   const location = useLocation();
   const sessionKey = listingRevealSessionKey(listingType, listingId);
 
-  const [revealed, setRevealed] = useState(() => sessionStorage.getItem(sessionKey) === "1");
+  const [revealed, setRevealed] = useState(
+    () => !!user || sessionStorage.getItem(sessionKey) === "1",
+  );
+
+  useEffect(() => {
+    if (!loading && user) setRevealed(true);
+  }, [loading, user]);
 
   const handleReveal = () => {
     if (revealed || loading) return;
