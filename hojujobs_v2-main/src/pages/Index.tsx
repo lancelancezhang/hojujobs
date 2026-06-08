@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { REGION_GROUPS, SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
 import { clearListingCaches } from "@/lib/listingCache";
+import { trackEvent } from "@/lib/trackEvent";
 import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 50;
@@ -436,6 +437,42 @@ const Index = ({ cityFilter }: IndexProps) => {
       keyword, locations: selectedLocations, industry, page, sortBy,
     }));
   }, [filterKey, keyword, selectedLocations, industry, page, sortBy]);
+
+  const filterTrackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFirstFilterRender = useRef(true);
+  useEffect(() => {
+    if (isFirstFilterRender.current) {
+      isFirstFilterRender.current = false;
+      return;
+    }
+    if (filterTrackTimerRef.current) clearTimeout(filterTrackTimerRef.current);
+    filterTrackTimerRef.current = setTimeout(() => {
+      if (keyword.trim()) {
+        trackEvent("search_performed", {
+          listing_type: "job",
+          metadata: {
+            search_keyword: keyword.trim(),
+            suburb: selectedLocations.join(", ") || undefined,
+            category: industry !== "all" ? industry : undefined,
+            city_filter: cityFilter ?? undefined,
+          },
+        });
+      } else {
+        trackEvent("filter_changed", {
+          listing_type: "job",
+          metadata: {
+            selected_filters: {
+              locations: selectedLocations,
+              industry: industry !== "all" ? industry : undefined,
+              sort_by: sortBy,
+            },
+            city_filter: cityFilter ?? undefined,
+          },
+        });
+      }
+    }, 1500);
+    return () => { if (filterTrackTimerRef.current) clearTimeout(filterTrackTimerRef.current); };
+  }, [keyword, selectedLocations, industry, sortBy]);
 
   useEffect(() => {
     let cancelled = false;

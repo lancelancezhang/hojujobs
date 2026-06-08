@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/trackEvent";
 
 type FlatmateListing = {
   id: number;
@@ -91,6 +92,15 @@ export default function FlatmateDetail() {
 
       setListing(data as FlatmateListing);
       setLoading(false);
+      trackEvent("rental_listing_viewed", {
+        listing_type: "rental",
+        listing_id: data.id,
+        metadata: {
+          suburb: data.suburb ?? undefined,
+          price: data.price ?? undefined,
+          room_type: data.private_room === true ? "private" : "shared",
+        },
+      });
     }
 
     fetchListing();

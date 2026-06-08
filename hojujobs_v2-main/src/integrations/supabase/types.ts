@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      user_click_events: {
+        Row: {
+          id: string
+          user_id: string
+          event_name: string
+          listing_type: string | null
+          listing_id: string | null
+          page_url: string | null
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          event_name: string
+          listing_type?: string | null
+          listing_id?: string | null
+          page_url?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          event_name?: string
+          listing_type?: string | null
+          listing_id?: string | null
+          page_url?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
       exchange_rates: {
         Row: {
           aud: number | null

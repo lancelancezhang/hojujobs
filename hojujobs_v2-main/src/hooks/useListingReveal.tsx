@@ -12,6 +12,8 @@ function listingRevealSessionKey(listingType: ListingType, listingId: string | n
 type ListingRevealContextValue = {
   revealed: boolean;
   loading: boolean;
+  listingType: ListingType;
+  listingId: string | number;
   handleReveal: () => void;
   handleKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
   interactiveProps: {
@@ -100,7 +102,7 @@ export function ListingRevealProvider({
 
   return (
     <ListingRevealContext.Provider
-      value={{ revealed, loading, handleReveal, handleKeyDown, interactiveProps }}
+      value={{ revealed, loading, listingType, listingId, handleReveal, handleKeyDown, interactiveProps }}
     >
       {children}
     </ListingRevealContext.Provider>

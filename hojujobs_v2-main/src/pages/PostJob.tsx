@@ -13,11 +13,15 @@ import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { clearListingCaches } from "@/lib/listingCache";
+import { trackEvent } from "@/lib/trackEvent";
 
 export default function PostJob() {
   useSEO({ title: "공고 등록 | Hoju Jobs", description: "Hoju Jobs 공고 등록", noindex: true });
   const { user } = useAuth();
   const navigate = useNavigate();
+  useEffect(() => {
+    trackEvent("job_post_started");
+  }, []);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: "",
@@ -81,6 +85,10 @@ export default function PostJob() {
     } else {
       toast.success("공고가 등록되었습니다!");
       clearListingCaches();
+      trackEvent("job_post_submitted", {
+        listing_type: "job",
+        metadata: { suburb: selectedLocations.join(", "), category: finalIndustry },
+      });
       navigate("/my-posts");
     }
     setLoading(false);

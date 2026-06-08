@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LocationPicker } from "@/components/LocationPicker";
 import { REGION_GROUPS } from "@/data/regionMap";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/trackEvent";
 
 const MAX_PHOTOS = 10;
 const STORAGE_BUCKET = "realestate-photos";
@@ -66,6 +67,10 @@ export default function FlatmatesPost() {
       navigate("/auth?next=/flatmates/post");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    trackEvent("rental_post_started");
+  }, []);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
@@ -149,6 +154,10 @@ export default function FlatmatesPost() {
         });
 
       if (insertError) throw insertError;
+      trackEvent("rental_post_submitted", {
+        listing_type: "rental",
+        metadata: { suburb: suburbSelection[0] ?? undefined },
+      });
       navigate("/flatmates");
     } catch (err: unknown) {
       console.error(err);

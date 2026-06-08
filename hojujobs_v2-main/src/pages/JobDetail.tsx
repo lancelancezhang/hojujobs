@@ -9,6 +9,8 @@ import { incrementViewCount } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
 import { SUBURB_EN } from "@/data/regionMap";
 import { useSEO } from "@/hooks/useSEO";
+import { useAuth } from "@/hooks/useAuth";
+import { trackEvent } from "@/lib/trackEvent";
 
 function formatDate(dateStr?: string | null) {
   if (!dateStr) return "";
@@ -38,6 +40,7 @@ function cacheViewCount(jobId: number, count: number) {
 
 export default function JobDetail() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [viewCount, setViewCount] = useState(0);
@@ -87,6 +90,14 @@ export default function JobDetail() {
         setViewCount(count);
         cacheViewCount(data.id, count);
         setLoading(false);
+        trackEvent("job_listing_viewed", {
+          listing_type: "job",
+          listing_id: data.id,
+          metadata: {
+            suburb: (data.location ?? []).join(", "),
+            category: data.industry ?? undefined,
+          },
+        });
         return;
       }
 

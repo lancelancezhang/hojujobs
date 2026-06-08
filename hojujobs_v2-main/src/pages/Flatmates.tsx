@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/trackEvent";
 
 type FlatmateListing = {
   id: number;
@@ -108,6 +109,33 @@ export default function Flatmates() {
   const [privateBathroom, setPrivateBathroom] = useState<BooleanFilter>("all");
   const [minRent, setMinRent] = useState("");
   const [maxRent, setMaxRent] = useState("");
+
+  const filterTrackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFirstFilterRender = useRef(true);
+  useEffect(() => {
+    if (isFirstFilterRender.current) {
+      isFirstFilterRender.current = false;
+      return;
+    }
+    if (filterTrackTimerRef.current) clearTimeout(filterTrackTimerRef.current);
+    filterTrackTimerRef.current = setTimeout(() => {
+      trackEvent("filter_changed", {
+        listing_type: "rental",
+        metadata: {
+          selected_filters: {
+            suburbs: selectedSuburbs,
+            private_room: privateRoom,
+            gender,
+            private_bathroom: privateBathroom,
+            min_rent: minRent || undefined,
+            max_rent: maxRent || undefined,
+          },
+          search_keyword: keyword.trim() || undefined,
+        },
+      });
+    }, 1500);
+    return () => { if (filterTrackTimerRef.current) clearTimeout(filterTrackTimerRef.current); };
+  }, [keyword, selectedSuburbs, privateRoom, gender, privateBathroom, minRent, maxRent]);
 
   useEffect(() => {
     let cancelled = false;
