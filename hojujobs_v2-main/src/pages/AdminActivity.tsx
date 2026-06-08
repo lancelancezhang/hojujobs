@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { cn } from "@/lib/utils";
 
+
 interface UserActivityRow {
   user_id: string;
   email: string | null;
@@ -35,6 +36,46 @@ interface UserActivityRow {
   last_activity: string | null;
 }
 
+function UserRow({ row, dimmed = false }: { row: UserActivityRow; dimmed?: boolean }) {
+  const rowTotal =
+    (row.job_views ?? 0) + (row.rental_views ?? 0) + (row.sale_views ?? 0) +
+    (row.flatmates_page_views ?? 0) + (row.sales_page_views ?? 0) +
+    (row.news_page_views ?? 0) + (row.dashboard_page_views ?? 0) +
+    (row.total_contact_clicks ?? 0) + (row.contact_text_selections ?? 0) +
+    (row.job_posts_started ?? 0) + (row.job_posts_submitted ?? 0) +
+    (row.rental_posts_started ?? 0) + (row.rental_posts_submitted ?? 0) +
+    (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
+  const searchFilter = (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
+  const postStarts = (row.job_posts_started ?? 0) + (row.rental_posts_started ?? 0);
+
+  return (
+    <tr className={cn("hover:bg-muted/30 transition-colors", dimmed && "opacity-50")}>
+      <td className="px-3 py-2">
+        <p className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+          {countryFlag(row.country) && <span className="text-base leading-none">{countryFlag(row.country)}</span>}
+          {row.display_name ?? <span className="italic text-muted-foreground font-normal">No name</span>}
+        </p>
+        <p className="text-[11px] text-muted-foreground">{row.email ?? "—"}</p>
+      </td>
+      <td className="px-2 py-2 text-center"><Stat value={rowTotal} color="bg-slate-100 text-slate-700" /></td>
+      <td className="px-2 py-2 text-center border-l"><Stat value={row.job_views} color="bg-blue-50 text-blue-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.rental_views} color="bg-rose-50 text-rose-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.sale_views} color="bg-emerald-50 text-emerald-700" /></td>
+      <td className="px-2 py-2 text-center border-l"><Stat value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.sales_page_views} color="bg-teal-50 text-teal-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.news_page_views} color="bg-indigo-50 text-indigo-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" /></td>
+      <td className="px-2 py-2 text-center border-l"><Stat value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.contact_text_selections} color="bg-orange-50 text-orange-600" /></td>
+      <td className="px-2 py-2 text-center border-l"><Stat value={postStarts} color="bg-slate-50 text-slate-500" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" /></td>
+      <td className="px-2 py-2 text-center"><Stat value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" /></td>
+      <td className="px-2 py-2 text-center border-l"><Stat value={searchFilter} color="bg-sky-50 text-sky-700" /></td>
+      <td className="px-3 py-2 text-right border-l text-muted-foreground whitespace-nowrap">{formatRelative(row.last_activity)}</td>
+    </tr>
+  );
+}
+
 function countryFlag(code: string | null): string {
   if (!code || code.length !== 2) return "";
   return [...code.toUpperCase()].map((c) => String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))).join("");
@@ -61,11 +102,33 @@ function formatRelative(iso: string | null) {
   return new Intl.DateTimeFormat("en-AU", { month: "short", day: "numeric" }).format(new Date(iso));
 }
 
+function sumRows(rows: UserActivityRow[]) {
+  const z = () => 0;
+  return {
+    job_views: rows.reduce((s, r) => s + (r.job_views ?? 0), z()),
+    rental_views: rows.reduce((s, r) => s + (r.rental_views ?? 0), z()),
+    sale_views: rows.reduce((s, r) => s + (r.sale_views ?? 0), z()),
+    flatmates_page_views: rows.reduce((s, r) => s + (r.flatmates_page_views ?? 0), z()),
+    sales_page_views: rows.reduce((s, r) => s + (r.sales_page_views ?? 0), z()),
+    news_page_views: rows.reduce((s, r) => s + (r.news_page_views ?? 0), z()),
+    dashboard_page_views: rows.reduce((s, r) => s + (r.dashboard_page_views ?? 0), z()),
+    total_contact_clicks: rows.reduce((s, r) => s + (r.total_contact_clicks ?? 0), z()),
+    contact_text_selections: rows.reduce((s, r) => s + (r.contact_text_selections ?? 0), z()),
+    job_posts_started: rows.reduce((s, r) => s + (r.job_posts_started ?? 0), z()),
+    job_posts_submitted: rows.reduce((s, r) => s + (r.job_posts_submitted ?? 0), z()),
+    rental_posts_started: rows.reduce((s, r) => s + (r.rental_posts_started ?? 0), z()),
+    rental_posts_submitted: rows.reduce((s, r) => s + (r.rental_posts_submitted ?? 0), z()),
+    searches_performed: rows.reduce((s, r) => s + (r.searches_performed ?? 0), z()),
+    filters_changed: rows.reduce((s, r) => s + (r.filters_changed ?? 0), z()),
+  };
+}
+
 export default function AdminActivity() {
   useSEO({ title: "User Activity | Admin", description: "User activity summary", noindex: true });
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [rows, setRows] = useState<UserActivityRow[]>([]);
+  const [adminUserIds, setAdminUserIds] = useState<Set<string>>(new Set());
   const [fetching, setFetching] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -80,11 +143,15 @@ export default function AdminActivity() {
 
   const fetchData = async () => {
     setFetching(true);
-    const { data } = await supabase
-      .from("user_activity_summary" as "jobs")
-      .select("*")
-      .order("last_activity", { ascending: false }) as unknown as { data: UserActivityRow[] | null };
-    if (data) setRows(data);
+    const [activityRes, rolesRes] = await Promise.all([
+      supabase
+        .from("user_activity_summary" as "jobs")
+        .select("*")
+        .order("last_activity", { ascending: false }) as unknown as { data: UserActivityRow[] | null },
+      supabase.from("user_roles").select("user_id").eq("role", "admin"),
+    ]);
+    if (activityRes.data) setRows(activityRes.data);
+    if (rolesRes.data) setAdminUserIds(new Set(rolesRes.data.map((r) => r.user_id)));
     setFetching(false);
   };
 
@@ -94,7 +161,19 @@ export default function AdminActivity() {
     return (r.email ?? "").toLowerCase().includes(q) || (r.display_name ?? "").toLowerCase().includes(q);
   });
 
-  const totalEvents = rows.reduce((s, r) => s + (r.total_events ?? 0), 0);
+  const regularUsers = filtered.filter((r) => !adminUserIds.has(r.user_id));
+  const adminUsers = filtered.filter((r) => adminUserIds.has(r.user_id));
+  const totals = sumRows(regularUsers);
+  const totalsRowTotal =
+    totals.job_views + totals.rental_views + totals.sale_views +
+    totals.flatmates_page_views + totals.sales_page_views +
+    totals.news_page_views + totals.dashboard_page_views +
+    totals.total_contact_clicks + totals.contact_text_selections +
+    totals.job_posts_started + totals.job_posts_submitted +
+    totals.rental_posts_started + totals.rental_posts_submitted +
+    totals.searches_performed + totals.filters_changed;
+
+  const totalEvents = rows.filter((r) => !adminUserIds.has(r.user_id)).reduce((s, r) => s + (r.total_events ?? 0), 0);
 
   if (loading) return <div className="flex min-h-screen items-center justify-center text-muted-foreground text-sm">Loading...</div>;
   if (!isAdmin) return null;
@@ -116,8 +195,8 @@ export default function AdminActivity() {
               User Activity Summary
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              <span className="font-semibold text-foreground">{rows.length}</span> users ·{" "}
-              <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span> events
+              <span className="font-semibold text-foreground">{regularUsers.length}</span> users ·{" "}
+              <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span> events (excl. admins)
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -170,45 +249,46 @@ export default function AdminActivity() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {filtered.map((row) => {
-                  const rowTotal =
-                    (row.job_views ?? 0) + (row.rental_views ?? 0) + (row.sale_views ?? 0) +
-                    (row.flatmates_page_views ?? 0) + (row.sales_page_views ?? 0) +
-                    (row.news_page_views ?? 0) + (row.dashboard_page_views ?? 0) +
-                    (row.total_contact_clicks ?? 0) + (row.contact_text_selections ?? 0) +
-                    (row.job_posts_started ?? 0) + (row.job_posts_submitted ?? 0) +
-                    (row.rental_posts_started ?? 0) + (row.rental_posts_submitted ?? 0) +
-                    (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
-                  const searchFilter = (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
-                  const postStarts = (row.job_posts_started ?? 0) + (row.rental_posts_started ?? 0);
+                {/* Regular users */}
+                {regularUsers.map((row) => <UserRow key={row.user_id} row={row} />)}
 
-                  return (
-                    <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-3 py-2">
-                        <p className="font-semibold text-foreground text-sm flex items-center gap-1.5">
-                          {countryFlag(row.country) && <span className="text-base leading-none">{countryFlag(row.country)}</span>}
-                          {row.display_name ?? <span className="italic text-muted-foreground font-normal">No name</span>}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">{row.email ?? "—"}</p>
-                      </td>
-                      <td className="px-2 py-2 text-center"><Stat value={rowTotal} color="bg-slate-100 text-slate-700" /></td>
-                      <td className="px-2 py-2 text-center border-l"><Stat value={row.job_views} color="bg-blue-50 text-blue-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.rental_views} color="bg-rose-50 text-rose-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.sale_views} color="bg-emerald-50 text-emerald-700" /></td>
-                      <td className="px-2 py-2 text-center border-l"><Stat value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.sales_page_views} color="bg-teal-50 text-teal-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.news_page_views} color="bg-indigo-50 text-indigo-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" /></td>
-                      <td className="px-2 py-2 text-center border-l"><Stat value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.contact_text_selections} color="bg-orange-50 text-orange-600" /></td>
-                      <td className="px-2 py-2 text-center border-l"><Stat value={postStarts} color="bg-slate-50 text-slate-500" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" /></td>
-                      <td className="px-2 py-2 text-center"><Stat value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" /></td>
-                      <td className="px-2 py-2 text-center border-l"><Stat value={searchFilter} color="bg-sky-50 text-sky-700" /></td>
-                      <td className="px-3 py-2 text-right border-l text-muted-foreground whitespace-nowrap">{formatRelative(row.last_activity)}</td>
-                    </tr>
-                  );
-                })}
+                {/* Totals row for regular users */}
+                {regularUsers.length > 0 && (
+                  <tr className="bg-slate-50 font-semibold border-t-2 border-slate-300">
+                    <td className="px-3 py-2 text-[11px] text-slate-600">
+                      Total ({regularUsers.length} users)
+                    </td>
+                    <td className="px-2 py-2 text-center">
+                      <Stat value={totalsRowTotal} color="bg-slate-200 text-slate-800" />
+                    </td>
+                    <td className="px-2 py-2 text-center border-l"><Stat value={totals.job_views} color="bg-blue-100 text-blue-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.rental_views} color="bg-rose-100 text-rose-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.sale_views} color="bg-emerald-100 text-emerald-800" /></td>
+                    <td className="px-2 py-2 text-center border-l"><Stat value={totals.flatmates_page_views} color="bg-pink-100 text-pink-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.sales_page_views} color="bg-teal-100 text-teal-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.news_page_views} color="bg-indigo-100 text-indigo-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.dashboard_page_views} color="bg-amber-100 text-amber-800" /></td>
+                    <td className="px-2 py-2 text-center border-l"><Stat value={totals.total_contact_clicks} color="bg-orange-100 text-orange-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.contact_text_selections} color="bg-orange-100 text-orange-700" /></td>
+                    <td className="px-2 py-2 text-center border-l"><Stat value={totals.job_posts_started + totals.rental_posts_started} color="bg-slate-100 text-slate-600" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.job_posts_submitted} color="bg-violet-100 text-violet-800" /></td>
+                    <td className="px-2 py-2 text-center"><Stat value={totals.rental_posts_submitted} color="bg-fuchsia-100 text-fuchsia-800" /></td>
+                    <td className="px-2 py-2 text-center border-l"><Stat value={totals.searches_performed + totals.filters_changed} color="bg-sky-100 text-sky-800" /></td>
+                    <td className="px-3 py-2 border-l" />
+                  </tr>
+                )}
+
+                {/* Admin separator */}
+                {adminUsers.length > 0 && (
+                  <tr>
+                    <td colSpan={16} className="px-3 py-1.5 bg-muted/60 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground border-t-2 border-dashed border-slate-300">
+                      Admins
+                    </td>
+                  </tr>
+                )}
+
+                {/* Admin users */}
+                {adminUsers.map((row) => <UserRow key={row.user_id} row={row} dimmed />)}
               </tbody>
             </table>
           </div>
