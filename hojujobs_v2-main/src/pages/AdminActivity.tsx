@@ -148,6 +148,7 @@ export default function AdminActivity() {
   const [fetching, setFetching] = useState(true);
   const [search, setSearch] = useState("");
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("7d");
+  const [rpcError, setRpcError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) navigate("/");
@@ -160,11 +161,13 @@ export default function AdminActivity() {
 
   const fetchData = async (tf: TimeFilter = timeFilter) => {
     setFetching(true);
+    setRpcError(null);
     const since = sinceFromFilter(tf);
     const [activityRes, rolesRes] = await Promise.all([
-      supabase.rpc("get_user_activity_summary", { since: since ?? null }) as unknown as { data: UserActivityRow[] | null },
+      supabase.rpc("get_user_activity_summary", { since: since ?? null }) as unknown as { data: UserActivityRow[] | null; error: { message: string } | null },
       supabase.from("user_roles").select("user_id").eq("role", "admin"),
     ]);
+    if (activityRes.error) setRpcError(activityRes.error.message);
     if (activityRes.data) setRows(activityRes.data);
     if (rolesRes.data) setAdminUserIds(new Set(rolesRes.data.map((r) => r.user_id)));
     setFetching(false);
@@ -247,6 +250,12 @@ export default function AdminActivity() {
             </div>
           </div>
         </div>
+
+        {rpcError && (
+          <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-xs text-destructive font-mono">
+            RPC error: {rpcError}
+          </div>
+        )}
 
         {fetching ? (
           <div className="py-20 text-center text-sm text-muted-foreground">Loading...</div>
