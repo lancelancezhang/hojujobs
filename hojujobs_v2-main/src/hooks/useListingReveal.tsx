@@ -50,6 +50,7 @@ export function ListingRevealProvider({
         logged_in: false,
         listing_type: listingType,
         listing_id: listingId,
+        user_id: null,
       });
       const returnPath = location.pathname + location.search;
       const authPath = `/auth?next=${encodeURIComponent(returnPath)}`;
@@ -65,6 +66,7 @@ export function ListingRevealProvider({
       logged_in: true,
       listing_type: listingType,
       listing_id: listingId,
+      user_id: user.id,
       revealed: true,
     });
     sessionStorage.setItem(sessionKey, "1");
