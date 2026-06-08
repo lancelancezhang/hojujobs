@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2, Shield, ExternalLink, Pencil, MapPin, Check, X, Sparkles, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Trash2, Shield, ExternalLink, Pencil, MapPin, Check, X, Sparkles, ShoppingBag, Users } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { LocationPicker } from "@/components/LocationPicker";
 import { Pagination } from "@/components/Pagination";
+import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,6 +41,33 @@ interface Deal {
   image_url: string | null;
   uploaded_at: string;
   promoted: boolean;
+}
+
+interface UserActivityRow {
+  user_id: string;
+  email: string | null;
+  display_name: string | null;
+  total_events: number;
+  job_views: number;
+  rental_views: number;
+  sale_views: number;
+  flatmates_page_views: number;
+  sales_page_views: number;
+  news_page_views: number;
+  dashboard_page_views: number;
+  phone_clicks: number;
+  email_clicks: number;
+  kakao_clicks: number;
+  total_contact_clicks: number;
+  contact_text_selections: number;
+  job_posts_started: number;
+  job_posts_submitted: number;
+  rental_posts_started: number;
+  rental_posts_submitted: number;
+  searches_performed: number;
+  filters_changed: number;
+  first_activity: string | null;
+  last_activity: string | null;
 }
 
 const ADMIN_PAGE_SIZE = 25;
@@ -75,6 +103,9 @@ export default function Admin() {
   const [editingLocations, setEditingLocations] = useState<string[]>([]);
   const [savingLocation, setSavingLocation] = useState(false);
   const [savingPromotionKey, setSavingPromotionKey] = useState<string | null>(null);
+  const [userActivity, setUserActivity] = useState<UserActivityRow[]>([]);
+  const [loadingActivity, setLoadingActivity] = useState(false);
+  const [activitySearch, setActivitySearch] = useState("");
 
   const fetchJobs = useCallback(async (page = jobPage) => {
     setLoadingJobs(true);
@@ -131,6 +162,16 @@ export default function Admin() {
     }
     setLoadingDeals(false);
   }, [dealPage]);
+
+  const fetchUserActivity = useCallback(async () => {
+    setLoadingActivity(true);
+    const { data, error } = await supabase
+      .from("user_activity_summary" as "jobs")
+      .select("*")
+      .order("last_activity", { ascending: false }) as unknown as { data: UserActivityRow[] | null; error: unknown };
+    if (!error && data) setUserActivity(data);
+    setLoadingActivity(false);
+  }, []);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -235,7 +276,7 @@ export default function Admin() {
         </div>
 
         <Tabs defaultValue="jobs" className="w-full min-w-0">
-          <TabsList className="mb-5 grid w-full grid-cols-2 sm:w-[22rem]">
+          <TabsList className="mb-5 grid w-full grid-cols-3 sm:w-[32rem]">
             <TabsTrigger value="jobs" className="gap-1.5">
               <Sparkles className="h-3.5 w-3.5" />
               공고
@@ -243,6 +284,10 @@ export default function Admin() {
             <TabsTrigger value="deals" className="gap-1.5">
               <ShoppingBag className="h-3.5 w-3.5" />
               딜
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="gap-1.5" onClick={() => { if (userActivity.length === 0) fetchUserActivity(); }}>
+              <Users className="h-3.5 w-3.5" />
+              유저 활동
             </TabsTrigger>
           </TabsList>
 
@@ -416,8 +461,183 @@ export default function Admin() {
               </div>
             )}
           </TabsContent>
+          <TabsContent value="activity" className="mt-0">
+            <UserActivityTab
+              rows={userActivity}
+              loading={loadingActivity}
+              search={activitySearch}
+              onSearchChange={setActivitySearch}
+              onRefresh={fetchUserActivity}
+            />
+          </TabsContent>
         </Tabs>
       </div>
+    </div>
+  );
+}
+
+function Stat({ label, value, color }: { label: string; value: number; color: string }) {
+  if (!value) return <span className="text-xs text-muted-foreground">—</span>;
+  return (
+    <span className={cn("inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-semibold", color)}>
+      {value}
+    </span>
+  );
+}
+
+function formatRelative(iso: string | null) {
+  if (!iso) return "—";
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}분 전`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}시간 전`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}일 전`;
+  return new Intl.DateTimeFormat("ko-KR", { month: "short", day: "numeric" }).format(new Date(iso));
+}
+
+function UserActivityTab({
+  rows,
+  loading,
+  search,
+  onSearchChange,
+  onRefresh,
+}: {
+  rows: UserActivityRow[];
+  loading: boolean;
+  search: string;
+  onSearchChange: (v: string) => void;
+  onRefresh: () => void;
+}) {
+  const filtered = rows.filter((r) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return (r.email ?? "").toLowerCase().includes(q) || (r.display_name ?? "").toLowerCase().includes(q);
+  });
+
+  const totalEvents = rows.reduce((s, r) => s + (r.total_events ?? 0), 0);
+  const totalUsers = rows.length;
+
+  return (
+    <div>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="flex items-center gap-2 text-base font-bold text-foreground">
+            <Users className="h-4 w-4 text-blue-500" />
+            유저 활동 요약
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            총 <span className="font-semibold text-foreground">{totalUsers}</span>명 ·{" "}
+            <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span>개 이벤트
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="이메일 또는 이름 검색"
+            className="h-8 w-48 rounded-md border border-input bg-background px-3 text-xs outline-none focus:ring-2 focus:ring-ring"
+          />
+          <Button variant="outline" size="sm" className="h-8 text-xs" onClick={onRefresh} disabled={loading}>
+            새로고침
+          </Button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="py-16 text-center text-sm text-muted-foreground">불러오는 중...</div>
+      ) : filtered.length === 0 ? (
+        <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
+          {search ? "검색 결과가 없습니다." : "아직 활동 데이터가 없습니다."}
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border">
+          <table className="w-full min-w-[900px] text-sm">
+            <thead className="bg-muted/50 text-xs text-muted-foreground">
+              <tr>
+                <th className="px-4 py-2.5 text-left font-semibold">유저</th>
+                <th className="px-3 py-2.5 text-center font-semibold">전체</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">구인</th>
+                <th className="px-3 py-2.5 text-center font-semibold">렌트</th>
+                <th className="px-3 py-2.5 text-center font-semibold">딜</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">플렛</th>
+                <th className="px-3 py-2.5 text-center font-semibold">온세일</th>
+                <th className="px-3 py-2.5 text-center font-semibold">뉴스</th>
+                <th className="px-3 py-2.5 text-center font-semibold">워홀</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">연락처</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">공고</th>
+                <th className="px-3 py-2.5 text-center font-semibold">렌트</th>
+                <th className="px-3 py-2.5 text-right font-semibold border-l">마지막 활동</th>
+              </tr>
+              <tr className="border-t text-[10px]">
+                <th className="px-4 pb-1.5 text-left" />
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">이벤트</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">조회</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">조회</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">조회</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">방문</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">방문</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">방문</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">방문</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">클릭</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">등록</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">등록</th>
+                <th className="px-3 pb-1.5 text-right border-l" />
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {filtered.map((row) => (
+                <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
+                  <td className="px-4 py-2.5 min-w-[160px]">
+                    <p className="font-semibold text-foreground truncate max-w-[200px]">
+                      {row.display_name ?? <span className="text-muted-foreground font-normal italic">이름 없음</span>}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate max-w-[200px]">{row.email ?? "—"}</p>
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="total" value={row.total_events} color="bg-slate-100 text-slate-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center border-l">
+                    <Stat label="job_views" value={row.job_views} color="bg-blue-50 text-blue-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="rental_views" value={row.rental_views} color="bg-rose-50 text-rose-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="sale_views" value={row.sale_views} color="bg-emerald-50 text-emerald-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center border-l">
+                    <Stat label="flatmates" value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="sales" value={row.sales_page_views} color="bg-teal-50 text-teal-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="news" value={row.news_page_views} color="bg-indigo-50 text-indigo-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="dashboard" value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center border-l">
+                    <Stat label="contact" value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center border-l">
+                    <Stat label="job_post" value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Stat label="rental_post" value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" />
+                  </td>
+                  <td className="px-3 py-2.5 text-right border-l">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">{formatRelative(row.last_activity)}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
