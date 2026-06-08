@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Bath, BedSingle, Calendar, ChevronLeft, ChevronRight, MapPin, ShieldCheck } from "lucide-react";
 import { ContactRevealSection } from "@/components/ContactRevealSection";
+import { DescriptionRevealSection } from "@/components/DescriptionRevealSection";
+import { ListingRevealProvider } from "@/hooks/useListingReveal";
 import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
@@ -185,22 +187,22 @@ export default function FlatmateDetail() {
           </div>
         </section>
 
-        {description && (
-          <section className="mt-5 rounded-xl border bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="mb-4 text-lg font-black text-slate-950">상세 내용</h2>
-            <div className="whitespace-pre-line break-words text-sm leading-relaxed text-slate-700 [overflow-wrap:anywhere]">
-              {description}
-            </div>
-          </section>
-        )}
+        <ListingRevealProvider listingType="flatmate" listingId={listing.id}>
+          {description && (
+            <DescriptionRevealSection
+              description={description}
+              className="mt-5 rounded-xl border bg-white p-5 shadow-sm sm:p-6"
+              headingClassName="mb-4 text-lg font-black text-slate-950"
+              bodyClassName="whitespace-pre-line break-words text-sm leading-relaxed text-slate-700 [overflow-wrap:anywhere]"
+            />
+          )}
 
-        <ContactRevealSection
-          listingType="flatmate"
-          listingId={listing.id}
-          phone={listing.contact_number}
-          email={listing.enquiry_email}
-          kakaoid={listing.kakaoid}
-        />
+          <ContactRevealSection
+            phone={listing.contact_number}
+            email={listing.enquiry_email}
+            kakaoid={listing.kakaoid}
+          />
+        </ListingRevealProvider>
       </main>
     </div>
   );

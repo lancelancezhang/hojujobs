@@ -3,6 +3,8 @@ import { useEffect, useState, useMemo } from "react";
 import { Header } from "@/components/Header";
 import { ArrowLeft, MapPin, Briefcase, Eye, Calendar, ExternalLink } from "lucide-react";
 import { ContactRevealSection } from "@/components/ContactRevealSection";
+import { DescriptionRevealSection } from "@/components/DescriptionRevealSection";
+import { ListingRevealProvider } from "@/hooks/useListingReveal";
 import { incrementViewCount } from "@/hooks/useViewCounts";
 import { supabase } from "@/integrations/supabase/client";
 import { SUBURB_EN } from "@/data/regionMap";
@@ -211,22 +213,22 @@ export default function JobDetail() {
           </div>
         </div>
 
-        {job.description && (
-          <div className="bg-card border border-border rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-bold text-foreground mb-4">상세 내용</h2>
-            <div className="text-sm text-foreground/80 whitespace-pre-line leading-relaxed break-words [overflow-wrap:anywhere]">
-              {job.description}
-            </div>
-          </div>
-        )}
+        <ListingRevealProvider listingType="job" listingId={job.id}>
+          {job.description && (
+            <DescriptionRevealSection
+              description={job.description}
+              className="bg-card border border-border rounded-xl p-6 mb-6"
+              headingClassName="text-lg font-bold text-foreground mb-4"
+              bodyClassName="text-sm text-foreground/80 leading-relaxed break-words [overflow-wrap:anywhere]"
+            />
+          )}
 
-        <ContactRevealSection
-          listingType="job"
-          listingId={job.id}
-          phone={job.contact}
-          email={job.email && job.email !== "정보없음" ? job.email : null}
-          kakaoid={job.kakaoid}
-        />
+          <ContactRevealSection
+            phone={job.contact}
+            email={job.email && job.email !== "정보없음" ? job.email : null}
+            kakaoid={job.kakaoid}
+          />
+        </ListingRevealProvider>
 
         {locations.length > 0 && (
           <div className="bg-card border border-border rounded-xl overflow-hidden mb-6">
