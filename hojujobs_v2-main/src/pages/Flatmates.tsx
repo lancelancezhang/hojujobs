@@ -221,7 +221,7 @@ export default function Flatmates() {
 	                    value={keyword}
 	                    onChange={(event) => setKeyword(event.target.value)}
 	                    placeholder="지역, 건물, 조건"
-	                    className="h-8 pl-8 text-[12px] font-medium placeholder:text-slate-500 placeholder:font-medium sm:h-10 sm:text-sm sm:placeholder:text-sm"
+	                    className="h-8 pl-8 text-[12px] font-medium placeholder:text-[11px] placeholder:font-medium placeholder:text-slate-500 sm:h-10 sm:text-sm sm:placeholder:text-xs"
 	                  />
                 </div>
               </label>
@@ -248,7 +248,7 @@ export default function Flatmates() {
                         if (nextValue && maxRent && Number(nextValue) > Number(maxRent)) setMaxRent(nextValue);
                         setMinRent(nextValue);
                       }}
-	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !minRent && "text-slate-500")}
+	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !minRent && "text-[11px] text-slate-500 sm:text-xs")}
                     >
                       <option value="">$0</option>
                       {RENT_OPTIONS.map((rent) => (
@@ -265,7 +265,7 @@ export default function Flatmates() {
                         if (nextValue && minRent && Number(nextValue) < Number(minRent)) setMinRent(nextValue);
                         setMaxRent(nextValue);
                       }}
-	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !maxRent && "text-slate-500")}
+	                      className={cn("h-8 w-full rounded-md border border-input bg-background px-2 text-[12px] font-medium not-italic leading-none outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm", !maxRent && "text-[11px] text-slate-500 sm:text-xs")}
                     >
                       <option value="">전체</option>
                       {RENT_OPTIONS.map((rent) => (
@@ -446,7 +446,7 @@ function SuburbDropdown({
         onClick={() => setIsOpen((o) => !o)}
         className="flex h-8 w-full items-center justify-between rounded-md border border-input bg-background px-2.5 text-[12px] not-italic leading-none ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:h-10 sm:px-3 sm:text-sm"
       >
-        <span className={cn("truncate not-italic leading-none", selectedSuburbs.length === 0 ? "font-medium text-slate-500" : "font-semibold text-slate-950")}>
+        <span className={cn("truncate not-italic leading-none", selectedSuburbs.length === 0 ? "text-[11px] font-medium text-slate-500 sm:text-xs" : "font-semibold text-slate-950")}>
           {label}
         </span>
         <ChevronDown className={cn("h-4 w-4 shrink-0 text-slate-400 transition-transform", isOpen && "rotate-180")} />
@@ -463,7 +463,7 @@ function SuburbDropdown({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="지역 검색..."
-                className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs outline-none focus:ring-2 focus:ring-ring"
+                className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs outline-none placeholder:text-[11px] focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
