@@ -13,6 +13,7 @@ import MyPosts from "./pages/MyPosts";
 import EditJob from "./pages/EditJob";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import AdminActivity from "./pages/AdminActivity";
 import Dashboard from "./pages/Dashboard";
 import Privacy from "./pages/Privacy";
 import About from "./pages/About";
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/my-posts" element={<MyPosts />} />
               <Route path="/edit-job/:id" element={<EditJob />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/activity" element={<AdminActivity />} />
               <Route path="/news" element={<News />} />
               <Route path="/flatmates" element={<Flatmates />} />
               <Route path="/flatmates/post" element={<FlatmatesPost />} />

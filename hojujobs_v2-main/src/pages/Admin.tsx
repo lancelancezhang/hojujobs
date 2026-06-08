@@ -468,6 +468,7 @@ export default function Admin() {
               search={activitySearch}
               onSearchChange={setActivitySearch}
               onRefresh={fetchUserActivity}
+              onOpenFullPage={() => navigate("/admin/activity")}
             />
           </TabsContent>
         </Tabs>
@@ -503,12 +504,14 @@ function UserActivityTab({
   search,
   onSearchChange,
   onRefresh,
+  onOpenFullPage,
 }: {
   rows: UserActivityRow[];
   loading: boolean;
   search: string;
   onSearchChange: (v: string) => void;
   onRefresh: () => void;
+  onOpenFullPage: () => void;
 }) {
   const filtered = rows.filter((r) => {
     if (!search.trim()) return true;
@@ -543,6 +546,9 @@ function UserActivityTab({
           <Button variant="outline" size="sm" className="h-8 text-xs" onClick={onRefresh} disabled={loading}>
             Refresh
           </Button>
+          <Button variant="default" size="sm" className="h-8 text-xs" onClick={onOpenFullPage}>
+            Full page ↗
+          </Button>
         </div>
       </div>
 
@@ -554,7 +560,7 @@ function UserActivityTab({
         </div>
       ) : (
         <div className="rounded-xl border overflow-hidden">
-          <table className="w-full text-xs">
+          <table className="w-full text-[11px]">
             <thead className="bg-muted/50 text-muted-foreground">
               {/* Group header row */}
               <tr className="border-b">
