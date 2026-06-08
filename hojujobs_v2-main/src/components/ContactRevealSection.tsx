@@ -125,7 +125,7 @@ export function ContactRevealSection({
       tabIndex={revealed ? undefined : 0}
       onClick={revealed ? undefined : handleReveal}
       onKeyDown={handleKeyDown}
-      aria-label={revealed ? undefined : "Click to reveal contact details"}
+      aria-label={revealed ? undefined : "클릭하여 연락처 확인하기"}
       className={cn(
         "bg-card border border-border rounded-xl p-6 mb-6",
         !revealed && [
@@ -138,22 +138,22 @@ export function ContactRevealSection({
       )}
     >
       <h2 className="text-lg font-bold text-foreground mb-4">연락처</h2>
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative rounded-lg min-h-[7.5rem] py-2">
         <ContactDetails phone={phone} email={email} kakaoid={kakaoid} revealed={revealed} />
         <div
           className={cn(
-            "absolute inset-0 flex items-center justify-center",
+            "absolute inset-0 flex items-center justify-center rounded-lg",
             "bg-card/60 backdrop-blur-[2px]",
             "transition-opacity duration-300 ease-out",
             revealed ? "pointer-events-none opacity-0" : "opacity-100",
           )}
           aria-hidden={revealed}
         >
-          <div className="flex flex-col items-center gap-2 px-4 text-center">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="flex flex-col items-center gap-2.5 px-6 py-4 text-center">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Eye className="h-4 w-4" />
             </span>
-            <span className="text-sm font-medium text-foreground">Click to reveal contact details</span>
+            <span className="text-sm font-medium text-foreground">클릭하여 연락처 확인하기</span>
             <span className="text-xs text-muted-foreground">로그인 후 연락처를 확인할 수 있습니다</span>
           </div>
         </div>
