@@ -554,7 +554,7 @@ function UserActivityTab({
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border">
-          <table className="w-full min-w-[900px] text-sm">
+          <table className="w-full min-w-[1100px] text-sm">
             <thead className="bg-muted/50 text-xs text-muted-foreground">
               <tr>
                 <th className="px-4 py-2.5 text-left font-semibold">User</th>
@@ -567,13 +567,16 @@ function UserActivityTab({
                 <th className="px-3 py-2.5 text-center font-semibold">News</th>
                 <th className="px-3 py-2.5 text-center font-semibold">Dashboard</th>
                 <th className="px-3 py-2.5 text-center font-semibold border-l">Contacts</th>
-                <th className="px-3 py-2.5 text-center font-semibold border-l">Job Post</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Text Sel.</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">Post Starts</th>
+                <th className="px-3 py-2.5 text-center font-semibold">Job Post</th>
                 <th className="px-3 py-2.5 text-center font-semibold">Rental Post</th>
+                <th className="px-3 py-2.5 text-center font-semibold border-l">Search/Filter</th>
                 <th className="px-3 py-2.5 text-right font-semibold border-l">Last Active</th>
               </tr>
               <tr className="border-t text-[10px]">
                 <th className="px-4 pb-1.5 text-left" />
-                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">events</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">sum</th>
                 <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">views</th>
                 <th className="px-3 pb-1.5 text-center text-muted-foreground/70">views</th>
                 <th className="px-3 pb-1.5 text-center text-muted-foreground/70">views</th>
@@ -582,58 +585,82 @@ function UserActivityTab({
                 <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
                 <th className="px-3 pb-1.5 text-center text-muted-foreground/70">visits</th>
                 <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">clicks</th>
-                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">submitted</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">selections</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">started</th>
                 <th className="px-3 pb-1.5 text-center text-muted-foreground/70">submitted</th>
+                <th className="px-3 pb-1.5 text-center text-muted-foreground/70">submitted</th>
+                <th className="px-3 pb-1.5 text-center border-l text-muted-foreground/70">events</th>
                 <th className="px-3 pb-1.5 text-right border-l" />
               </tr>
             </thead>
             <tbody className="divide-y">
-              {filtered.map((row) => (
-                <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-2.5 min-w-[160px]">
-                    <p className="font-semibold text-foreground truncate max-w-[200px]">
-                      {row.display_name ?? <span className="text-muted-foreground font-normal italic">No name</span>}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate max-w-[200px]">{row.email ?? "—"}</p>
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="total" value={row.total_events} color="bg-slate-100 text-slate-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center border-l">
-                    <Stat label="job_views" value={row.job_views} color="bg-blue-50 text-blue-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="rental_views" value={row.rental_views} color="bg-rose-50 text-rose-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="sale_views" value={row.sale_views} color="bg-emerald-50 text-emerald-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center border-l">
-                    <Stat label="flatmates" value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="sales" value={row.sales_page_views} color="bg-teal-50 text-teal-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="news" value={row.news_page_views} color="bg-indigo-50 text-indigo-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="dashboard" value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center border-l">
-                    <Stat label="contact" value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center border-l">
-                    <Stat label="job_post" value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Stat label="rental_post" value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" />
-                  </td>
-                  <td className="px-3 py-2.5 text-right border-l">
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">{formatRelative(row.last_activity)}</span>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((row) => {
+                const rowTotal =
+                  (row.job_views ?? 0) + (row.rental_views ?? 0) + (row.sale_views ?? 0) +
+                  (row.flatmates_page_views ?? 0) + (row.sales_page_views ?? 0) +
+                  (row.news_page_views ?? 0) + (row.dashboard_page_views ?? 0) +
+                  (row.total_contact_clicks ?? 0) + (row.contact_text_selections ?? 0) +
+                  (row.job_posts_started ?? 0) + (row.job_posts_submitted ?? 0) +
+                  (row.rental_posts_started ?? 0) + (row.rental_posts_submitted ?? 0) +
+                  (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
+                const searchFilter = (row.searches_performed ?? 0) + (row.filters_changed ?? 0);
+                const postStarts = (row.job_posts_started ?? 0) + (row.rental_posts_started ?? 0);
+                return (
+                  <tr key={row.user_id} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-2.5 min-w-[160px]">
+                      <p className="font-semibold text-foreground truncate max-w-[200px]">
+                        {row.display_name ?? <span className="text-muted-foreground font-normal italic">No name</span>}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate max-w-[200px]">{row.email ?? "—"}</p>
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="total" value={rowTotal} color="bg-slate-100 text-slate-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center border-l">
+                      <Stat label="job_views" value={row.job_views} color="bg-blue-50 text-blue-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="rental_views" value={row.rental_views} color="bg-rose-50 text-rose-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="sale_views" value={row.sale_views} color="bg-emerald-50 text-emerald-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center border-l">
+                      <Stat label="flatmates" value={row.flatmates_page_views} color="bg-pink-50 text-pink-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="sales" value={row.sales_page_views} color="bg-teal-50 text-teal-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="news" value={row.news_page_views} color="bg-indigo-50 text-indigo-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="dashboard" value={row.dashboard_page_views} color="bg-amber-50 text-amber-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center border-l">
+                      <Stat label="contact" value={row.total_contact_clicks} color="bg-orange-50 text-orange-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="text_sel" value={row.contact_text_selections} color="bg-orange-50 text-orange-600" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center border-l">
+                      <Stat label="post_starts" value={postStarts} color="bg-slate-50 text-slate-600" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="job_post" value={row.job_posts_submitted} color="bg-violet-50 text-violet-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center">
+                      <Stat label="rental_post" value={row.rental_posts_submitted} color="bg-fuchsia-50 text-fuchsia-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-center border-l">
+                      <Stat label="search_filter" value={searchFilter} color="bg-sky-50 text-sky-700" />
+                    </td>
+                    <td className="px-3 py-2.5 text-right border-l">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{formatRelative(row.last_activity)}</span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
