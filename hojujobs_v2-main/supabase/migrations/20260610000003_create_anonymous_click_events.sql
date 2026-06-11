@@ -83,8 +83,7 @@ begin
       coalesce(ace.metadata->>'source', ace.metadata->>'source_url', ace.metadata->>'url'),
       split_part(coalesce(ace.page_url, ''), '?', 1),
       ace.country
-    order by count(*) desc, max(ace.created_at) desc nulls last
-    limit 200;
+    order by count(*) desc, max(ace.created_at) desc nulls last;
 end;
 $$;
 

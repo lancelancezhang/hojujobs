@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -252,12 +252,16 @@ function AnonymousRow({ row }: { row: AnonymousActivityRow }) {
   );
 }
 
-function MetricPill({ label, value, tone = "bg-slate-100 text-slate-700" }: { label: string; value: number; tone?: string }) {
+function safeCount(value: number | null | undefined) {
+  return value ?? 0;
+}
+
+function MetricPill({ label, value, tone = "bg-slate-100 text-slate-700" }: { label: string; value: number | null | undefined; tone?: string }) {
   if (!value) return null;
   return (
     <div className={cn("rounded-md px-2 py-1", tone)}>
       <p className="text-[10px] font-medium opacity-75">{label}</p>
-      <p className="text-sm font-bold leading-tight">{value.toLocaleString()}</p>
+      <p className="text-sm font-bold leading-tight">{safeCount(value).toLocaleString()}</p>
     </div>
   );
 }
@@ -280,11 +284,11 @@ function MetricGroup({ title, items }: { title: string; items: [string, number |
   );
 }
 
-function UserDetailStat({ label, value, tone }: { label: string; value: number; tone: string }) {
+function UserDetailStat({ label, value, tone }: { label: string; value: number | null | undefined; tone: string }) {
   return (
     <div className="min-w-0 border-r px-4 py-3 last:border-r-0">
       <p className="truncate text-[11px] font-medium text-muted-foreground">{label}</p>
-      <p className={cn("mt-1 text-xl font-black leading-none", tone)}>{value.toLocaleString()}</p>
+      <p className={cn("mt-1 text-xl font-black leading-none", tone)}>{safeCount(value).toLocaleString()}</p>
     </div>
   );
 }
@@ -296,7 +300,7 @@ function UserDetailGroup({
 }: {
   title: string;
   description: string;
-  items: { label: string; value: number; tone: string }[];
+  items: { label: string; value: number | null | undefined; tone: string }[];
 }) {
   return (
     <div className="border-t px-4 py-4">
@@ -308,7 +312,7 @@ function UserDetailGroup({
         {items.map((item) => (
           <div key={item.label} className="flex items-center justify-between gap-3 border-b border-dashed py-1.5 last:border-b sm:last:border-b">
             <span className="min-w-0 truncate text-xs text-muted-foreground">{item.label}</span>
-            <span className={cn("shrink-0 text-sm font-bold", item.tone)}>{item.value.toLocaleString()}</span>
+            <span className={cn("shrink-0 text-sm font-bold", item.tone)}>{safeCount(item.value).toLocaleString()}</span>
           </div>
         ))}
       </div>
@@ -666,363 +670,10 @@ function sinceFromFilter(f: TimeFilter): string | null {
   return new Date(Date.now() - ms).toISOString();
 }
 
-function hoursAgo(hours: number) {
-  return new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
-}
-
-function mockUserActivityRows(): UserActivityRow[] {
-  const names = [
-    "Mina Kim", "Jun Park", "Hana Lee", "Daniel Choi", "Soojin Lim", "Alex Han", "Yuna Cho", "Chris Jung", "Eunji Seo", "David Kang",
-    "Jisoo Moon", "Grace Yoo", "Min Park", "Sarah Kim", "Jason Lee", "Nari Choi", "Kevin Lim", "Jenny Han", "Brian Seo", "Alice Kang",
-    "Taewoo Shin", "Irene Kwon", "Leo Jang", "Mia Baek", "Noah Hong", "Emma Yoon", "Ryan Oh", "Claire Jeong", "Aaron Bae", "Lina Nam",
-    "Peter Ko", "Sophie Ahn", "Mark Ryu", "Ella Song", "Jayden Yang", "Rachel Hwang", "Nathan Jo", "Amy Ha", "Simon Yu", "Tina Kim",
-    "Owen Lee", "Julie Park", "Eric Chae", "Kelly Shin", "Harry Moon", "Chloe Lim", "Sam Joo", "Olivia Seo", "Ian Kang", "Maya Choi",
-  ];
-
-  const rows = names.map((name, index) => {
-    const n = index + 1;
-    const dealHunter = n % 7 === 0;
-    const housingSeeker = n % 5 === 0;
-    const jobSeeker = n % 3 !== 0;
-    const poster = n % 11 === 0 || n % 17 === 0;
-    const row: UserActivityRow = {
-      user_id: `preview-user-${n}`,
-      email: `${name.toLowerCase().replaceAll(" ", ".")}@example.com`,
-      display_name: name,
-      country: n % 4 === 0 ? "KR" : "AU",
-      total_events: 0,
-      job_views: jobSeeker ? 4 + ((n * 3) % 29) : (n % 4),
-      rental_views: housingSeeker ? 8 + ((n * 5) % 24) : ((n * 2) % 8),
-      sale_views: dealHunter ? 12 + ((n * 4) % 28) : ((n * 3) % 10),
-      flatmates_page_views: housingSeeker ? 3 + (n % 12) : (n % 3),
-      sales_page_views: dealHunter ? 5 + (n % 11) : (n % 4),
-      news_page_views: (n * 2) % 9,
-      dashboard_page_views: poster ? 2 + (n % 5) : 0,
-      phone_clicks: housingSeeker ? n % 4 : n % 2,
-      email_clicks: jobSeeker ? n % 3 : 0,
-      kakao_clicks: n % 6 === 0 ? 2 : n % 2,
-      total_contact_clicks: (housingSeeker ? n % 4 : n % 2) + (jobSeeker ? n % 3 : 0) + (n % 6 === 0 ? 2 : n % 2),
-      contact_text_selections: n % 6,
-      job_posts_started: poster && n % 2 === 0 ? 1 : 0,
-      job_posts_submitted: poster && n % 2 === 0 ? 1 : 0,
-      rental_posts_started: poster && n % 2 !== 0 ? 1 : 0,
-      rental_posts_submitted: poster && n % 2 !== 0 && n % 3 !== 0 ? 1 : 0,
-      searches_performed: 2 + ((n * 4) % 18),
-      filters_changed: 4 + ((n * 7) % 28),
-      job_card_clicks: jobSeeker ? 6 + ((n * 2) % 25) : n % 3,
-      rental_card_clicks: housingSeeker ? 5 + ((n * 3) % 22) : n % 4,
-      sale_card_clicks: dealHunter ? 8 + ((n * 5) % 24) : n % 5,
-      deal_outbound_clicks: dealHunter ? 4 + ((n * 3) % 18) : n % 3,
-      map_clicks: housingSeeker || jobSeeker ? n % 9 : n % 2,
-      news_article_clicks: n % 8,
-      navigation_clicks: 3 + (n % 9),
-      post_cta_clicks: poster ? 3 + (n % 4) : n % 3,
-      my_posts_clicks: poster ? 1 + (n % 3) : 0,
-      admin_clicks: 0,
-      promote_cta_clicks: poster ? n % 2 : 0,
-      auth_events: n % 5,
-      sales_filters_changed: dealHunter ? 3 + (n % 8) : n % 3,
-      first_activity: hoursAgo(12 + ((n * 5) % 120)),
-      last_activity: hoursAgo(0.2 + ((n * 1.7) % 48)),
-    };
-    row.total_events = getUserActivityStats(row).total;
-    return row;
-  });
-
-  return [
-    ...rows,
-    {
-      user_id: "preview-admin-1",
-      email: "admin.hojujobs@example.com",
-      display_name: "Admin Preview",
-      country: "AU",
-      total_events: 31,
-      job_views: 4,
-      rental_views: 2,
-      sale_views: 1,
-      flatmates_page_views: 1,
-      sales_page_views: 1,
-      news_page_views: 2,
-      dashboard_page_views: 6,
-      phone_clicks: 0,
-      email_clicks: 0,
-      kakao_clicks: 0,
-      total_contact_clicks: 0,
-      contact_text_selections: 0,
-      job_posts_started: 0,
-      job_posts_submitted: 0,
-      rental_posts_started: 0,
-      rental_posts_submitted: 0,
-      searches_performed: 2,
-      filters_changed: 2,
-      job_card_clicks: 2,
-      rental_card_clicks: 1,
-      sale_card_clicks: 1,
-      deal_outbound_clicks: 0,
-      map_clicks: 0,
-      news_article_clicks: 1,
-      navigation_clicks: 4,
-      post_cta_clicks: 0,
-      my_posts_clicks: 0,
-      admin_clicks: 8,
-      promote_cta_clicks: 0,
-      auth_events: 1,
-      sales_filters_changed: 0,
-      first_activity: hoursAgo(9),
-      last_activity: hoursAgo(0.1),
-    },
-  ];
-}
-
-function mockAnonymousActivityRows(): AnonymousActivityRow[] {
-  return [
-    {
-      event_name: "job_listing_viewed",
-      listing_type: "job",
-      listing_id: "4821",
-      label: "Kitchen hand - Strathfield",
-      surface: "job_detail",
-      source: "organic",
-      page_path: "/jobs/4821",
-      country: "AU",
-      total_events: 58,
-      unique_visitors: 44,
-      first_activity: hoursAgo(36),
-      last_activity: hoursAgo(0.5),
-    },
-    {
-      event_name: "rental_listing_viewed",
-      listing_type: "rental",
-      listing_id: "1832",
-      label: "Private room - Lidcombe",
-      surface: "rental_detail",
-      source: "organic",
-      page_path: "/flatmates/1832",
-      country: "AU",
-      total_events: 36,
-      unique_visitors: 28,
-      first_activity: hoursAgo(29),
-      last_activity: hoursAgo(2.1),
-    },
-    {
-      event_name: "sale_listing_viewed",
-      listing_type: "sale",
-      listing_id: "962333",
-      label: "Grocery cashback deal",
-      surface: "sale_detail",
-      source: "ozbargain",
-      page_path: "/sales/962333",
-      country: "KR",
-      total_events: 27,
-      unique_visitors: 21,
-      first_activity: hoursAgo(18),
-      last_activity: hoursAgo(0.9),
-    },
-    {
-      event_name: "job_card_clicked",
-      listing_type: "job",
-      listing_id: "4821",
-      label: "Kitchen hand - Strathfield",
-      surface: "home_list",
-      source: "organic",
-      page_path: "/",
-      country: "AU",
-      total_events: 42,
-      unique_visitors: 31,
-      first_activity: hoursAgo(31),
-      last_activity: hoursAgo(0.7),
-    },
-    {
-      event_name: "rental_card_clicked",
-      listing_type: "rental",
-      listing_id: "1832",
-      label: "Private room - Lidcombe",
-      surface: "flatmates_list",
-      source: "organic",
-      page_path: "/flatmates",
-      country: "AU",
-      total_events: 24,
-      unique_visitors: 19,
-      first_activity: hoursAgo(24),
-      last_activity: hoursAgo(1.8),
-    },
-    {
-      event_name: "sale_card_clicked",
-      listing_type: "sale",
-      listing_id: "962333",
-      label: "Grocery cashback deal",
-      surface: "sales_grid",
-      source: "ozbargain",
-      page_path: "/sales",
-      country: "KR",
-      total_events: 31,
-      unique_visitors: 23,
-      first_activity: hoursAgo(20),
-      last_activity: hoursAgo(3),
-    },
-    {
-      event_name: "flatmates_page_viewed",
-      listing_type: null,
-      listing_id: null,
-      label: "Flatmates page",
-      surface: "page",
-      source: "direct",
-      page_path: "/flatmates",
-      country: "AU",
-      total_events: 47,
-      unique_visitors: 35,
-      first_activity: hoursAgo(42),
-      last_activity: hoursAgo(0.4),
-    },
-    {
-      event_name: "sales_page_viewed",
-      listing_type: null,
-      listing_id: null,
-      label: "On sale page",
-      surface: "page",
-      source: "direct",
-      page_path: "/sales",
-      country: "AU",
-      total_events: 52,
-      unique_visitors: 39,
-      first_activity: hoursAgo(42),
-      last_activity: hoursAgo(0.3),
-    },
-    {
-      event_name: "news_article_clicked",
-      listing_type: "news",
-      listing_id: "tax-time-2026",
-      label: "Tax time checklist",
-      surface: "news_page",
-      source: "google_translate",
-      page_path: "/news",
-      country: "AU",
-      total_events: 19,
-      unique_visitors: 15,
-      first_activity: hoursAgo(18),
-      last_activity: hoursAgo(1.4),
-    },
-    {
-      event_name: "contact_number_clicked",
-      listing_type: "job",
-      listing_id: "4821",
-      label: "Kitchen hand phone number",
-      surface: "job_detail_contact",
-      source: "organic",
-      page_path: "/jobs/4821",
-      country: "AU",
-      total_events: 11,
-      unique_visitors: 9,
-      first_activity: hoursAgo(11),
-      last_activity: hoursAgo(2.6),
-    },
-    {
-      event_name: "email_clicked",
-      listing_type: "rental",
-      listing_id: "1832",
-      label: "Rental enquiry email",
-      surface: "rental_detail_contact",
-      source: "organic",
-      page_path: "/flatmates/1832",
-      country: "AU",
-      total_events: 7,
-      unique_visitors: 6,
-      first_activity: hoursAgo(9),
-      last_activity: hoursAgo(3.3),
-    },
-    {
-      event_name: "deal_outbound_clicked",
-      listing_type: "deal",
-      listing_id: "962333",
-      label: "Grocery cashback deal",
-      surface: "sales_card",
-      source: "ozbargain",
-      page_path: "/sales",
-      country: "KR",
-      total_events: 13,
-      unique_visitors: 10,
-      first_activity: hoursAgo(12),
-      last_activity: hoursAgo(4),
-    },
-    {
-      event_name: "map_clicked",
-      listing_type: "job",
-      listing_id: "4821",
-      label: "Kitchen hand map",
-      surface: "job_detail_map",
-      source: "google_maps",
-      page_path: "/jobs/4821",
-      country: "AU",
-      total_events: 22,
-      unique_visitors: 17,
-      first_activity: hoursAgo(14),
-      last_activity: hoursAgo(0.6),
-    },
-    {
-      event_name: "post_cta_clicked",
-      listing_type: null,
-      listing_id: null,
-      label: "Header post button",
-      surface: "header",
-      source: "direct",
-      page_path: "/",
-      country: "AU",
-      total_events: 15,
-      unique_visitors: 12,
-      first_activity: hoursAgo(16),
-      last_activity: hoursAgo(1.1),
-    },
-    {
-      event_name: "search_performed",
-      listing_type: "job",
-      listing_id: null,
-      label: "Job search",
-      surface: "home_search",
-      source: "direct",
-      page_path: "/",
-      country: "AU",
-      total_events: 63,
-      unique_visitors: 41,
-      first_activity: hoursAgo(46),
-      last_activity: hoursAgo(0.6),
-    },
-    {
-      event_name: "filter_changed",
-      listing_type: "job",
-      listing_id: null,
-      label: "Job filters",
-      surface: "home_filters",
-      source: "direct",
-      page_path: "/",
-      country: "AU",
-      total_events: 79,
-      unique_visitors: 43,
-      first_activity: hoursAgo(45),
-      last_activity: hoursAgo(0.8),
-    },
-    {
-      event_name: "sales_filter_changed",
-      listing_type: "sale",
-      listing_id: null,
-      label: "Sales filters",
-      surface: "sales_filters",
-      source: "direct",
-      page_path: "/sales",
-      country: "AU",
-      total_events: 34,
-      unique_visitors: 22,
-      first_activity: hoursAgo(25),
-      last_activity: hoursAgo(2.5),
-    },
-  ];
-}
-
 export default function AdminActivity() {
   useSEO({ title: "User Activity | Admin", description: "User activity summary", noindex: true });
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const isPreview = import.meta.env.DEV && new URLSearchParams(location.search).get("preview") === "activity";
   const [rows, setRows] = useState<UserActivityRow[]>([]);
   const [anonymousRows, setAnonymousRows] = useState<AnonymousActivityRow[]>([]);
   const [adminUserIds, setAdminUserIds] = useState<Set<string>>(new Set());
@@ -1033,42 +684,38 @@ export default function AdminActivity() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && !isPreview && (!user || !isAdmin)) navigate("/");
-  }, [user, isAdmin, loading, isPreview, navigate]);
+    if (!loading && (!user || !isAdmin)) navigate("/");
+  }, [user, isAdmin, loading, navigate]);
 
   useEffect(() => {
-    if (isPreview) {
-      const previewRows = mockUserActivityRows();
-      setRows(previewRows);
-      setAnonymousRows(mockAnonymousActivityRows());
-      setAdminUserIds(new Set(["preview-admin-1"]));
-      setSelectedUserId(previewRows[0]?.user_id ?? null);
-      setRpcError(null);
-      setFetching(false);
-      return;
-    }
     if (!user || !isAdmin) return;
     fetchData(timeFilter);
-  }, [user, isAdmin, isPreview, timeFilter]);
+  }, [user, isAdmin, timeFilter]);
 
   const fetchData = async (tf: TimeFilter = timeFilter) => {
     setFetching(true);
     setRpcError(null);
-    const since = sinceFromFilter(tf);
-    const [activityRes, anonymousRes, rolesRes] = await Promise.all([
-      supabase.rpc("get_user_activity_summary", { since: since ?? null }) as unknown as { data: UserActivityRow[] | null; error: { message: string } | null },
-      supabase.rpc("get_anonymous_activity_summary", { since: since ?? null }) as unknown as { data: AnonymousActivityRow[] | null; error: { message: string } | null },
-      supabase.from("user_roles").select("user_id").eq("role", "admin"),
-    ]);
-    if (activityRes.error) setRpcError(activityRes.error.message);
-    if (anonymousRes.error) setRpcError((current) => [current, anonymousRes.error?.message].filter(Boolean).join(" | "));
-    if (activityRes.data) {
-      setRows(activityRes.data);
-      setSelectedUserId((current) => current ?? activityRes.data?.[0]?.user_id ?? null);
+    try {
+      const since = sinceFromFilter(tf);
+      const [activityRes, anonymousRes, rolesRes] = await Promise.all([
+        supabase.rpc("get_user_activity_summary", { since: since ?? null }) as unknown as { data: UserActivityRow[] | null; error: { message: string } | null },
+        supabase.rpc("get_anonymous_activity_summary", { since: since ?? null }) as unknown as { data: AnonymousActivityRow[] | null; error: { message: string } | null },
+        supabase.from("user_roles").select("user_id").eq("role", "admin"),
+      ]);
+      if (activityRes.error) setRpcError(activityRes.error.message);
+      if (anonymousRes.error) setRpcError((current) => [current, anonymousRes.error?.message].filter(Boolean).join(" | "));
+      if (rolesRes.error) setRpcError((current) => [current, rolesRes.error?.message].filter(Boolean).join(" | "));
+      if (activityRes.data) {
+        setRows(activityRes.data);
+        setSelectedUserId((current) => current ?? activityRes.data?.[0]?.user_id ?? null);
+      }
+      if (anonymousRes.data) setAnonymousRows(anonymousRes.data);
+      if (rolesRes.data) setAdminUserIds(new Set(rolesRes.data.map((r) => r.user_id)));
+    } catch (error) {
+      setRpcError(error instanceof Error ? error.message : "Failed to load activity data.");
+    } finally {
+      setFetching(false);
     }
-    if (anonymousRes.data) setAnonymousRows(anonymousRes.data);
-    if (rolesRes.data) setAdminUserIds(new Set(rolesRes.data.map((r) => r.user_id)));
-    setFetching(false);
   };
 
   const filtered = rows.filter((r) => {
@@ -1104,8 +751,8 @@ export default function AdminActivity() {
     { label: "Submitted posts", loggedIn: submittedPosts, anonymous: "—" },
   ];
 
-  if (loading && !isPreview) return <div className="flex min-h-screen items-center justify-center text-muted-foreground text-sm">Loading...</div>;
-  if (!isAdmin && !isPreview) return null;
+  if (loading) return <div className="flex min-h-screen items-center justify-center text-muted-foreground text-sm">Loading...</div>;
+  if (!isAdmin) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -1124,10 +771,11 @@ export default function AdminActivity() {
               User Activity Summary
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              <span className="font-semibold text-foreground">{regularUsers.length}</span> users ·{" "}
+              <span className="font-semibold text-foreground">{rows.length}</span> registered users ·{" "}
+              <span className="font-semibold text-foreground">{regularUsers.length}</span> regular ·{" "}
+              <span className="font-semibold text-foreground">{adminUsers.length}</span> admins ·{" "}
               <span className="font-semibold text-foreground">{totalEvents.toLocaleString()}</span> logged-in events ·{" "}
               <span className="font-semibold text-foreground">{anonymousTotalEvents.toLocaleString()}</span> anonymous events
-              {isPreview && <span className="ml-2 rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">Preview data</span>}
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:items-end">
@@ -1221,7 +869,7 @@ export default function AdminActivity() {
               <div className="border-b px-4 py-3">
                 <h2 className="text-sm font-bold text-foreground">Logged-in User Overview</h2>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Compact 50-user scan. Select a row to update the detail panel above.
+                  Full registered-user scan. Select a row to update the detail panel above.
                 </p>
               </div>
               <div className="max-h-[34rem] overflow-auto">
